@@ -1,0 +1,10 @@
+{
+  "name": "@loudsight/useful-helper",
+  "version": "0.0.1-SNAPSHOT",
+  "description": "Loudsight useful helper",
+  "files": [
+    "build",
+    "package.json"
+  ],
+  "main": "useful-helper.js"
+}
