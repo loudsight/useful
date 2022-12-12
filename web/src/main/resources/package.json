@@ -1,0 +1,10 @@
+{
+  "name": "@loudsight/web-utilities-unpublished",
+  "version": "0.0.1-SNAPSHOT",
+  "description": "Loudsight service utilities",
+  "files": [
+    "web-utilities-unpublished*",
+    "package.json"
+  ],
+  "main": "web-utilities-unpublished.js"
+}
