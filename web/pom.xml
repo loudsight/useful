@@ -89,16 +89,6 @@
             <version>0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.loudsight.utilities-unpublished</groupId>
-            <artifactId>entity-unpublished</artifactId>
-            <version>${loudsight.utilities.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.loudsight.utilities-unpublished</groupId>
-            <artifactId>json-unpublished</artifactId>
-            <version>${loudsight.utilities.version}</version>
-        </dependency>
-        <dependency>
             <groupId>javax.ws.rs</groupId>
             <artifactId>javax.ws.rs-api</artifactId>
             <version>2.1.1</version>
@@ -154,7 +144,7 @@
         <profile>
             <id>js-compile</id>
             <properties>
-                <js.artifact.name>web-utilities-unpublished</js.artifact.name>
+                <js.artifact.name>useful-web</js.artifact.name>
             </properties>
             <activation>
                 <activeByDefault>false</activeByDefault>

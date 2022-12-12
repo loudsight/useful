@@ -1,4 +1,4 @@
-package com.loudsight.utilities.web.config;
+package com.loudsight.useful.web.config;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
