@@ -1,6 +1,7 @@
 {
   "javascript_modules": [
     "helper",
-    "string"
+    "string",
+    "web"
   ]
 }
