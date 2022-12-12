@@ -1,10 +1,10 @@
 {
-  "name": "@loudsight/web-utilities-unpublished",
+  "name": "@loudsight/useful-web",
   "version": "0.0.1-SNAPSHOT",
-  "description": "Loudsight service utilities",
+  "description": "Loudsight useful web utilities",
   "files": [
-    "web-utilities-unpublished*",
+    "useful-web*",
     "package.json"
   ],
-  "main": "web-utilities-unpublished.js"
+  "main": "useful-web.js"
 }
