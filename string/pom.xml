@@ -45,16 +45,6 @@
         <url>git@github.com:loudsight/synergisms.git</url>
     </scm>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-reflect</artifactId>
-        </dependency>
-    </dependencies>
     <build>
         <plugins>
             <plugin>

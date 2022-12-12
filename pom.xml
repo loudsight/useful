@@ -47,6 +47,7 @@
     <modules>
         <module>helper</module>
         <module>string</module>
+        <module>web</module>
     </modules>
     <dependencies>
         <dependency>
