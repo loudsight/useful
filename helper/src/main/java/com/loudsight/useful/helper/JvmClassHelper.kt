@@ -1,6 +1,6 @@
 package com.loudsight.useful.helper
 
-import com.loudsight.utilities.helper.ClassHelper.Companion.uncheckedCast
+import com.loudsight.useful.helper.ClassHelper.Companion.uncheckedCast
 import kotlin.jvm.kotlin
 import java.lang.Exception
 import java.lang.RuntimeException
