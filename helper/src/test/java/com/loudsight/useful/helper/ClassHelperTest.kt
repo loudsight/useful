@@ -1,6 +1,6 @@
 package com.loudsight.useful.helper
 
-import com.loudsight.utilities.helper.ClassHelper
+import com.loudsight.useful.helper.ClassHelper
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import java.util.ArrayList
