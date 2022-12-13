@@ -1,4 +1,4 @@
-package com.loudsight.utilities
+package com.loudsight.useful.helper
 
 import com.loudsight.utilities.helper.ClassHelper
 import org.junit.jupiter.api.Assertions

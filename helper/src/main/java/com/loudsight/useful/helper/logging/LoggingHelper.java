@@ -1,4 +1,4 @@
-package com.loudsight.utilities.helper.logging;
+package com.loudsight.useful.helper.logging;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

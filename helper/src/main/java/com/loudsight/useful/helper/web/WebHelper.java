@@ -1,6 +1,6 @@
-package com.loudsight.utilities.helper.web;
+package com.loudsight.useful.helper.web;
 
-import com.loudsight.utilities.helper.ExceptionHelper;
+import com.loudsight.useful.helper.ExceptionHelper;
 
 import java.net.ServerSocket;
 

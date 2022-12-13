@@ -1,4 +1,4 @@
-package com.loudsight.utilities.helper;
+package com.loudsight.useful.helper;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
