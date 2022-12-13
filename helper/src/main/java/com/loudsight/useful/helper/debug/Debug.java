@@ -1,4 +1,4 @@
-package com.loudsight.utilities.helper.debug;
+package com.loudsight.useful.helper.debug;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
