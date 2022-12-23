@@ -1,5 +1,12 @@
 package com.loudsight.useful.web.config;
 
+import com.loudsight.useful.helper.logging.LoggingHelper;
+import com.loudsight.useful.web.AuthenticationEvent;
+import com.loudsight.useful.web.AuthenticationListener;
+import com.loudsight.useful.web.handler.CustomAuthenticationSuccessHandler;
+import com.loudsight.useful.web.handler.CustomOAuth2AccessTokenResponseBodyExtractor;
+import com.loudsight.useful.web.handler.CustomServerLogoutSuccessHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
@@ -8,6 +15,11 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.core.userdetails.MapReactiveUserDetailsService;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.client.endpoint.WebClientReactiveAuthorizationCodeTokenResponseClient;
+import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.context.ServerSecurityContextRepository;
 import org.springframework.web.server.ServerWebExchange;
@@ -26,7 +38,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebFluxSecurity
 //@EnableReactiveMethodSecurity
 public class SecurityConfig {
-//    private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
+    private static final LoggingHelper logger = LoggingHelper.wrap(SecurityConfig.class);
 
 
 
@@ -49,74 +61,110 @@ public class SecurityConfig {
         return new X();
     }
 
+//    @Bean
+//    public SecurityWebFilterChain configure(ServerHttpSecurity http,
+//                                            ServerSecurityContextRepository serverSecurityContextRepository,
+//                                            @Qualifier("unsecuredPaths") List<String> unsecuredPaths,
+//                                            X forwardedHeaderFilter
+//    ) {
+//        return http
+//                .csrf().disable()
+//                .addFilterAt(forwardedHeaderFilter::filter,
+//                        SecurityWebFiltersOrder.AUTHENTICATION)
+//                .authorizeExchange((authorize) -> authorize
+//                        .pathMatchers(unsecuredPaths.toArray(new String[]{})).permitAll()
+//                        .anyExchange().authenticated()
+//                )
+//                .oauth2Login(oauth2LoginCustomizer(serverSecurityContextRepository))
+////                .oauth2Client(oauth2ClientCustomizer())
+//                .exceptionHandling(exceptions -> exceptions
+//                        .authenticationEntryPoint(
+//                                (exchange, ex) -> {
+//                                    var loginPath = "/login";
+//                                    AtomicReference<URI> newLocation = new AtomicReference<>(URI.create(loginPath));
+//                                    var response = exchange.getResponse();
+//
+//                                    response.setStatusCode(HttpStatus.FOUND);
+//                                    response.getHeaders().setLocation(newLocation.get());
+//                                    return response.writeWith(Mono.just(response.bufferFactory().wrap(
+//                                            ("Redirecting to " + newLocation.get()).getBytes(StandardCharsets.UTF_8)
+//                                    )));
+//                                }
+//                        )
+//                )
+//                .formLogin().disable()
+//                .oauth2Client(withDefaults())
+//                .build();
+//    }
+
+    @Autowired
+    ReactiveClientRegistrationRepository clientRegistrationRepository;
+
+    @Bean
+    public MapReactiveUserDetailsService userDetailsService() {
+        UserDetails user =  User.withDefaultPasswordEncoder()
+                .username("user")
+                .password("password")
+                .roles("USER")
+                .build();
+        return new MapReactiveUserDetailsService(user);
+    }
+
+    @Bean
+    AuthenticationListener authenticationListener() {
+        return new AuthenticationListener() {
+
+            @Override
+            public void accept(AuthenticationEvent event) {
+                logger.logInfo("Received provider " + event.provider() + "Received user " + event.username());
+            }
+        };
+    }
+
     @Bean
     public SecurityWebFilterChain configure(ServerHttpSecurity http,
                                             ServerSecurityContextRepository serverSecurityContextRepository,
-                                            @Qualifier("unsecuredPaths") List<String> unsecuredPaths,
-                                            X forwardedHeaderFilter
+                                            @Qualifier("unsecuredPaths") List<String> unsecuredPaths
     ) {
         return http
                 .csrf().disable()
-                .addFilterAt(forwardedHeaderFilter::filter,
-                        SecurityWebFiltersOrder.AUTHENTICATION)
                 .authorizeExchange((authorize) -> authorize
                         .pathMatchers(unsecuredPaths.toArray(new String[]{})).permitAll()
                         .anyExchange().authenticated()
                 )
                 .oauth2Login(oauth2LoginCustomizer(serverSecurityContextRepository))
-//                .oauth2Client(oauth2ClientCustomizer())
-                .exceptionHandling(exceptions -> exceptions
-                        .authenticationEntryPoint(
-                                (exchange, ex) -> {
-                                    var loginPath = "/login";
-                                    AtomicReference<URI> newLocation = new AtomicReference<>(URI.create(loginPath));
-                                    var response = exchange.getResponse();
-
-                                    response.setStatusCode(HttpStatus.FOUND);
-                                    response.getHeaders().setLocation(newLocation.get());
-                                    return response.writeWith(Mono.just(response.bufferFactory().wrap(
-                                            ("Redirecting to " + newLocation.get()).getBytes(StandardCharsets.UTF_8)
-                                    )));
-                                }
-                        )
-                )
-                .formLogin().disable()
-                .oauth2Client(withDefaults())
+                .formLogin().authenticationSuccessHandler(customAuthenticationSuccessHandler())
+                .and().logout().logoutSuccessHandler(customServerLogoutSuccessHandler())
+                .and().oauth2Client(Customizer.withDefaults())
                 .build();
+    }
+
+
+
+    @Bean
+    public WebClientReactiveAuthorizationCodeTokenResponseClient webClientReactiveAuthorizationCodeTokenResponseClient() {
+        WebClientReactiveAuthorizationCodeTokenResponseClient webClientReactiveAuthorizationCodeTokenResponseClient =
+                new WebClientReactiveAuthorizationCodeTokenResponseClient();
+        webClientReactiveAuthorizationCodeTokenResponseClient.setBodyExtractor(new CustomOAuth2AccessTokenResponseBodyExtractor());
+        return webClientReactiveAuthorizationCodeTokenResponseClient;
+    }
+
+
+    @Bean
+    public CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler() {
+        return new CustomAuthenticationSuccessHandler(authenticationListener(), "/only-logged-in-users-can-access-this");
+    }
+
+    @Bean
+    public CustomServerLogoutSuccessHandler customServerLogoutSuccessHandler() {
+        return new CustomServerLogoutSuccessHandler(authenticationListener(), clientRegistrationRepository);
     }
 
     Customizer<ServerHttpSecurity.OAuth2LoginSpec> oauth2LoginCustomizer(
             ServerSecurityContextRepository serverSecurityContextRepository) {
         return (oauth2Login) -> {
-            oauth2Login.securityContextRepository(serverSecurityContextRepository);
+            oauth2Login.securityContextRepository(serverSecurityContextRepository)
+                    .authenticationSuccessHandler(customAuthenticationSuccessHandler());
         };
     }
-
-
-//    Customizer<ServerHttpSecurity.OAuth2ClientSpec> oauth2ClientCustomizer() {
-//        return oAuth2ClientSpec -> oAuth2ClientSpec.authenticationConverter(new ServerAuthenticationConverter() {
-//            @Override
-//            public Mono<Authentication> convert(ServerWebExchange exchange) {
-//                return null;
-//            }
-//        });
-//    }
-
-//    @Bean
-//    SecurityContextRepository securityContextRepository() {
-//        @Component
-//        class Handler {
-//            Mono<ServerResponse> all(ServerRequest request) {
-//                return ReactiveSecurityContextHolder.getContext()
-//                        .switchIfEmpty(Mono.error(new IllegalStateException("ReactiveSecurityContext is empty")))
-//                        .map(SecurityContext::getAuthentication)
-//                        .map(Authentication::getName)
-//                        .flatMap(s -> Mono.just("Hi " + s))
-//                        .doOnNext(System.out::println)
-//                        .doOnError(Throwable::printStackTrace)
-//                        .doOnSuccess(s -> System.out.println("completed without value: " + s))
-//                        .flatMap(s -> ServerResponse.ok().build());
-//            }
-//        }
-//    }
 }
