@@ -19,7 +19,7 @@ import java.net.URI;
 
 public class CustomAuthenticationSuccessHandler implements ServerAuthenticationSuccessHandler {
 
-    private AuthenticationListener authenticationListener;
+    private final AuthenticationListener authenticationListener;
 
     private URI location = URI.create("/");
     private ServerRedirectStrategy redirectStrategy = new DefaultServerRedirectStrategy();

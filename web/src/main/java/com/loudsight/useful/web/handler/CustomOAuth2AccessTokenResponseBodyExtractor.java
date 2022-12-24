@@ -16,8 +16,7 @@ import reactor.core.publisher.Mono;
 import java.util.*;
 
 public class CustomOAuth2AccessTokenResponseBodyExtractor implements BodyExtractor<Mono<OAuth2AccessTokenResponse>, ReactiveHttpInputMessage> {
-    private static final String INVALID_TOKEN_RESPONSE_ERROR_CODE = "invalid_token_response";
-    private static final ParameterizedTypeReference<Map<String, Object>> STRING_OBJECT_MAP = new ParameterizedTypeReference<Map<String, Object>>() {
+    private static final ParameterizedTypeReference<Map<String, Object>> STRING_OBJECT_MAP = new ParameterizedTypeReference<>() {
     };
 
     public CustomOAuth2AccessTokenResponseBodyExtractor() {
@@ -50,7 +49,7 @@ public class CustomOAuth2AccessTokenResponseBodyExtractor implements BodyExtract
     }
 
     private static OAuth2Error invalidTokenResponse(String message) {
-        return new OAuth2Error("invalid_token_response", message, (String)null);
+        return new OAuth2Error("invalid_token_response", message, null);
     }
 
     private static Mono<AccessTokenResponse> oauth2AccessTokenResponse(TokenResponse tokenResponse) {
@@ -83,13 +82,13 @@ public class CustomOAuth2AccessTokenResponseBodyExtractor implements BodyExtract
         }
 
         long expiresIn = accessToken.getLifetime();
-        Set<String> scopes = accessToken.getScope() != null ? new LinkedHashSet(accessToken.getScope().toStringList()) : Collections.emptySet();
+        Set<String> scopes = accessToken.getScope() != null ? new LinkedHashSet<>(accessToken.getScope().toStringList()) : Collections.emptySet();
         String refreshToken = null;
         if (accessTokenResponse.getTokens().getRefreshToken() != null) {
             refreshToken = accessTokenResponse.getTokens().getRefreshToken().getValue();
         }
 
-        Map<String, Object> additionalParameters = new LinkedHashMap(accessTokenResponse.getCustomParameters());
-        return OAuth2AccessTokenResponse.withToken(accessToken.getValue()).tokenType(accessTokenType).expiresIn(expiresIn).scopes((Set)scopes).refreshToken(refreshToken).additionalParameters(additionalParameters).build();
+        Map<String, Object> additionalParameters = new LinkedHashMap<>(accessTokenResponse.getCustomParameters());
+        return OAuth2AccessTokenResponse.withToken(accessToken.getValue()).tokenType(accessTokenType).expiresIn(expiresIn).scopes(scopes).refreshToken(refreshToken).additionalParameters(additionalParameters).build();
     }
 }
