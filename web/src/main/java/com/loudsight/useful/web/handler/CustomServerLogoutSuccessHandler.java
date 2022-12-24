@@ -13,7 +13,7 @@ import reactor.core.publisher.Mono;
 
 public class CustomServerLogoutSuccessHandler extends OidcClientInitiatedServerLogoutSuccessHandler {
 
-    private AuthenticationListener authenticationListener;
+    private final AuthenticationListener authenticationListener;
     public CustomServerLogoutSuccessHandler(AuthenticationListener authenticationListener, ReactiveClientRegistrationRepository clientRegistrationRepository) {
         super(clientRegistrationRepository);
         this.authenticationListener = authenticationListener;
