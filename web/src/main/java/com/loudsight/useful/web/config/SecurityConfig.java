@@ -145,7 +145,7 @@ public class SecurityConfig {
 
     @Bean
     public CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler() {
-        return new CustomAuthenticationSuccessHandler(authenticationListener(), "/only-logged-in-users-can-access-this");
+        return new CustomAuthenticationSuccessHandler(authenticationListener());
     }
 
     @Bean
