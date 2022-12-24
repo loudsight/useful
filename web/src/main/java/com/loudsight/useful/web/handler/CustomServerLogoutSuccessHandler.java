@@ -20,6 +20,7 @@ public class CustomServerLogoutSuccessHandler extends OidcClientInitiatedServerL
     }
 
 
+    @Override
     public Mono<Void> onLogoutSuccess(WebFilterExchange webFilterExchange, Authentication authentication) {
         ServerWebExchange exchange = webFilterExchange.getExchange();
         this.authenticationListener.accept(new AuthenticationEvent() {

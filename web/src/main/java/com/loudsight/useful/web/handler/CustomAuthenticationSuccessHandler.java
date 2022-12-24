@@ -25,11 +25,11 @@ public class CustomAuthenticationSuccessHandler implements ServerAuthenticationS
     private ServerRedirectStrategy redirectStrategy = new DefaultServerRedirectStrategy();
     private ServerRequestCache requestCache = new WebSessionServerRequestCache();
 
-    public CustomAuthenticationSuccessHandler(AuthenticationListener authenticationListener, String location) {
-        this.location = URI.create(location);
+    public CustomAuthenticationSuccessHandler(AuthenticationListener authenticationListener) {
         this.authenticationListener = authenticationListener;
     }
 
+    @Override
     public Mono<Void> onAuthenticationSuccess(WebFilterExchange webFilterExchange, Authentication authentication) {
         ServerWebExchange exchange = webFilterExchange.getExchange();
         this.authenticationListener.accept(new AuthenticationEvent() {
