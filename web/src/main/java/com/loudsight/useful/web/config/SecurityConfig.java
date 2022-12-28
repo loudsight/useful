@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.userdetails.MapReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.User;
@@ -117,10 +118,13 @@ public class SecurityConfig {
     @Bean
     public SecurityWebFilterChain configure(ServerHttpSecurity http,
                                             ServerSecurityContextRepository serverSecurityContextRepository,
-                                            @Qualifier("unsecuredPaths") List<String> unsecuredPaths
+                                            @Qualifier("unsecuredPaths") List<String> unsecuredPaths,
+                                            X forwardedHeaderFilter
     ) {
         return http
                 .csrf().disable()
+                .addFilterAt(forwardedHeaderFilter::filter,
+                        SecurityWebFiltersOrder.AUTHENTICATION)
                 .authorizeExchange((authorize) -> authorize
                         .pathMatchers(unsecuredPaths.toArray(new String[]{})).permitAll()
                         .anyExchange().authenticated()
