@@ -123,8 +123,8 @@ public class SecurityConfig {
     ) {
         return http
                 .csrf().disable()
-                .addFilterAt(forwardedHeaderFilter::filter,
-                        SecurityWebFiltersOrder.AUTHENTICATION)
+//                .addFilterAt(forwardedHeaderFilter::filter,
+//                        SecurityWebFiltersOrder.AUTHENTICATION)
                 .authorizeExchange((authorize) -> authorize
                         .pathMatchers(unsecuredPaths.toArray(new String[]{})).permitAll()
                         .anyExchange().authenticated()
