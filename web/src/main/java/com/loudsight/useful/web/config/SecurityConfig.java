@@ -117,7 +117,7 @@ public class SecurityConfig {
     @Bean
     public SecurityWebFilterChain configure(ServerHttpSecurity http,
                                             ServerSecurityContextRepository serverSecurityContextRepository,
-                                            @Qualifier("unsecuredPaths") List<String> /*unsecuredPaths,
+                                            @Qualifier("unsecuredPaths") List<String> unsecuredPaths/*,
                                             X forwardedHeaderFilter*/
     ) {
         return http
