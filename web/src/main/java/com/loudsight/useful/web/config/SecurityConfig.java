@@ -33,63 +33,6 @@ import java.util.List;
 public class SecurityConfig {
     private static final LoggingHelper logger = LoggingHelper.wrap(SecurityConfig.class);
 
-
-
-    class X extends ForwardedHeaderTransformer implements WebFilter {
-
-        @Override
-        public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
-            ServerHttpRequest request = exchange.getRequest();
-            if (hasForwardedHeaders(request)) {
-                ServerWebExchange mutatedExchange = exchange.mutate().request(apply(request)).build();
-
-                return chain.filter(mutatedExchange);
-            }
-            return chain.filter(exchange);
-        }
-    }
-
-    @Bean
-    X forwardedHeaderTransformer() {
-        return new X();
-    }
-
-//    @Bean
-//    public SecurityWebFilterChain configure(ServerHttpSecurity http,
-//                                            ServerSecurityContextRepository serverSecurityContextRepository,
-//                                            @Qualifier("unsecuredPaths") List<String> unsecuredPaths,
-//                                            X forwardedHeaderFilter
-//    ) {
-//        return http
-//                .csrf().disable()
-//                .addFilterAt(forwardedHeaderFilter::filter,
-//                        SecurityWebFiltersOrder.AUTHENTICATION)
-//                .authorizeExchange((authorize) -> authorize
-//                        .pathMatchers(unsecuredPaths.toArray(new String[]{})).permitAll()
-//                        .anyExchange().authenticated()
-//                )
-//                .oauth2Login(oauth2LoginCustomizer(serverSecurityContextRepository))
-////                .oauth2Client(oauth2ClientCustomizer())
-//                .exceptionHandling(exceptions -> exceptions
-//                        .authenticationEntryPoint(
-//                                (exchange, ex) -> {
-//                                    var loginPath = "/login";
-//                                    AtomicReference<URI> newLocation = new AtomicReference<>(URI.create(loginPath));
-//                                    var response = exchange.getResponse();
-//
-//                                    response.setStatusCode(HttpStatus.FOUND);
-//                                    response.getHeaders().setLocation(newLocation.get());
-//                                    return response.writeWith(Mono.just(response.bufferFactory().wrap(
-//                                            ("Redirecting to " + newLocation.get()).getBytes(StandardCharsets.UTF_8)
-//                                    )));
-//                                }
-//                        )
-//                )
-//                .formLogin().disable()
-//                .oauth2Client(withDefaults())
-//                .build();
-//    }
-
     @Autowired
     ReactiveClientRegistrationRepository clientRegistrationRepository;
 
@@ -136,7 +79,6 @@ public class SecurityConfig {
     }
 
 
-
     @Bean
     public WebClientReactiveAuthorizationCodeTokenResponseClient webClientReactiveAuthorizationCodeTokenResponseClient() {
         WebClientReactiveAuthorizationCodeTokenResponseClient webClientReactiveAuthorizationCodeTokenResponseClient =
@@ -144,7 +86,6 @@ public class SecurityConfig {
         webClientReactiveAuthorizationCodeTokenResponseClient.setBodyExtractor(new CustomOAuth2AccessTokenResponseBodyExtractor());
         return webClientReactiveAuthorizationCodeTokenResponseClient;
     }
-
 
     @Bean
     public CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler() {
