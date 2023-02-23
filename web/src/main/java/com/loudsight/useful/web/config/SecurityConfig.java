@@ -9,7 +9,6 @@ import com.loudsight.useful.web.handler.CustomServerLogoutSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -20,11 +19,6 @@ import org.springframework.security.oauth2.client.endpoint.WebClientReactiveAuth
 import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.context.ServerSecurityContextRepository;
-import org.springframework.web.server.ServerWebExchange;
-import org.springframework.web.server.WebFilter;
-import org.springframework.web.server.WebFilterChain;
-import org.springframework.web.server.adapter.ForwardedHeaderTransformer;
-import reactor.core.publisher.Mono;
 
 import java.util.List;
 
