@@ -20,7 +20,7 @@
     <packaging>jar</packaging>
 
     <name>Useful string utilities</name>
-    <description>Loudsight's Useful String Utilities</description>
+    <description>Useful string utilities</description>
     <url>https://loudsight.com/</url>
 
     <licenses>
