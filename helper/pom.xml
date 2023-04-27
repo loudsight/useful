@@ -9,14 +9,12 @@
         <artifactId>useful</artifactId>
     </parent>
 
+    <artifactId>helper</artifactId>
+    <packaging>jar</packaging>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
-    <groupId>com.loudsight.useful</groupId>
-    <version>0-SNAPSHOT</version>
-    <artifactId>helper</artifactId>
-    <packaging>jar</packaging>
 
     <name>Useful helper utilities</name>
     <description>Loudsight's Useful Helper Utilities</description>
@@ -44,16 +42,8 @@
         <url>git@github.com:loudsight/synergisms.git</url>
     </scm>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-reflect</artifactId>
-        </dependency>
-    </dependencies>
+    <dependencies />
+
     <build>
         <plugins>
             <plugin>

@@ -45,7 +45,9 @@
         <url>git@github.com:loudsight/utilities.git</url>
     </scm>
     <modules>
+        <module>entity</module>
         <module>helper</module>
+        <module>service</module>
         <module>string</module>
         <module>web</module>
     </modules>

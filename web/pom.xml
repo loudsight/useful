@@ -128,8 +128,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.loudsight.meta</groupId>
-            <artifactId>entity-meta-generator-test</artifactId>
+            <groupId>com.loudsight</groupId>
+            <artifactId>simple-pojo</artifactId>
             <version>0-SNAPSHOT</version>
             <type>test-jar</type>
             <scope>test</scope>
