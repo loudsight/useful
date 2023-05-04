@@ -56,21 +56,4 @@
             </plugin>
         </plugins>
     </build>
-    <profiles>
-        <profile>
-            <id>js-compile</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <properties>
-                <js.artifact.name>useful-helper</js.artifact.name>
-            </properties>
-            <dependencies>
-                <dependency>
-                    <groupId>org.jetbrains.kotlin</groupId>
-                    <artifactId>kotlin-stdlib-js</artifactId>
-                </dependency>
-            </dependencies>
-        </profile>
-    </profiles>
-</project>
+ </project>
