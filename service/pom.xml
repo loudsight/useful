@@ -24,13 +24,6 @@
              <artifactId>entity-meta-generator-lib</artifactId>
              <version>0-SNAPSHOT</version>
          </dependency>
-
-         <dependency>
-             <groupId>com.loudsight.utilities-unpublished</groupId>
-             <artifactId>entity-unpublished</artifactId>
-             <version>${loudsight.utilities.version}</version>
-         </dependency>
-
          <dependency>
              <groupId>com.loudsight.useful</groupId>
              <artifactId>helper</artifactId>
