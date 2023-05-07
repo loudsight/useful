@@ -14,7 +14,7 @@
     </properties>
 
     <groupId>com.loudsight.useful</groupId>
-    <version>0.0.1</version>
+    <version>0.0.2-SNAPSHOT</version>
     <artifactId>useful</artifactId>
     <packaging>pom</packaging>
 
