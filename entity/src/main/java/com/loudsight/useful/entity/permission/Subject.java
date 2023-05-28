@@ -1,16 +1,16 @@
 package com.loudsight.useful.entity.permission;
 
-//import com.loudsight.meta.annotation.Id;
-//import com.loudsight.meta.annotation.Introspect;
+import com.loudsight.meta.annotation.Id;
+import com.loudsight.meta.annotation.Introspect;
 
-//@Introspect(clazz = Subject.class)
+@Introspect(clazz = Subject.class)
 public class Subject {
 
-//   @Id
+   @Id
    private String id;
-//   @Id
+   @Id
    private String name;
-   
+
    private static final Subject anonymous = new Subject();
    
    private static final Subject admin = new Subject();
