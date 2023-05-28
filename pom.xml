@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.loudsight</groupId>
         <artifactId>parent</artifactId>
-        <version>0.0.12</version>
+        <version>0.0.15-SNAPSHOT</version>
     </parent>
 
     <properties>
@@ -58,6 +58,14 @@
             </plugin>
         </plugins>
     </build>
+    <dependencies>
+        <dependency>
+            <groupId>com.loudsight.meta</groupId>
+            <artifactId>entity-meta-processor</artifactId>
+            <version>0-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 </project>
 
 
