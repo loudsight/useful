@@ -14,7 +14,7 @@ public interface Dispatcher {
                   Address replyTo,
                   Subject recipient,
                   Subject sender,
-                  Object payload,
+                  Q payload,
                   BridgeMessageType publicationType);
 //               
 
@@ -30,15 +30,15 @@ public interface Dispatcher {
      */
 
 
-    <Q, A> Subscription<Q, A> subscribe(Address to, MessageHandler<A> handler);
+    <Q, A> Subscription<Q, A> subscribe(Address to, MessageHandler<Q, A> handler);
 
-    <T> Subscription<Publication,T> bridge(Address to, MessageHandler<T> handler);
+    <Q, A> Subscription<Q, A> bridge(Address to, MessageHandler<Q, A> handler);
 
-    <T> void publishAsync(Address to,
+    <Q, A> void publishAsync(Address to,
                       Subject recipient,
                       Subject publisher,
                       Object payload,
-                      MessageHandler<T> handler);
+                      MessageHandler<Q, A> handler);
     void publish(Address to,
                  Subject recipient,
                  Subject publisher,
