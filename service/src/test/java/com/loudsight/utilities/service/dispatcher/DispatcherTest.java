@@ -92,7 +92,7 @@ public abstract class DispatcherTest {
         sent.setId(123);
         Dispatcher clientDispatcher = getClientDispatcher();
 
-        MessageHandler<SimpleEntity> asyncHandler =
+        MessageHandler<SimpleEntity, SimpleEntity> asyncHandler =
                 (to, replyTo, recipient, sender, publicationType, payload) -> {
                     var q = (SimpleEntity) payload;
                     received.accept(q);
@@ -244,7 +244,7 @@ public abstract class DispatcherTest {
         reply.setId(sent.getId() + 123);
         var received = new Listener<SelfReferencingEntity>();
 
-        MessageHandler<SimpleEntity> handler =
+        MessageHandler<SimpleEntity, SimpleEntity> handler =
                 (to, replyTo, recipient, sender, publicationType, payload) -> {
             received.accept((SelfReferencingEntity) payload);
             return null;
@@ -266,7 +266,7 @@ public abstract class DispatcherTest {
         Dispatcher dispatcher = new SerialDispatcher();
         var received = new AtomicReferenceArray<Integer>(100);
 
-        MessageHandler<Object> handler =
+        MessageHandler<Integer, Object> handler =
                 (to, replyTo, recipient, sender, publicationType, payload) -> {
                     received.set((Integer)payload, (Integer)payload);
                     return null;
