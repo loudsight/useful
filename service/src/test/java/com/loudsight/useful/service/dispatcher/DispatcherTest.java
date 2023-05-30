@@ -1,12 +1,11 @@
-package com.loudsight.utilities.service.dispatcher;
+package com.loudsight.useful.service.dispatcher;
 
 import com.loudsight.meta.MetaRepository;
 import com.loudsight.meta.entity.SimpleEntity;
 import com.loudsight.meta.entity.SelfReferencingEntity;
 import com.loudsight.useful.entity.permission.Subject;
-import com.loudsight.useful.helper.JvmClassHelper;
 import com.loudsight.useful.helper.logging.LoggingHelper;
-import com.loudsight.utilities.service.Listener;
+import com.loudsight.useful.service.Listener;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +17,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 import java.util.function.Consumer;
 
-import static com.loudsight.utilities.service.dispatcher.Address.WILDCARD_ADDRESS;
+import static com.loudsight.useful.service.dispatcher.Address.WILDCARD_ADDRESS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public abstract class DispatcherTest {

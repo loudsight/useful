@@ -1,4 +1,4 @@
-package com.loudsight.utilities.service;
+package com.loudsight.useful.service;
 
 import com.loudsight.useful.helper.ExceptionHelper;
 

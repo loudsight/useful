@@ -1,4 +1,4 @@
-package com.loudsight.utilities.service.dispatcher.bridge;
+package com.loudsight.useful.service.dispatcher.bridge;
 
 import com.loudsight.meta.annotation.Introspect;
 
