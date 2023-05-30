@@ -1,19 +1,16 @@
-package com.loudsight.utilities.service.dispatcher;
+package com.loudsight.useful.service.dispatcher;
 
 import com.loudsight.meta.MetaRepository;
 import com.loudsight.useful.entity.permission.Subject;
 import com.loudsight.useful.helper.ClassHelper;
-import com.loudsight.utilities.service.dispatcher.bridge.BridgeMessageType;
-import com.loudsight.utilities.service.dispatcher.bridge.BridgeMessageTypeMeta;
+import com.loudsight.useful.service.dispatcher.bridge.BridgeMessageType;
+import com.loudsight.useful.service.dispatcher.bridge.BridgeMessageTypeMeta;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
-
-import static com.loudsight.utilities.service.dispatcher.Address.NO_REPLY;
-import static com.loudsight.utilities.service.dispatcher.Address.WILDCARD_ADDRESS;
 
 public class ParallelDispatcher implements Dispatcher {
     private static final List<Subscription<?, ?>> EMPTY_LIST = new ArrayList<>();
@@ -36,7 +33,7 @@ public class ParallelDispatcher implements Dispatcher {
                         Subject publisher,
                         Object payload,
                         BridgeMessageType publicationType) {
-        publish(to, NO_REPLY, recipient, publisher, payload, publicationType);
+        publish(to, Address.NO_REPLY, recipient, publisher, payload, publicationType);
     }
 
     void publish(Address to,
@@ -50,7 +47,7 @@ public class ParallelDispatcher implements Dispatcher {
 
         List<Subscription<?, ?>> subscriptions = new ArrayList<>();
         subscriptions.addAll(openSubscriptions.getOrDefault(to, EMPTY_LIST));
-        subscriptions.addAll(openSubscriptions.getOrDefault(WILDCARD_ADDRESS, EMPTY_LIST));
+        subscriptions.addAll(openSubscriptions.getOrDefault(Address.WILDCARD_ADDRESS, EMPTY_LIST));
         var openSubscriptionsIt = subscriptions.iterator();
 
         while (openSubscriptionsIt.hasNext()) {
@@ -73,7 +70,7 @@ public class ParallelDispatcher implements Dispatcher {
                 );
             } else if (payload == Dispatcher.BRIDGE_RETURN) {
 
-            } else if (replyTo != NO_REPLY) {
+            } else if (replyTo != Address.NO_REPLY) {
                 var response = it.onEvent(
                         to,
                         replyTo,

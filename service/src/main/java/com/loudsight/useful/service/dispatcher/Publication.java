@@ -1,8 +1,8 @@
-package com.loudsight.utilities.service.dispatcher;
+package com.loudsight.useful.service.dispatcher;
 
 import com.loudsight.meta.annotation.Introspect;
 import com.loudsight.useful.entity.permission.Subject;
-import com.loudsight.utilities.service.dispatcher.bridge.BridgeMessageType;
+import com.loudsight.useful.service.dispatcher.bridge.BridgeMessageType;
 
 @Introspect(clazz = Publication.class)
 public class Publication {

@@ -12,15 +12,13 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <revision>0-SNAPSHOT</revision>
     </properties>
 
     <version>0-SNAPSHOT</version>
     <artifactId>web</artifactId>
     <packaging>jar</packaging>
 
-    <name>Useful web utilities</name>
-    <description>Loudsight's Useful Web Utilities</description>
+    <description>Useful service utilities</description>
     <url>https://loudsight.com/</url>
 
     <build>

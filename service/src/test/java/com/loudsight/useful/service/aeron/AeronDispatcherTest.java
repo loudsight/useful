@@ -1,15 +1,14 @@
-package com.loudsight.utilities.service.aeron;
+package com.loudsight.useful.service.aeron;
 
 import com.loudsight.meta.MetaRepository;
 //import com.loudsight.utilities.service.dispatcher.aeron.AeronDispatcher;
 //import com.loudsight.utilities.service.config.ServiceTestConfig;
 //import com.loudsight.utilities.service.dispatcher.Dispatcher;
-import com.loudsight.utilities.service.dispatcher.Dispatcher;
-import com.loudsight.utilities.service.dispatcher.DispatcherTest;
+import com.loudsight.useful.service.dispatcher.Dispatcher;
+import com.loudsight.useful.service.dispatcher.DispatcherTest;
 import org.junit.jupiter.api.Disabled;
 //import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 @Disabled
 //@SpringJUnitConfig(classes = {ServiceTestConfig.class})

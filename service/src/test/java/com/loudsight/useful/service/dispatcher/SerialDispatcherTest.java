@@ -1,8 +1,6 @@
-package com.loudsight.utilities.service.dispatcher;
+package com.loudsight.useful.service.dispatcher;
 
 import com.loudsight.meta.MetaRepository;
-import com.loudsight.utilities.service.dispatcher.Dispatcher;
-import com.loudsight.utilities.service.dispatcher.SerialDispatcher;
 
 public class SerialDispatcherTest extends DispatcherTest {
 

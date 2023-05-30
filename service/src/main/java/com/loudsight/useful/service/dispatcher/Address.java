@@ -1,4 +1,4 @@
-package com.loudsight.utilities.service.dispatcher;
+package com.loudsight.useful.service.dispatcher;
 
 import com.loudsight.meta.annotation.Introspect;
 
