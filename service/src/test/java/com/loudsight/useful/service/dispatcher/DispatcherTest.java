@@ -82,7 +82,7 @@ public abstract class DispatcherTest {
     }
 
     @Test
-    public void  testAsyncRequest() throws InterruptedException {
+    public void  testAsyncRequest() {
 
         var received = new Listener<SimpleEntity>();
         var replied = new Listener<SimpleEntity>();
@@ -92,7 +92,7 @@ public abstract class DispatcherTest {
         Dispatcher clientDispatcher = getClientDispatcher();
 
         MessageHandler<SimpleEntity, SimpleEntity> asyncHandler =
-                (to, replyTo, recipient, sender, publicationType, payload) -> {
+                (to, sender, payload) -> {
                     var q = (SimpleEntity) payload;
                     received.accept(q);
 
@@ -108,12 +108,9 @@ public abstract class DispatcherTest {
         setupAddresses(serverAddress, CLIENT_ADDRESS);
         var subscription = serverDispatcher.subscribe(serverAddress, asyncHandler);
 
-        clientDispatcher.publishAsync(serverAddress, ANONYMOUS, ANONYMOUS, sent, (to,
-                                                                                  replyTo,
-                                                                                  recipient,
-                                                                                  sender,
-                                                                                  publicationType,
-                                                                                  payload) -> {
+        clientDispatcher.publishAsync(serverAddress, new Publication(sent), (to,
+                                                                             sender,
+                                                                             payload) -> {
             replied.accept((SimpleEntity) payload);
             return null;
         });
@@ -212,7 +209,7 @@ public abstract class DispatcherTest {
             replyLatch.countDown();
         });
 
-        dispatcher.publish(new Address("Test", "Q::class"),  null, Subject.getAnonymous(), sent);
+        dispatcher.publish(new Address("Test", "Q::class"), Subject.getAnonymous(), new Publication(sent));
 
         replyLatch.await(15, TimeUnit.SECONDS);
 
@@ -244,7 +241,7 @@ public abstract class DispatcherTest {
         var received = new Listener<SelfReferencingEntity>();
 
         MessageHandler<SimpleEntity, SimpleEntity> handler =
-                (to, replyTo, recipient, sender, publicationType, payload) -> {
+                (to, sender, payload) -> {
             received.accept((SelfReferencingEntity) payload);
             return null;
         };
@@ -252,7 +249,7 @@ public abstract class DispatcherTest {
         setupAddresses(serverAddress, CLIENT_ADDRESS);
         var subscription = serverDispatcher.subscribe(serverAddress, handler);
         delay(500);
-        clientDispatcher.publish(serverAddress, ANONYMOUS, ANONYMOUS, sent);
+        clientDispatcher.publish(serverAddress, ANONYMOUS, new Publication(sent));
 
         var result = received.getResult(15, TimeUnit.SECONDS);
 
@@ -266,7 +263,7 @@ public abstract class DispatcherTest {
         var received = new AtomicReferenceArray<Integer>(100);
 
         MessageHandler<Integer, Object> handler =
-                (to, replyTo, recipient, sender, publicationType, payload) -> {
+                (to, sender, payload) -> {
                     received.set((Integer)payload, (Integer)payload);
                     return null;
                 };
@@ -275,7 +272,7 @@ public abstract class DispatcherTest {
 
         for (int i = 0; i < 100; i++) {
             var address = new Address("service-" + i, "topic-" + i);
-            dispatcher.publish(address, Subject.getAnonymous(), Subject.getAnonymous(), i);
+            dispatcher.publish(address, Subject.getAnonymous(), new Publication(i));
         }
         for (int i = 0; i < 100; i++) {
             assertEquals(i, received.get(i));

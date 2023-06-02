@@ -7,5 +7,6 @@ public class AeronDispatcher extends ParallelDispatcher {
 
     public AeronDispatcher() {
 
+        super(1);
     }
 }

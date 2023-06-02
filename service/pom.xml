@@ -10,12 +10,37 @@
         <artifactId>useful</artifactId>
     </parent>
 
-    <artifactId>service</artifactId>
-    <description>Useful service utilities</description>
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <artifactId>service</artifactId>
+    <packaging>jar</packaging>
+
+    <name>Useful service utilities</name>
+    <description>Useful service utilities</description>
+
+    <licenses>
+        <license>
+            <name>Apache License 2.0 (Apache-2.0)</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.html</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>loudsight</name>
+            <email>spam@loudsight.com</email>
+            <organization>Loudsight</organization>
+            <organizationUrl>https://loudsight.com</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git@github.com:loudsight/useful.git</connection>
+        <developerConnection>scm:git@github.com:loudsight/useful.git</developerConnection>
+        <url>git@github.com:loudsight/useful.git</url>
+    </scm>
 
      <dependencies>
          <dependency>
@@ -26,26 +51,15 @@
          <dependency>
              <groupId>com.loudsight.useful</groupId>
              <artifactId>entity</artifactId>
-             <version>${project.version}</version>
          </dependency>
          <dependency>
              <groupId>com.loudsight.useful</groupId>
              <artifactId>helper</artifactId>
-             <version>${project.version}</version>
          </dependency>
          <dependency>
              <groupId>com.loudsight.useful</groupId>
              <artifactId>string</artifactId>
-             <version>${project.version}</version>
          </dependency>
-
-         <!-- dependency>
-            <groupId>com.loudsight.utilities-unpublished</groupId>
-            <artifactId>test-unpublished</artifactId>
-            <type>test-jar</type>
-            <version>${loudsight.utilities.version}</version>
-            <scope>test</scope>
-        </dependency -->
 
          <dependency>
              <groupId>org.springframework</groupId>
@@ -59,14 +73,6 @@
              <scope>test</scope>
          </dependency>
 
-         <!-- dependency>
-             <groupId>com.loudsight.utilities-unpublished</groupId>
-             <artifactId>entity-unpublished</artifactId>
-             <version>${loudsight.utilities.version}</version>
-             <type>test-jar</type>
-             <scope>test</scope>
-         </dependency -->
-
          <dependency>
              <groupId>com.loudsight</groupId>
              <artifactId>simple-pojo</artifactId>
@@ -74,6 +80,6 @@
              <type>test-jar</type>
              <scope>test</scope>
          </dependency>
-
      </dependencies>
+
 </project>

@@ -4,18 +4,14 @@ import com.loudsight.useful.entity.permission.Subject;
 import com.loudsight.useful.service.dispatcher.bridge.BridgeMessageType;
 
 public interface Dispatcher {
-        String BRIDGE_RETURN = "bridgeMessage";
-    
+    String BRIDGE_RETURN = "bridgeMessage";
 
     interface Subscription<Q, A> {
         long getId();
 
         A onEvent(Address to,
-                  Address replyTo,
-                  Subject recipient,
                   Subject sender,
-                  Q payload,
-                  BridgeMessageType publicationType);
+                  Publication payload);
 //               
 
         void unsubscribe();
@@ -34,18 +30,13 @@ public interface Dispatcher {
 
     <Q, A> Subscription<Q, A> bridge(Address to, MessageHandler<Q, A> handler);
 
-    <Q, A> void publishAsync(Address to,
-                      Subject recipient,
-                      Subject publisher,
-                      Object payload,
-                      MessageHandler<Q, A> handler);
+    <Q, A> void publishAsync(Address to, Publication payload, MessageHandler<Q, A> handler);
     void publish(Address to,
-                 Subject recipient,
                  Subject publisher,
-                 Object payload,
+                 Publication payload,
                  BridgeMessageType publicationType);
 
-    default void publish(Address to, Subject recipient, Subject publisher, Object payload) {
-        publish(to, recipient, publisher, payload, BridgeMessageType.DIRECT);
+    default void publish(Address to, Subject publisher, Publication payload) {
+        publish(to, publisher, payload, BridgeMessageType.DIRECT);
     }
 }
