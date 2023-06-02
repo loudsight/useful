@@ -13,7 +13,7 @@ public class Publication {
     private final Object payload;
     BridgeMessageType publicationType;
 
-    Publication(
+    public Publication(
             Address to,
             Address replyTo,
             Subject recipient,
@@ -27,6 +27,11 @@ public class Publication {
         this.sender = sender;
         this.payload = payload;
         this.publicationType = publicationType;
+    }
+
+
+    public Publication(Object payload) {
+        this(null, null, null, null, payload, null);
     }
 
     public Address getTo() {

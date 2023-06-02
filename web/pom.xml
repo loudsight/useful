@@ -14,21 +14,33 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <version>0-SNAPSHOT</version>
     <artifactId>web</artifactId>
     <packaging>jar</packaging>
 
-    <description>Useful service utilities</description>
-    <url>https://loudsight.com/</url>
+    <name>Useful web utilities</name>
+    <description>Useful web utilities</description>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
+    <licenses>
+        <license>
+            <name>Apache License 2.0 (Apache-2.0)</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.html</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>loudsight</name>
+            <email>spam@loudsight.com</email>
+            <organization>Loudsight</organization>
+            <organizationUrl>https://loudsight.com</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git@github.com:loudsight/useful.git</connection>
+        <developerConnection>scm:git@github.com:loudsight/useful.git</developerConnection>
+        <url>git@github.com:loudsight/useful.git</url>
+    </scm>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -138,18 +150,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    <profiles>
-        <profile>
-            <id>js-compile</id>
-            <properties>
-                <js.artifact.name>useful-web</js.artifact.name>
-            </properties>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <dependencies>
-            </dependencies>
-        </profile>
-    </profiles>
-
 </project>

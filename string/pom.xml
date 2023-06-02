@@ -19,7 +19,6 @@
 
     <name>Useful string utilities</name>
     <description>Useful string utilities</description>
-    <url>https://loudsight.com/</url>
 
     <licenses>
         <license>
@@ -38,17 +37,8 @@
     </developers>
 
     <scm>
-        <connection>scm:git@github.com:loudsight/synergisms.git</connection>
-        <developerConnection>scm:git@github.com:loudsight/synergisms.git</developerConnection>
-        <url>git@github.com:loudsight/synergisms.git</url>
+        <connection>scm:git@github.com:loudsight/useful.git</connection>
+        <developerConnection>scm:git@github.com:loudsight/useful.git</developerConnection>
+        <url>git@github.com:loudsight/useful.git</url>
     </scm>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 </project>
