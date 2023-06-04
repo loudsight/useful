@@ -5,6 +5,7 @@ import com.loudsight.useful.service.TimeProvider;
 import com.loudsight.useful.service.dispatcher.Address;
 import com.loudsight.useful.service.dispatcher.Dispatcher;
 import com.loudsight.useful.service.dispatcher.Publication;
+import com.loudsight.useful.service.dispatcher.Topic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +20,11 @@ import java.util.concurrent.Executors;
  * @author  Munya M.
  */
 public class TickPublisher implements AutoCloseable {
-    public static final Address ONE_SECOND_TICK = new Address("com.loudsight.useful.service.publisher.TickPublisher", "ONE_SECOND_TICK");
+    public static final Topic<Object, Long> ONE_SECOND_TICK = new Topic<>(
+            new Address("com.loudsight.useful.service.publisher.TickPublisher", "ONE_SECOND_TICK"),
+            Object.class,
+            Long.class
+    );
 
     private volatile boolean isOpen = true;
     Dispatcher dispatcher;
@@ -46,7 +51,7 @@ public class TickPublisher implements AutoCloseable {
 
         while (isOpen) {
             if ((currentTimeMillis - startTime) % 1000 == 0) {
-                dispatcher.publish(ONE_SECOND_TICK, null, new Publication(currentTimeMillis));
+                dispatcher.publish(ONE_SECOND_TICK, null, currentTimeMillis);
             } else {
                 Thread.yield();
             }

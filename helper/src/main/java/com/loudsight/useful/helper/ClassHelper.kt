@@ -1,6 +1,5 @@
 package com.loudsight.useful.helper
 
-
 class ClassHelper {
     /**
      * Method to cast a given type to an arbitrary type. The small size of the method means it will likely be in-lined
