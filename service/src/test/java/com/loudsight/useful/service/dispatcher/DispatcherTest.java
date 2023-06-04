@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 import java.util.function.Consumer;
 
-import static com.loudsight.useful.service.dispatcher.Address.WILDCARD_ADDRESS;
+import static com.loudsight.useful.service.dispatcher.Topic.WILDCARD_ADDRESS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public abstract class DispatcherTest {
@@ -56,7 +56,7 @@ public abstract class DispatcherTest {
 
     protected abstract Dispatcher getClientDispatcher();
 
-    protected void setupAddresses(Address serverAddress, Address clientAddress) { };
+    protected <Q, A> void setupAddresses(Topic<Q, A> serverAddress, Address clientAddress) { };
 
     protected Dispatcher getServerDispatcher() {
         return getClientDispatcher();
@@ -92,7 +92,7 @@ public abstract class DispatcherTest {
         Dispatcher clientDispatcher = getClientDispatcher();
 
         MessageHandler<SimpleEntity, SimpleEntity> asyncHandler =
-                (to, sender, payload) -> {
+                (sender, payload) -> {
                     var q = (SimpleEntity) payload;
                     received.accept(q);
 
@@ -104,16 +104,13 @@ public abstract class DispatcherTest {
                 };
 
         Dispatcher serverDispatcher = getServerDispatcher();
-        Address serverAddress = new Address(SERVER_ADDRESS.getScope(), "" + id.incrementAndGet());
+        var serverAddress = new Topic<>(SERVER_ADDRESS.scope(), "" + id.incrementAndGet(),
+                SimpleEntity.class,
+                SimpleEntity.class);
         setupAddresses(serverAddress, CLIENT_ADDRESS);
         var subscription = serverDispatcher.subscribe(serverAddress, asyncHandler);
 
-        clientDispatcher.publishAsync(serverAddress, new Publication(sent), (to,
-                                                                             sender,
-                                                                             payload) -> {
-            replied.accept((SimpleEntity) payload);
-            return null;
-        });
+        clientDispatcher.publishAsync(serverAddress, sent, replied::accept);
 
         var result = received.getResult(5, TimeUnit.SECONDS);
         assertEquals(sent.getId(), result.getId());
@@ -209,7 +206,7 @@ public abstract class DispatcherTest {
             replyLatch.countDown();
         });
 
-        dispatcher.publish(new Address("Test", "Q::class"), Subject.getAnonymous(), new Publication(sent));
+        dispatcher.publish(new Topic<>("Test", "Q::class", SimpleEntity.class, Void.class), null, sent);
 
         replyLatch.await(15, TimeUnit.SECONDS);
 
@@ -241,15 +238,17 @@ public abstract class DispatcherTest {
         var received = new Listener<SelfReferencingEntity>();
 
         MessageHandler<SimpleEntity, SimpleEntity> handler =
-                (to, sender, payload) -> {
+                (sender, payload) -> {
             received.accept((SelfReferencingEntity) payload);
             return null;
         };
-        Address serverAddress = new Address(SERVER_ADDRESS.getScope(), "" + id.incrementAndGet());
+        var serverAddress = new Topic<>(SERVER_ADDRESS.scope(), "" + id.incrementAndGet(),
+                SimpleEntity.class,
+                SimpleEntity.class);
         setupAddresses(serverAddress, CLIENT_ADDRESS);
         var subscription = serverDispatcher.subscribe(serverAddress, handler);
         delay(500);
-        clientDispatcher.publish(serverAddress, ANONYMOUS, new Publication(sent));
+        clientDispatcher.publish(serverAddress, ANONYMOUS, sent);
 
         var result = received.getResult(15, TimeUnit.SECONDS);
 
@@ -262,17 +261,17 @@ public abstract class DispatcherTest {
         Dispatcher dispatcher = new SerialDispatcher();
         var received = new AtomicReferenceArray<Integer>(100);
 
-        MessageHandler<Integer, Object> handler =
-                (to, sender, payload) -> {
+        MessageHandler<Object, Object> handler =
+                (sender, payload) -> {
                     received.set((Integer)payload, (Integer)payload);
                     return null;
                 };
 
-        dispatcher.<Integer, Object>subscribe(WILDCARD_ADDRESS, handler);
+        dispatcher.subscribe(WILDCARD_ADDRESS, handler);
 
         for (int i = 0; i < 100; i++) {
-            var address = new Address("service-" + i, "topic-" + i);
-            dispatcher.publish(address, Subject.getAnonymous(), new Publication(i));
+            var address = new Topic<>("service-" + i, "topic-" + i, Integer.class, Integer.class);
+            dispatcher.publish(address, Subject.getAnonymous(), i);
         }
         for (int i = 0; i < 100; i++) {
             assertEquals(i, received.get(i));
