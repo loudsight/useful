@@ -4,7 +4,6 @@ import com.loudsight.useful.service.NamedThreadFactory;
 import com.loudsight.useful.service.TimeProvider;
 import com.loudsight.useful.service.dispatcher.Address;
 import com.loudsight.useful.service.dispatcher.Dispatcher;
-import com.loudsight.useful.service.dispatcher.Publication;
 import com.loudsight.useful.service.dispatcher.Topic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
