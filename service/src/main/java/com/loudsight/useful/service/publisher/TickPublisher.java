@@ -19,10 +19,10 @@ import java.util.concurrent.Executors;
  * @author  Munya M.
  */
 public class TickPublisher implements AutoCloseable {
-    public static final Topic<Object, Long> ONE_SECOND_TICK = new Topic<>(
+    public static final Topic<Long, Object> ONE_SECOND_TICK = new Topic<>(
             new Address("com.loudsight.useful.service.publisher.TickPublisher", "ONE_SECOND_TICK"),
-            Object.class,
-            Long.class
+            Long.class,
+            Object.class
     );
 
     private volatile boolean isOpen = true;
