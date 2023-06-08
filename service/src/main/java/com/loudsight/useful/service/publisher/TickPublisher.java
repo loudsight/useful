@@ -1,12 +1,11 @@
 package com.loudsight.useful.service.publisher;
 
+import com.loudsight.useful.helper.logging.LoggingHelper;
 import com.loudsight.useful.service.NamedThreadFactory;
 import com.loudsight.useful.service.TimeProvider;
 import com.loudsight.useful.service.dispatcher.Address;
 import com.loudsight.useful.service.dispatcher.Dispatcher;
 import com.loudsight.useful.service.dispatcher.Topic;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -27,7 +26,7 @@ public class TickPublisher implements AutoCloseable {
     private volatile boolean isOpen = true;
     Dispatcher dispatcher;
     TimeProvider timeProvider;
-    private static final Logger logger = LoggerFactory.getLogger(TickPublisher.class);
+    private static final LoggingHelper logger = LoggingHelper.wrap(TickPublisher.class);
     private final long startTime;
     ExecutorService executor;
         public TickPublisher(Dispatcher dispatcher,
