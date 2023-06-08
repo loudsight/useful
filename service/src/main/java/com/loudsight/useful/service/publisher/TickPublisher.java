@@ -44,7 +44,7 @@ public class TickPublisher implements AutoCloseable {
 
     private void execute() {
         var currentTimeMillis = timeProvider.millisNow();
-        logger.debug("-Tick produced at " + currentTimeMillis);
+        logger.logDebug("-Tick produced at " + currentTimeMillis);
 
         while (isOpen) {
             if ((currentTimeMillis - startTime) % 1000 == 0) {
