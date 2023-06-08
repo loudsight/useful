@@ -12,9 +12,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * This class provides a basic implementation of the {@link Publisher} interface
- * A publisher listens for subscription requests on a known address and send publications to the addresses
- * specified by subscribers in their subscription requests
+ * This class provides a basic implementation of the a 'Tick Publisher'
+ * The publisher produces ticks on fixed addresses
  *
  * @author  Munya M.
  */
@@ -46,7 +45,7 @@ public class TickPublisher implements AutoCloseable {
 
     private void execute() {
         var currentTimeMillis = timeProvider.millisNow();
-        logger.debug("-execute $currentTimeMillis ${subscribers.values}");
+        logger.debug("-Tick produced at " + currentTimeMillis);
 
         while (isOpen) {
             if ((currentTimeMillis - startTime) % 1000 == 0) {
