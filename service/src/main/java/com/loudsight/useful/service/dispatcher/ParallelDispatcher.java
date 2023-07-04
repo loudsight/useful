@@ -1,6 +1,7 @@
 package com.loudsight.useful.service.dispatcher;
 
 import com.loudsight.meta.MetaRepository;
+import com.loudsight.meta.Pair;
 import com.loudsight.useful.entity.permission.Subject;
 import com.loudsight.useful.helper.ClassHelper;
 import com.loudsight.useful.service.NamedThreadFactory;
@@ -18,10 +19,10 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 public class ParallelDispatcher implements Dispatcher {
-    private static final List<Subscription<?, ?>> EMPTY_LIST = new ArrayList<>();
+    private static final List<Subscription<?, ?, ?>> EMPTY_LIST = new ArrayList<>();
     private final ExecutorService executorService;
     private long replyId = 0L;
-    private final Map<Topic, List<Subscription<?, ?>>> openSubscriptions = new HashMap<>();
+    private final Map<Topic, List<Subscription<?, ?, ?>>> openSubscriptions = new HashMap<>();
     private final List<Long> closedSubscriptions = new ArrayList<>();
     private final AtomicLong idCount = new AtomicLong();
 
@@ -34,31 +35,32 @@ public class ParallelDispatcher implements Dispatcher {
     public ParallelDispatcher(int workCount) {
         this.executorService = Executors.newFixedThreadPool(workCount, new NamedThreadFactory("ParallelDispatcher"));
     }
+
     @Override
-    public  <Q, A> void publish(Topic<Q, A> topic,
-                                  Subject publisher,
-                                  Q payload) {
+    public <P, Q, A> void publish(Topic<P, Q, A> topic,
+                               Subject publisher,
+                               Q payload) {
         publish(topic, Topic.NO_REPLY, publisher, payload, BridgeMessageType.DIRECT);
     }
 
-    protected <Q, A> void publish(Topic<Q, A> topic,
-                        Subject publisher,
-                        Q payload,
-                        BridgeMessageType publicationType) {
+    protected <P, Q, A> void publish(Topic<P, Q, A> topic,
+                                  Subject publisher,
+                                  Q payload,
+                                  BridgeMessageType publicationType) {
         publish(topic, Topic.NO_REPLY, publisher, payload, publicationType);
     }
 
-    private <Q, A>  void publish(Topic<?, ?> topic,
-                                 Topic<?, ?> replyTo,
-                         Subject publisher,
-                         Q publication,
-                 BridgeMessageType publicationType) {
-executorService.submit(() -> {
+    private <P, Q, A> void publish(Topic<?, ?, ?> topic,
+                                Topic<?, ?, ?> replyTo,
+                                Subject publisher,
+                                Q publication,
+                                BridgeMessageType publicationType) {
+        executorService.submit(() -> {
 
-});
+        });
 //        println("publishing: topic=$topic publication=$publication")
 
-        List<Subscription<?, ?>> subscriptions = new ArrayList<>();
+        List<Subscription<?, ?, ?>> subscriptions = new ArrayList<>();
         subscriptions.addAll(openSubscriptions.getOrDefault(topic, EMPTY_LIST));
         subscriptions.addAll(openSubscriptions.getOrDefault(Topic.WILDCARD_ADDRESS, EMPTY_LIST));
         var openSubscriptionsIt = subscriptions.iterator();
@@ -87,7 +89,7 @@ executorService.submit(() -> {
 
                 if (response != Dispatcher.BRIDGE_RETURN) {
                     Object res = (response == null) ? NullValue.INSTANCE : response;
-                    publish((Topic)replyTo, publisher, res, publicationType);
+                    publish((Topic) replyTo, publisher, res, publicationType);
                 }
             } else {
                 it.onEvent(
@@ -111,19 +113,19 @@ executorService.submit(() -> {
 
 
     @Override
-    public <Q, A> Subscription<Q, A> subscribe(Topic<Q, A> topic, MessageHandler<Q, A> handler) {
+    public <P, Q, A> Subscription<P, Q, A> subscribe(Topic<P, Q, A> topic, MessageHandler<Q, A> handler) {
         return newSubscription(topic, handler, false);
     }
 
     @Override
-    public <Q, A> Subscription<Q, A> bridge(Topic<Q, A> topic, MessageHandler<Q, A> handler) {
+    public <P, Q, A> Subscription<P, Q, A> bridge(Topic<P, Q, A> topic, MessageHandler<Q, A> handler) {
         return newSubscription(topic, handler, true);
     }
 
-    private <Q, A> Subscription<Q, A> newSubscription(Topic<Q, A> topic, MessageHandler<Q, A> handler, Boolean isBridged
+    private <P, Q, A> Subscription<P, Q, A> newSubscription(Topic<P, Q, A> topic, MessageHandler<Q, A> handler, Boolean isBridged
     ) {
-        class SubscriptionHolder implements Subscription<Q, A> {
-            final List<Subscription<?, ?>> subscriptionList = openSubscriptions.compute(topic, (k, v) -> new ArrayList<>());
+        class SubscriptionHolder implements Subscription<P, Q, A> {
+            final List<Subscription<?, ?, ?>> subscriptionList = openSubscriptions.compute(topic, (k, v) -> new ArrayList<>());
             private final long id = idCount.getAndIncrement();
 //
 //            init {
@@ -172,14 +174,15 @@ executorService.submit(() -> {
 
 
     @Override
-    public <Q, A> void publishAsync(Topic<Q, A> to,
+    public <P, Q, A> void publishAsync(Topic<P, Q, A> to,
                                     Q payload,
                                     Consumer<A> handler) {
-        AtomicReference<Subscription<?, ?>> subscriptionHolder = new AtomicReference<>();
+        AtomicReference<Subscription<?, ?, ?>> subscriptionHolder = new AtomicReference<>();
         // Establish response subscription
         var replyTo =
-                new Topic<>("com.loudsight.utilities.service.dispatcher.ParallelDispatcher.publishAsync",
-                        "" + replyId++, to.responseType(), NullValue.class);
+                new Topic<>(ParallelDispatcher.class,
+                        to.responseType(), NullValue.class,
+                        List.of(Pair.of("id", "publishAsync" + replyId++)));
 
         var subscription = this.subscribe(replyTo, new MessageHandler<A, NullValue>() {
             @Override

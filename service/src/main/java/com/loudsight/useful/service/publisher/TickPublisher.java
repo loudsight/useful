@@ -3,7 +3,6 @@ package com.loudsight.useful.service.publisher;
 import com.loudsight.useful.helper.logging.LoggingHelper;
 import com.loudsight.useful.service.NamedThreadFactory;
 import com.loudsight.useful.service.TimeProvider;
-import com.loudsight.useful.service.dispatcher.Address;
 import com.loudsight.useful.service.dispatcher.Dispatcher;
 import com.loudsight.useful.service.dispatcher.Topic;
 
@@ -17,8 +16,8 @@ import java.util.concurrent.Executors;
  * @author  Munya M.
  */
 public class TickPublisher implements AutoCloseable {
-    public static final Topic<Long, Object> ONE_SECOND_TICK = new Topic<>(
-            new Address("com.loudsight.useful.service.publisher.TickPublisher", "ONE_SECOND_TICK"),
+    public static final Topic<TickPublisher, Long, Object> ONE_SECOND_TICK = new Topic<>(
+            TickPublisher.class,
             Long.class,
             Object.class
     );
