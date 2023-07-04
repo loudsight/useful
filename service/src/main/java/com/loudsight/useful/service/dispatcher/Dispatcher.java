@@ -7,15 +7,15 @@ import java.util.function.Consumer;
 public interface Dispatcher {
     String BRIDGE_RETURN = "bridgeMessage";
 
-    <Q, A> Subscription<Q, A> bridge(Topic<Q, A> topic, MessageHandler<Q, A> handler);
+    <P, Q, A> Subscription<P, Q, A> bridge(Topic<P, Q, A> topic, MessageHandler<Q, A> handler);
 
-    <Q, A> void publishAsync(Topic<Q, A> topic, Q payload, Consumer<A> handler);
+    <P, Q, A> void publishAsync(Topic<P, Q, A> topic, Q payload, Consumer<A> handler);
 
-    <Q, A> Subscription<Q, A> subscribe(Topic<Q, A> topic, MessageHandler<Q, A> handler);
+    <P, Q, A> Subscription<P, Q, A> subscribe(Topic<P, Q, A> topic, MessageHandler<Q, A> handler);
 
-    <Q, A> void publish(Topic<Q, A> topic, Subject publisher, Q payload);
+    <P, Q, A> void publish(Topic<P, Q, A> topic, Subject publisher, Q payload);
 
-//    default <Q, A> void publish(Topic<Q, A> topic, Subject publisher, Publication payload) {
+//    default <P, Q, A> void publish(Topic<P, Q, A> topic, Subject publisher, Publication payload) {
 //        publish(to, publisher, payload, BridgeMessageType.DIRECT);
 //    }
 }

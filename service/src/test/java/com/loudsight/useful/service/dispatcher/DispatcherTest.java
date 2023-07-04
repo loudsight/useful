@@ -1,6 +1,7 @@
 package com.loudsight.useful.service.dispatcher;
 
 import com.loudsight.meta.MetaRepository;
+import com.loudsight.meta.Pair;
 import com.loudsight.meta.entity.SimpleEntity;
 import com.loudsight.meta.entity.SelfReferencingEntity;
 import com.loudsight.useful.entity.permission.Subject;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -56,7 +58,7 @@ public abstract class DispatcherTest {
 
     protected abstract Dispatcher getClientDispatcher();
 
-    protected <Q, A> void setupAddresses(Topic<Q, A> serverAddress, Address clientAddress) { };
+    protected <P, Q, A> void setupAddresses(Topic<P, Q, A> serverAddress, Address clientAddress) { };
 
     protected Dispatcher getServerDispatcher() {
         return getClientDispatcher();
@@ -104,7 +106,7 @@ public abstract class DispatcherTest {
                 };
 
         Dispatcher serverDispatcher = getServerDispatcher();
-        var serverAddress = new Topic<>(SERVER_ADDRESS.scope(), "" + id.incrementAndGet(),
+        var serverAddress = new Topic<>(Object.class,
                 SimpleEntity.class,
                 SimpleEntity.class);
         setupAddresses(serverAddress, CLIENT_ADDRESS);
@@ -206,7 +208,7 @@ public abstract class DispatcherTest {
             replyLatch.countDown();
         });
 
-        dispatcher.publish(new Topic<>("Test", "Q::class", SimpleEntity.class, Void.class), null, sent);
+        dispatcher.publish(new Topic<>(Object.class, SimpleEntity.class, Void.class), null, sent);
 
         replyLatch.await(15, TimeUnit.SECONDS);
 
@@ -242,9 +244,11 @@ public abstract class DispatcherTest {
             received.accept((SelfReferencingEntity) payload);
             return null;
         };
-        var serverAddress = new Topic<>(SERVER_ADDRESS.scope(), "" + id.incrementAndGet(),
+        var serverAddress = new Topic<>(
+                Object.class,
                 SimpleEntity.class,
-                SimpleEntity.class);
+                SimpleEntity.class,
+                List.of(new Pair<>("scope", id.incrementAndGet())));
         setupAddresses(serverAddress, CLIENT_ADDRESS);
         var subscription = serverDispatcher.subscribe(serverAddress, handler);
         delay(500);
@@ -270,7 +274,7 @@ public abstract class DispatcherTest {
         dispatcher.subscribe(WILDCARD_ADDRESS, handler);
 
         for (int i = 0; i < 100; i++) {
-            var address = new Topic<>("service-" + i, "topic-" + i, Integer.class, Integer.class);
+            var address = new Topic<>(DispatcherTest.class, Integer.class, Integer.class, "service", i, "topic", i);
             dispatcher.publish(address, Subject.getAnonymous(), i);
         }
         for (int i = 0; i < 100; i++) {
