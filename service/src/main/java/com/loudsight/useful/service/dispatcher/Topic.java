@@ -21,7 +21,7 @@ public record Topic<P, I, O>(
                 zip(properties));
     }
 
-    private static Map<Object, Object> zip(Object[] elements) {
+    private static Map<Object, Object> zip(Object... elements) {
         var map = new HashMap<>();
         for (int i = 0; i < elements.length/2; i+=2) {
             map.put(elements[i], elements[i + 1]);
