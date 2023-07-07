@@ -7,6 +7,7 @@ import com.loudsight.meta.entity.SelfReferencingEntity;
 import com.loudsight.useful.entity.permission.Subject;
 import com.loudsight.useful.helper.logging.LoggingHelper;
 import com.loudsight.useful.service.Listener;
+import com.loudsight.useful.service.publisher.TopicFactory;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -262,7 +263,8 @@ public abstract class DispatcherTest {
 
     @Test
     public void testWildCardSubscription() {
-        Dispatcher dispatcher = new SerialDispatcher();
+        TopicFactory topicFactory = new TopicFactory(MetaRepository.INSTANCE);
+        Dispatcher dispatcher = new SerialDispatcher(topicFactory);
         var received = new AtomicReferenceArray<Integer>(100);
 
         MessageHandler<Object, Object> handler =
@@ -281,6 +283,8 @@ public abstract class DispatcherTest {
             assertEquals(i, received.get(i));
         }
     }
+
+
 
     @Test
     public void eventBusConcurrentRequests() {

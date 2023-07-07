@@ -7,6 +7,7 @@ import com.loudsight.useful.helper.ClassHelper;
 import com.loudsight.useful.service.NamedThreadFactory;
 import com.loudsight.useful.service.dispatcher.bridge.BridgeMessageType;
 import com.loudsight.useful.service.dispatcher.bridge.BridgeMessageTypeMeta;
+import com.loudsight.useful.service.publisher.TopicFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,6 +22,8 @@ import java.util.function.Consumer;
 public class ParallelDispatcher implements Dispatcher {
     private static final List<Subscription<?, ?, ?>> EMPTY_LIST = new ArrayList<>();
     private final ExecutorService executorService;
+
+    TopicFactory topicFactory;
     private long replyId = 0L;
     private final Map<Topic, List<Subscription<?, ?, ?>>> openSubscriptions = new HashMap<>();
     private final List<Long> closedSubscriptions = new ArrayList<>();
@@ -32,8 +35,13 @@ public class ParallelDispatcher implements Dispatcher {
         MetaRepository.INSTANCE.register(PublicationMeta.getInstance());
     }
 
-    public ParallelDispatcher(int workCount) {
-        this.executorService = Executors.newFixedThreadPool(workCount, new NamedThreadFactory("ParallelDispatcher"));
+    public ParallelDispatcher(TopicFactory topicFactory, int workerCount) {
+        this.topicFactory = topicFactory;
+        this.executorService = Executors.newFixedThreadPool(workerCount, new NamedThreadFactory("ParallelDispatcher"));
+    }
+
+    public ParallelDispatcher(TopicFactory topicFactory) {
+        this(topicFactory, Runtime.getRuntime().availableProcessors() / 2);
     }
 
     @Override
