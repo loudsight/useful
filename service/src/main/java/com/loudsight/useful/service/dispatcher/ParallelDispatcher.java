@@ -1,7 +1,7 @@
 package com.loudsight.useful.service.dispatcher;
 
 import com.loudsight.meta.MetaRepository;
-import com.loudsight.meta.Pair;
+import com.loudsight.collection.Pair;
 import com.loudsight.useful.entity.permission.Subject;
 import com.loudsight.useful.helper.ClassHelper;
 import com.loudsight.useful.service.NamedThreadFactory;
@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
-public class ParallelDispatcher implements Dispatcher {
+public class ParallelDispatcher implements Dispatcher, AutoCloseable {
     private static final List<Subscription<?, ?, ?>> EMPTY_LIST = new ArrayList<>();
     private final ExecutorService executorService;
 
@@ -30,9 +30,9 @@ public class ParallelDispatcher implements Dispatcher {
     private final AtomicLong idCount = new AtomicLong();
 
     static {
-        MetaRepository.INSTANCE.register(AddressMeta.getInstance());
-        MetaRepository.INSTANCE.register(BridgeMessageTypeMeta.getInstance());
-        MetaRepository.INSTANCE.register(PublicationMeta.getInstance());
+        MetaRepository.getInstance().register(AddressMeta.getInstance());
+        MetaRepository.getInstance().register(BridgeMessageTypeMeta.getInstance());
+        MetaRepository.getInstance().register(PublicationMeta.getInstance());
     }
 
     public ParallelDispatcher(TopicFactory topicFactory, int workerCount) {
@@ -46,27 +46,31 @@ public class ParallelDispatcher implements Dispatcher {
 
     @Override
     public <P, Q, A> void publish(Topic<P, Q, A> topic,
-                               Subject publisher,
-                               Q payload) {
+                                  Subject publisher,
+                                  Q payload) {
         publish(topic, Topic.NO_REPLY, publisher, payload, BridgeMessageType.DIRECT);
     }
 
     protected <P, Q, A> void publish(Topic<P, Q, A> topic,
-                                  Subject publisher,
-                                  Q payload,
-                                  BridgeMessageType publicationType) {
+                                     Subject publisher,
+                                     Q payload,
+                                     BridgeMessageType publicationType) {
         publish(topic, Topic.NO_REPLY, publisher, payload, publicationType);
     }
 
     private <P, Q, A> void publish(Topic<?, ?, ?> topic,
-                                Topic<?, ?, ?> replyTo,
-                                Subject publisher,
-                                Q publication,
-                                BridgeMessageType publicationType) {
-        executorService.submit(() -> {
+                                   Topic<?, ?, ?> replyTo,
+                                   Subject publisher,
+                                   Q publication,
+                                   BridgeMessageType publicationType) {
+        processPublications(topic, replyTo, publisher, publication, publicationType);
+    }
 
-        });
-//        println("publishing: topic=$topic publication=$publication")
+    protected <Q> void processPublications(Topic<?, ?, ?> topic,
+                                           Topic<?, ?, ?> replyTo,
+                                           Subject publisher,
+                                           Q publication,
+                                           BridgeMessageType publicationType) {
 
         List<Subscription<?, ?, ?>> subscriptions = new ArrayList<>();
         subscriptions.addAll(openSubscriptions.getOrDefault(topic, EMPTY_LIST));
@@ -85,14 +89,14 @@ public class ParallelDispatcher implements Dispatcher {
             if (it.isBridged()) {
                 it.onEvent(
                         publisher,
-                        ClassHelper.Companion.uncheckedCast(publication)
+                        ClassHelper.uncheckedCast(publication)
                 );
             } else if (publication == Dispatcher.BRIDGE_RETURN) {
 
             } else if (replyTo != Topic.NO_REPLY) {
                 var response = it.onEvent(
                         publisher,
-                        ClassHelper.Companion.uncheckedCast(publication)
+                        ClassHelper.uncheckedCast(publication)
                 );
 
                 if (response != Dispatcher.BRIDGE_RETURN) {
@@ -102,7 +106,7 @@ public class ParallelDispatcher implements Dispatcher {
             } else {
                 it.onEvent(
                         publisher,
-                        ClassHelper.Companion.uncheckedCast(publication)
+                        ClassHelper.uncheckedCast(publication)
                 );
             }
             if (!it.isActive()) {
@@ -111,14 +115,6 @@ public class ParallelDispatcher implements Dispatcher {
             }
         }
     }
-
-////    override fun <Q, A> subscribe(topic: Dispatcher.Topic, handler: Consumer<A>): Dispatcher.Subscription {
-////        return subscribe(topic, Function<Object, A?> { o ->
-////            handler.accept(o as A)
-////            null
-////        })
-////    }
-
 
     @Override
     public <P, Q, A> Subscription<P, Q, A> subscribe(Topic<P, Q, A> topic, MessageHandler<Q, A> handler) {
@@ -183,8 +179,8 @@ public class ParallelDispatcher implements Dispatcher {
 
     @Override
     public <P, Q, A> void publishAsync(Topic<P, Q, A> to,
-                                    Q payload,
-                                    Consumer<A> handler) {
+                                       Q payload,
+                                       Consumer<A> handler) {
         AtomicReference<Subscription<?, ?, ?>> subscriptionHolder = new AtomicReference<>();
         // Establish response subscription
         var replyTo =
@@ -192,16 +188,18 @@ public class ParallelDispatcher implements Dispatcher {
                         to.responseType(), NullValue.class,
                         List.of(Pair.of("id", "publishAsync" + replyId++)));
 
-        var subscription = this.subscribe(replyTo, new MessageHandler<A, NullValue>() {
-            @Override
-            public NullValue onMessage(Subject sender, A payload) {
-                subscriptionHolder.get().unsubscribe();
-                handler.accept(payload);
+        var subscription = this.subscribe(replyTo, (sender, payload1) -> {
+            subscriptionHolder.get().unsubscribe();
+            handler.accept(payload1);
 
-                return NullValue.INSTANCE;
-            }
+            return NullValue.INSTANCE;
         });
         subscriptionHolder.set(subscription);
         publish(to, replyTo, null, payload, BridgeMessageType.DIRECT_ASYNC);
+    }
+
+    @Override
+    public void close() throws Exception {
+        executorService.shutdown();
     }
 }

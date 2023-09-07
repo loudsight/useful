@@ -28,4 +28,12 @@ public record Topic<P, I, O>(
         }
         return map;
     }
+
+    public <T> T getProperty(String key) {
+        return (T) properties.get(key);
+    }
+
+    public <T> T getPropertyOrDefault(String key, T defaultValue) {
+        return (T) properties.getOrDefault(key, defaultValue);
+    }
 }

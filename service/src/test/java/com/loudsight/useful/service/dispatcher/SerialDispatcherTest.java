@@ -5,16 +5,17 @@ import com.loudsight.useful.service.publisher.TopicFactory;
 
 public class SerialDispatcherTest extends DispatcherTest {
 
-    private static final TopicFactory topicFactory = new TopicFactory(MetaRepository.INSTANCE);
-    private static final Dispatcher dispatcherValue = new SerialDispatcher(topicFactory);
+    private final TopicFactory topicFactory = new TopicFactory(MetaRepository.getInstance());
+    private final Dispatcher dispatcherValue = new SerialDispatcher(topicFactory);
 
     @Override
     protected MetaRepository getMetaRepository() {
-        return MetaRepository.INSTANCE;
+        return MetaRepository.getInstance();
     }
 
     @Override
     protected Dispatcher getClientDispatcher() {
         return dispatcherValue;
     }
+
 }
