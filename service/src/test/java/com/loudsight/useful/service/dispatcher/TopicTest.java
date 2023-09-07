@@ -11,7 +11,7 @@ public class TopicTest {
 
     @Test
     public void verifyTopicsCanBeDifferentiatedUsingProperties() {
-        var topicFactory = new TopicFactory(MetaRepository.INSTANCE);
+        var topicFactory = new TopicFactory(MetaRepository.getInstance());
 
         var simpleEntityTopic = topicFactory.create(
                 TopicTest.class,

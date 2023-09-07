@@ -1,13 +1,12 @@
 package com.loudsight.useful.service.dispatcher;
 
 import com.loudsight.meta.MetaRepository;
-import com.loudsight.meta.Pair;
+import com.loudsight.collection.Pair;
 import com.loudsight.meta.entity.SimpleEntity;
 import com.loudsight.meta.entity.SelfReferencingEntity;
 import com.loudsight.useful.entity.permission.Subject;
 import com.loudsight.useful.helper.logging.LoggingHelper;
 import com.loudsight.useful.service.Listener;
-import com.loudsight.useful.service.publisher.TopicFactory;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +16,6 @@ import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.concurrent.atomic.AtomicReferenceArray;
 import java.util.function.Consumer;
 
 import static com.loudsight.useful.service.dispatcher.Topic.WILDCARD_ADDRESS;
@@ -263,13 +261,12 @@ public abstract class DispatcherTest {
 
     @Test
     public void testWildCardSubscription() {
-        TopicFactory topicFactory = new TopicFactory(MetaRepository.INSTANCE);
-        Dispatcher dispatcher = new SerialDispatcher(topicFactory);
-        var received = new AtomicReferenceArray<Integer>(100);
+        Dispatcher dispatcher = getClientDispatcher();
+        var received = new Listener<Integer>();
 
         MessageHandler<Object, Object> handler =
                 (sender, payload) -> {
-                    received.set((Integer)payload, (Integer)payload);
+                    received.accept((Integer)payload);
                     return null;
                 };
 
@@ -280,7 +277,7 @@ public abstract class DispatcherTest {
             dispatcher.publish(address, Subject.getAnonymous(), i);
         }
         for (int i = 0; i < 100; i++) {
-            assertEquals(i, received.get(i));
+            assertEquals(i, received.getResult());
         }
     }
 
