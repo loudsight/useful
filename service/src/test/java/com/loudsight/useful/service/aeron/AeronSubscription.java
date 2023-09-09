@@ -6,8 +6,8 @@ import com.loudsight.useful.service.dispatcher.Subscription;
 import com.loudsight.useful.service.dispatcher.Topic;
 import io.aeron.FragmentAssembler;
 import io.aeron.logbuffer.FragmentHandler;
-import kotlin.collections.ByteIterator;
 
+import java.util.Iterator;
 import java.util.function.Consumer;
 
 public record AeronSubscription<P, Q, A>(
@@ -43,7 +43,7 @@ public record AeronSubscription<P, Q, A>(
     public boolean poll(Consumer<A> publicationHandler) {
         FragmentHandler handler = (bytes, offset, length, header) -> {
             var publication = EntityTransform.<A>deserialize(
-                    new ByteIterator() {
+                    new Iterator<>() {
                         int index = offset;
 
                         @Override
@@ -52,7 +52,7 @@ public record AeronSubscription<P, Q, A>(
                         }
 
                         @Override
-                        public byte nextByte() {
+                        public Byte next() {
                             var it = bytes.getByte(index);
                             index++;
                             return it;
