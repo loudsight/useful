@@ -94,6 +94,10 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.loudsight</groupId>
+            <artifactId>helper</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.loudsight.useful</groupId>
             <artifactId>helper</artifactId>
         </dependency>
