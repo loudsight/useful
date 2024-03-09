@@ -9,7 +9,7 @@ public class Publication {
     private final Address to;
     private final Address replyTo;
     private final Subject recipient;
-    private final Subject sender;
+    private Subject sender;
     private final Object payload;
     BridgeMessageType publicationType;
 
@@ -48,6 +48,10 @@ public class Publication {
 
     public Subject getSender() {
         return sender;
+    }
+
+    public void setSender(Subject sender) {
+        this.sender = sender;
     }
 
     public Object getPayload() {
