@@ -6,12 +6,12 @@ import com.loudsight.useful.web.AuthenticationListener;
 import com.loudsight.useful.web.handler.CustomAuthenticationSuccessHandler;
 import com.loudsight.useful.web.handler.CustomOAuth2AccessTokenResponseBodyExtractor;
 import com.loudsight.useful.web.handler.CustomServerLogoutSuccessHandler;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.config.web.server.ServerHttpSecurity.CsrfSpec;
 import org.springframework.security.core.userdetails.MapReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,9 +26,6 @@ import java.util.List;
 //@EnableReactiveMethodSecurity
 public class SecurityConfig {
     private static final LoggingHelper logger = LoggingHelper.wrap(SecurityConfig.class);
-
-    @Autowired
-    ReactiveClientRegistrationRepository clientRegistrationRepository;
 
     @Bean
     public MapReactiveUserDetailsService userDetailsService() {
@@ -54,11 +51,12 @@ public class SecurityConfig {
     @Bean
     public SecurityWebFilterChain configure(ServerHttpSecurity http,
                                             ServerSecurityContextRepository serverSecurityContextRepository,
-                                            @Qualifier("unsecuredPaths") List<String> unsecuredPaths/*,
+                                            @Qualifier("unsecuredPaths") List<String> unsecuredPaths,
+                                            ReactiveClientRegistrationRepository clientRegistrationRepository/*,
                                             X forwardedHeaderFilter*/
     ) {
         return http
-                .csrf().disable()
+                .csrf(CsrfSpec::disable)
 //                .addFilterAt(forwardedHeaderFilter::filter,
 //                        SecurityWebFiltersOrder.AUTHENTICATION)
                 .authorizeExchange((authorize) -> authorize
@@ -67,7 +65,7 @@ public class SecurityConfig {
                 )
                 .oauth2Login(oauth2LoginCustomizer(serverSecurityContextRepository))
                 .formLogin().authenticationSuccessHandler(customAuthenticationSuccessHandler())
-                .and().logout().logoutSuccessHandler(customServerLogoutSuccessHandler())
+                .and().logout().logoutSuccessHandler(customServerLogoutSuccessHandler(clientRegistrationRepository))
                 .and().oauth2Client(Customizer.withDefaults())
                 .build();
     }
@@ -87,7 +85,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public CustomServerLogoutSuccessHandler customServerLogoutSuccessHandler() {
+    public CustomServerLogoutSuccessHandler customServerLogoutSuccessHandler(ReactiveClientRegistrationRepository clientRegistrationRepository) {
         return new CustomServerLogoutSuccessHandler(authenticationListener(), clientRegistrationRepository);
     }
 
