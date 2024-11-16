@@ -1,4 +1,4 @@
-package com.loudsight.useful.web.utils;
+package com.loudsight.web.utils;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;

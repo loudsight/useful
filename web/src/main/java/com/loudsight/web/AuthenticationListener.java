@@ -1,4 +1,4 @@
-package com.loudsight.useful.web;
+package com.loudsight.web;
 
 import java.util.function.Consumer;
 
