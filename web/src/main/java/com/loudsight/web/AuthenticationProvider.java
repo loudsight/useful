@@ -1,4 +1,4 @@
-package com.loudsight.useful.web;
+package com.loudsight.web;
 
 /**
  * Supported social login methods

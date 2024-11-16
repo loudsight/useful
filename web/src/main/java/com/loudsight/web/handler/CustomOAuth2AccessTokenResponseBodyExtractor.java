@@ -1,4 +1,4 @@
-package com.loudsight.useful.web.handler;
+package com.loudsight.web.handler;
 
 import com.nimbusds.oauth2.sdk.*;
 import com.nimbusds.oauth2.sdk.token.AccessToken;

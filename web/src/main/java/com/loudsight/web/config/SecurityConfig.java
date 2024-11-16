@@ -1,11 +1,11 @@
-package com.loudsight.useful.web.config;
+package com.loudsight.web.config;
 
 import com.loudsight.useful.helper.logging.LoggingHelper;
-import com.loudsight.useful.web.AuthenticationEvent;
-import com.loudsight.useful.web.AuthenticationListener;
-import com.loudsight.useful.web.handler.CustomAuthenticationSuccessHandler;
-import com.loudsight.useful.web.handler.CustomOAuth2AccessTokenResponseBodyExtractor;
-import com.loudsight.useful.web.handler.CustomServerLogoutSuccessHandler;
+import com.loudsight.web.AuthenticationEvent;
+import com.loudsight.web.AuthenticationListener;
+import com.loudsight.web.handler.CustomAuthenticationSuccessHandler;
+import com.loudsight.web.handler.CustomOAuth2AccessTokenResponseBodyExtractor;
+import com.loudsight.web.handler.CustomServerLogoutSuccessHandler;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.Customizer;

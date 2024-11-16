@@ -1,9 +1,9 @@
-package com.loudsight.useful.web.handler;
+package com.loudsight.web.handler;
 
-import com.loudsight.useful.web.AuthenticationEvent;
-import com.loudsight.useful.web.AuthenticationListener;
-import com.loudsight.useful.web.AuthenticationProvider;
-import com.loudsight.useful.web.utils.SecurityUtils;
+import com.loudsight.web.AuthenticationEvent;
+import com.loudsight.web.AuthenticationListener;
+import com.loudsight.web.AuthenticationProvider;
+import com.loudsight.web.utils.SecurityUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.server.DefaultServerRedirectStrategy;
 import org.springframework.security.web.server.ServerRedirectStrategy;
