@@ -1,21 +1,23 @@
 package com.loudsight.useful.entity.utils;
 
+import com.loudsight.useful.helper.logging.LoggingHelper;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.function.BiFunction;
-import java.util.function.BinaryOperator;
 
 public class PropertiesToYamlConverter {
+    private static final LoggingHelper LOGGER = LoggingHelper.wrap(PropertiesToYamlConverter.class);
 
     public static void main(String[] args) {
         // Specify the input and output file paths
-        String propertiesFilePath = "c:/dev/code/victory2025/webapps/backendserver/src/main/config/application.properties";
-        String yamlFilePath = "config.yaml";
+        String propertiesFilePath = "c:/dev/code/victory2025/webapps/backendserver/src/main/config/loudsight.net.properties";
+        String yamlFilePath = "c:/dev/code/victory2025/webapps/backendserver/src/main/config/loudsight.net.yaml";
 
         try {
             // Convert properties file to Map
@@ -27,10 +29,9 @@ public class PropertiesToYamlConverter {
             // Save Map to YAML file
             saveYaml(propertiesMapOfMap, yamlFilePath);
 
-            System.out.println("Conversion complete! YAML file saved as: " + yamlFilePath);
+            LOGGER.logInfo("Conversion complete! YAML file saved as: {}", yamlFilePath);
         } catch (IOException e) {
-            System.err.println("Error during conversion: " + e.getMessage());
-            e.printStackTrace();
+            LOGGER.logError("Error during conversion", e);
         }
     }
 
@@ -48,8 +49,8 @@ public class PropertiesToYamlConverter {
                 to.compute(x[0], (m, n) -> {
                     if (n == null) {
                         n = new HashMap<>();
-                        propertiesToMapOfMaps(x[1], v, (Map)n);
                     }
+                    propertiesToMapOfMaps(x[1], v, (Map)n);
                     return n;
                 });
             } else {
