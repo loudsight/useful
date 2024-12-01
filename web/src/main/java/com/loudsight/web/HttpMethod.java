@@ -1,5 +1,5 @@
-package com.loudsight.useful.web
+package com.loudsight.web;
 
-enum class HttpMethod {
+enum HttpMethod {
     GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS, TRACE
 }
