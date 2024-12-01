@@ -47,7 +47,7 @@ public class TickPublisher implements AutoCloseable {
 
         while (isOpen) {
             if ((currentTimeMillis - startTime) % 1000 == 0) {
-                dispatcher.publish(ONE_SECOND_TICK, null, currentTimeMillis);
+                dispatcher.publish(ONE_SECOND_TICK, currentTimeMillis);
             } else {
                 Thread.yield();
             }

@@ -1,22 +1,21 @@
 package com.loudsight.useful.service.dispatcher;
 
+import com.loudsight.helper.ClassHelper;
 import com.loudsight.meta.MetaRepository;
-import com.loudsight.collection.Pair;
 import com.loudsight.meta.entity.SimpleEntity;
 import com.loudsight.meta.entity.SelfReferencingEntity;
+import com.loudsight.meta.serialization.transform.JvmTransforms;
 import com.loudsight.useful.entity.permission.Subject;
 import com.loudsight.useful.helper.logging.LoggingHelper;
 import com.loudsight.useful.service.Listener;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
-import java.util.List;
+import java.util.Map;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import static com.loudsight.useful.service.dispatcher.Topic.WILDCARD_ADDRESS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -30,6 +29,7 @@ public abstract class DispatcherTest {
     private static volatile boolean isRunning = true;
 
     static {
+        JvmTransforms.init(); // FIXME
 
 //        new Thread(() -> {
 //            Thread.currentThread().setDaemon(true);
@@ -57,7 +57,7 @@ public abstract class DispatcherTest {
 
     protected abstract Dispatcher getClientDispatcher();
 
-    protected <P, Q, A> void setupAddresses(Topic<P, Q, A> serverAddress, Address clientAddress) { };
+    protected <P, Q, A> void setupAddresses(Topic<P, Q, A> serverAddress, Address clientAddress) {  };
 
     protected Dispatcher getServerDispatcher() {
         return getClientDispatcher();
@@ -92,14 +92,13 @@ public abstract class DispatcherTest {
         sent.setId(123);
         Dispatcher clientDispatcher = getClientDispatcher();
 
-        MessageHandler<SimpleEntity, SimpleEntity> asyncHandler =
-                (sender, payload) -> {
-                    var q = (SimpleEntity) payload;
-                    received.accept(q);
+        Function<SimpleEntity, SimpleEntity> asyncHandler =
+                (payload) -> {
+                    received.accept(payload);
 
                     var reply = new SimpleEntity();
                     reply.setName("b");
-                    reply.setId(q.getId() + 123);
+                    reply.setId(payload.getId() + 123);
 
                     return reply;
                 };
@@ -207,7 +206,7 @@ public abstract class DispatcherTest {
             replyLatch.countDown();
         });
 
-        dispatcher.publish(new Topic<>(Object.class, SimpleEntity.class, Void.class), null, sent);
+        dispatcher.publish(new Topic<>(Object.class, SimpleEntity.class, Void.class), sent);
 
         replyLatch.await(15, TimeUnit.SECONDS);
 
@@ -225,7 +224,7 @@ public abstract class DispatcherTest {
 
     void testPublishSubscribe(MetaRepository clientMetaRepository,
                               Dispatcher clientDispatcher,
-                              Dispatcher serverDispatcher) throws Exception {
+                              Dispatcher serverDispatcher) {
         var aMeta = clientMetaRepository.getMeta(SelfReferencingEntity.class);
 
         var sent = new SelfReferencingEntity(new SelfReferencingEntity(null));
@@ -238,20 +237,20 @@ public abstract class DispatcherTest {
         reply.setId(sent.getId() + 123);
         var received = new Listener<SelfReferencingEntity>();
 
-        MessageHandler<SimpleEntity, SimpleEntity> handler =
-                (sender, payload) -> {
-            received.accept((SelfReferencingEntity) payload);
+        Function<SimpleEntity, SimpleEntity> handler =
+                (payload) -> {
+            received.accept(ClassHelper.uncheckedCast(payload));
             return null;
         };
         var serverAddress = new Topic<>(
                 Object.class,
                 SimpleEntity.class,
                 SimpleEntity.class,
-                List.of(new Pair<>("scope", id.incrementAndGet())));
+                Map.of("scope", id.incrementAndGet()));
         setupAddresses(serverAddress, CLIENT_ADDRESS);
         var subscription = serverDispatcher.subscribe(serverAddress, handler);
         delay(500);
-        clientDispatcher.publish(serverAddress, ANONYMOUS, sent);
+        clientDispatcher.publish(serverAddress, sent);
 
         var result = received.getResult(15, TimeUnit.SECONDS);
 
@@ -264,8 +263,8 @@ public abstract class DispatcherTest {
         Dispatcher dispatcher = getClientDispatcher();
         var received = new Listener<Integer>();
 
-        MessageHandler<Object, Object> handler =
-                (sender, payload) -> {
+        Function<Object, Object> handler =
+                (payload) -> {
                     received.accept((Integer)payload);
                     return null;
                 };
@@ -273,8 +272,8 @@ public abstract class DispatcherTest {
         dispatcher.subscribe(WILDCARD_ADDRESS, handler);
 
         for (int i = 0; i < 100; i++) {
-            var address = new Topic<>(DispatcherTest.class, Integer.class, Integer.class, "service", i, "topic", i);
-            dispatcher.publish(address, Subject.getAnonymous(), i);
+            var address = new Topic<>(DispatcherTest.class, Integer.class, Integer.class, Map.of("service", i, "topic", i));
+            dispatcher.publish(address, i);
         }
         for (int i = 0; i < 100; i++) {
             assertEquals(i, received.getResult());

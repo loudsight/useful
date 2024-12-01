@@ -1,21 +1,21 @@
 package com.loudsight.useful.service.dispatcher;
 
-import com.loudsight.useful.entity.permission.Subject;
-
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public interface Dispatcher {
-    String BRIDGE_RETURN = "bridgeMessage";
 
-    <P, Q, A> Subscription<P, Q, A> bridge(Topic<P, Q, A> topic, MessageHandler<Q, A> handler);
+    <P, Q, A> Subscription<P, Q, A> subscribe(Topic<P, Q, A> requestTopic, Topic<P, A, ?> responseTopic, Function<Q, A> handler);
+
+    default <P, Q, A> Subscription<P, Q, A> subscribe(Topic<P, Q, A> requestTopic, Function<Q, A> handler) {
+        return subscribe(requestTopic, null, handler);
+    }
+
+    <P, Q, A> void publish(Topic<P, Q, A> requestTopic, Topic<?, A, ?> responseTopic, Q payload);
+
+    default <P, Q, A> void publish(Topic<P, Q, A> requestTopic, Q payload) {
+        publish(requestTopic, null, payload);
+    }
 
     <P, Q, A> void publishAsync(Topic<P, Q, A> topic, Q payload, Consumer<A> handler);
-
-    <P, Q, A> Subscription<P, Q, A> subscribe(Topic<P, Q, A> topic, MessageHandler<Q, A> handler);
-
-    <P, Q, A> void publish(Topic<P, Q, A> topic, Subject publisher, Q payload);
-
-//    default <P, Q, A> void publish(Topic<P, Q, A> topic, Subject publisher, Publication payload) {
-//        publish(to, publisher, payload, BridgeMessageType.DIRECT);
-//    }
 }
