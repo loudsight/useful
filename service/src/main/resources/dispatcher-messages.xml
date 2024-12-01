@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sbe:messageSchema xmlns:sbe="http://fixprotocol.io/2016/sbe"
+                   package="com.loudsight.example.aeron.protocol"
+                   id="1"
+                   version="2"
+                   semanticVersion="0.1"
+                   description=""
+                   byteOrder="littleEndian">
+    <types>
+        <composite name="messageHeader" description="Message identifiers and length of message root">
+            <type name="blockLength" primitiveType="uint16"/>
+            <type name="templateId" primitiveType="uint16"/>
+            <type name="schemaId" primitiveType="uint16"/>
+            <type name="version" primitiveType="uint16"/>
+        </composite>
+        <type name="guid" primitiveType="uint8" length="16"/>
+        <type name="timestamp" primitiveType="uint64" sinceVersion="2"/>
+        <composite name="varData">
+            <type name="length" primitiveType="uint16" maxValue="1048576"/>
+            <type name="bytes" primitiveType="uint8" length="1048576" characterEncoding="UTF-8"/>
+        </composite>
+    </types>
+
+    <sbe:message name="ExampleMessage" id="2" description="Example">
+        <field name="id" type="uint32" id="1" />
+        <field name="payload" id="3" type="varData" />
+    </sbe:message>
+
+</sbe:messageSchema>

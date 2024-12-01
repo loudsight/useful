@@ -1,11 +1,9 @@
 package com.loudsight.useful.service.dispatcher;
 
-import com.loudsight.useful.entity.permission.Subject;
-
 public interface Subscription<P, Q, A> {
         long getId();
 
-        A onEvent(Subject sender, Q payload);
+        A onEvent(Envelope envelope);
 
         void unsubscribe();
 

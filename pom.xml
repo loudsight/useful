@@ -46,6 +46,7 @@
     <modules>
         <module>entity</module>
         <module>helper</module>
+        <module>ping-pong</module>
         <module>service</module>
         <module>string</module>
         <module>web</module>

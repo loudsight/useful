@@ -14,11 +14,11 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <artifactId>service</artifactId>
+    <artifactId>ping-pong</artifactId>
     <packaging>jar</packaging>
 
-    <name>Useful service utilities</name>
-    <description>Useful service utilities</description>
+    <name>Useful ping-pong utilities</name>
+    <description>Useful ping-pong utilities</description>
 
     <licenses>
         <license>
@@ -66,6 +66,12 @@
          </dependency>
 
          <dependency>
+             <groupId>io.aeron</groupId>
+             <artifactId>aeron-all</artifactId>
+         </dependency>
+
+
+         <dependency>
              <groupId>org.springframework</groupId>
              <artifactId>spring-context</artifactId>
              <scope>test</scope>
@@ -88,66 +94,10 @@
 
     <build>
         <plugins>
-<!--
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>3.5.0</version>
-                <executions>
-                    <execution>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <includeProjectDependencies>false</includeProjectDependencies>
-                    <includePluginDependencies>true</includePluginDependencies>
-                    <mainClass>uk.co.real_logic.sbe.SbeTool</mainClass>
-                    <systemProperties>
-                        <systemProperty>
-                            <key>sbe.output.dir</key>
-                            <value>${project.build.directory}/generated-sources/sbe</value>
-                        </systemProperty>
-                    </systemProperties>
-                    <arguments>
-                        <argument>${project.build.resources[0].directory}/dispatcher-messages.xml</argument>
-                    </arguments>
-                    <workingDirectory>${project.build.directory}/generated-sources/sbe</workingDirectory>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>uk.co.real-logic</groupId>
-                        <artifactId>sbe-tool</artifactId>
-                        <version>${sbe.tool.version}</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
--->
-<!--
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>add-source</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>add-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>${project.build.directory}/generated-sources/sbe/</source>
-                            </sources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
--->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.1.0</version>
                 <configuration>
                     <argLine>--add-opens=java.base/sun.nio.ch=ALL-UNNAMED</argLine>
                 </configuration>

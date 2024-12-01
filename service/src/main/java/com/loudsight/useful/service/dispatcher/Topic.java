@@ -1,39 +1,42 @@
 package com.loudsight.useful.service.dispatcher;
 
-import java.util.HashMap;
+import com.loudsight.meta.annotation.Introspect;
+
+import java.util.Collections;
 import java.util.Map;
 
+@Introspect(clazz = Topic.class)
 public record Topic<P, I, O>(
         Class<P> publisher,
         Class<I> requestType,
         Class<O> responseType,
-        Map<Object, Object> properties) {
+        Map<String, Object> properties) {
 
-    public static Topic<?, ?, ?> NO_REPLY = new Topic<>(Object.class, Void.class, Void.class);
+    public static Topic<?, ?, ?> NO_REPLY = new Topic<>(Object.class, Void.class, Void.class, Collections.emptyMap());
     public static Topic<Object, Object, Object> WILDCARD_ADDRESS =
             new Topic<>(Object.class, Object.class, Object.class);
 
-    public Topic(Class<P> publisherClass, Class<I> requestType, Class<O> responseType, Object... properties) {
+    public Topic(Class<P> publisherClass, Class<I> requestType, Class<O> responseType) {
         this(
                 publisherClass,
                 requestType,
                 responseType,
-                zip(properties));
+                Collections.emptyMap());
     }
 
-    public static Map<Object, Object> zip(Object... elements) {
-        var map = new HashMap<>();
-        for (int i = 0; i < elements.length/2; i+=2) {
-            map.put(elements[i], elements[i + 1]);
-        }
-        return map;
+//    public static Map<Object, Object> zip(Object... elements) {
+//        var map = new HashMap<>();
+//        for (int i = 0; i < elements.length/2; i+=2) {
+//            map.put(elements[i], elements[i + 1]);
+//        }
+//        return map;
+//    }
+
+    public Object getProperty(String key) {
+        return properties.get(key);
     }
 
-    public <T> T getProperty(String key) {
-        return (T) properties.get(key);
-    }
-
-    public <T> T getPropertyOrDefault(String key, T defaultValue) {
-        return (T) properties.getOrDefault(key, defaultValue);
+    public <T> T getPropertyOrDefault(String key, Object defaultValue) {
+        return (T)properties.getOrDefault(key, defaultValue);
     }
 }
