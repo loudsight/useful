@@ -45,4 +45,11 @@ public class LoggingHelper {
             logger.error(log, params);
         }
     }
+
+    public void logError(String log, Throwable t) {
+        if (logger.isErrorEnabled()) {
+            logger.error(log, t);
+        }
+    }
+
 }

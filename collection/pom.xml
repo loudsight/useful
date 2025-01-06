@@ -10,8 +10,14 @@
         <artifactId>useful</artifactId>
     </parent>
 
-    <artifactId>string</artifactId>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <artifactId>collection</artifactId>
     <packaging>jar</packaging>
-    <name>Useful string utilities</name>
-    <description>Useful string utilities</description>
+
+    <name>Useful collection utilities</name>
+    <description>Useful collection utilities</description>
+
 </project>
