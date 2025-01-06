@@ -45,6 +45,7 @@
     </scm>
     <modules>
         <module>entity</module>
+        <module>collection</module>
         <module>helper</module>
         <module>ping-pong</module>
         <module>service</module>
@@ -63,9 +64,16 @@
         <dependency>
             <groupId>com.loudsight.meta</groupId>
             <artifactId>entity-meta-processor</artifactId>
-            <version>0-SNAPSHOT</version>
+            <version>0.0.2-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.loudsight.meta</groupId>
+            <artifactId>entity-meta-generator-lib</artifactId>
+            <version>0.0.2-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
 </project>
 

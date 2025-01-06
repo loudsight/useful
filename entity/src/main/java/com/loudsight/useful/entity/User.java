@@ -6,8 +6,8 @@ import com.loudsight.useful.entity.permission.Subject;
 @Introspect(clazz = User.class)
 public class User extends Subject {
 
-    public User(String name, String email) {
-        super(email, name);
+    public User(String name, String id) {
+        super(id, name);
     }
 
     public static boolean isAnonymous(User user) {
