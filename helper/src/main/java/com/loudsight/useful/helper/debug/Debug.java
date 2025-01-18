@@ -16,11 +16,10 @@ public class Debug {
      *
      * @return
      */
+    private static final RuntimeMXBean runtimeMXBean = ManagementFactory.getRuntimeMXBean();
+    private static final List<String> inputArguments = runtimeMXBean.getInputArguments();
 
     public static boolean isInDebugger() {
-        RuntimeMXBean runtimeMXBean = ManagementFactory.getRuntimeMXBean();
-        List<String> inputArguments = runtimeMXBean.getInputArguments();
-
         return inputArguments.toString().contains("-agentlib:jdwp");
     }
 }
