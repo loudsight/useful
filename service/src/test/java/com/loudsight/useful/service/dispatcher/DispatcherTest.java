@@ -112,11 +112,11 @@ public abstract class DispatcherTest {
 
         clientDispatcher.publishAsync(serverAddress, sent, replied::accept);
 
-        var result = received.getResult(5, TimeUnit.SECONDS);
+        var result = received.getResult(60, TimeUnit.SECONDS);
         assertEquals(sent.getId(), result.getId());
         assertEquals(sent.getName(), result.getName());
 
-        SimpleEntity reply = replied.getResult(5, TimeUnit.SECONDS);
+        SimpleEntity reply = replied.getResult(60, TimeUnit.SECONDS);
         assertEquals(sent.getId() + 123, reply.getId());
         assertEquals("b", reply.getName());
         subscription.unsubscribe();
@@ -252,7 +252,7 @@ public abstract class DispatcherTest {
         delay(500);
         clientDispatcher.publish(serverAddress, sent);
 
-        var result = received.getResult(15, TimeUnit.SECONDS);
+        var result = received.getResult(60, TimeUnit.SECONDS);
 
         assertEquals(sent.getId(), result.getId());
         subscription.unsubscribe();

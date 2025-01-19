@@ -10,7 +10,7 @@ public class Listener<T> implements Consumer<T> {
 
     private final Exchanger<T> results = new Exchanger<>();
     public T getResult() {
-        return getResult(10, TimeUnit.SECONDS);
+        return getResult(60, TimeUnit.SECONDS);
     }
 
     public T getResult(long timeout, TimeUnit unit) {
