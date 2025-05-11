@@ -9,32 +9,30 @@ import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.OAuth2AuthorizationException;
 import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AccessTokenResponse;
-import org.springframework.web.reactive.function.BodyExtractor;
-import org.springframework.web.reactive.function.BodyExtractors;
 import reactor.core.publisher.Mono;
 
 import java.util.*;
 
-public class CustomOAuth2AccessTokenResponseBodyExtractor implements BodyExtractor<Mono<OAuth2AccessTokenResponse>, ReactiveHttpInputMessage> {
+public class CustomOAuth2AccessTokenResponseBodyExtractor /*implements BodyExtractor<Mono<OAuth2AccessTokenResponse>, ReactiveHttpInputMessage>*/ {
     private static final ParameterizedTypeReference<Map<String, Object>> STRING_OBJECT_MAP = new ParameterizedTypeReference<>() {
     };
 
     public CustomOAuth2AccessTokenResponseBodyExtractor() {
     }
 
-    @Override
-    public Mono<OAuth2AccessTokenResponse> extract(ReactiveHttpInputMessage inputMessage, Context context) {
-        BodyExtractor<Mono<Map<String, Object>>, ReactiveHttpInputMessage> delegate = BodyExtractors
-                .toMono(STRING_OBJECT_MAP);
-        return delegate.extract(inputMessage, context)
-                .onErrorMap((ex) -> new OAuth2AuthorizationException(
-                        invalidTokenResponse("An error occurred parsing the Access Token response: " + ex.getMessage()),
-                        ex))
-                .switchIfEmpty(Mono.error(() -> new OAuth2AuthorizationException(
-                        invalidTokenResponse("Empty OAuth 2.0 Access Token Response"))))
-                .map(CustomOAuth2AccessTokenResponseBodyExtractor::parse)
-                .flatMap(CustomOAuth2AccessTokenResponseBodyExtractor::oauth2AccessTokenResponse)
-                .map(CustomOAuth2AccessTokenResponseBodyExtractor::oauth2AccessTokenResponse);
+//    @Override
+    public /*Mono<OAuth2AccessTokenResponse>*/void extract(ReactiveHttpInputMessage inputMessage/*, Context context*/) {
+//        BodyExtractor<Mono<Map<String, Object>>, ReactiveHttpInputMessage> delegate = BodyExtractors
+//                .toMono(STRING_OBJECT_MAP);
+//        return delegate.extract(inputMessage, context)
+//                .onErrorMap((ex) -> new OAuth2AuthorizationException(
+//                        invalidTokenResponse("An error occurred parsing the Access Token response: " + ex.getMessage()),
+//                        ex))
+//                .switchIfEmpty(Mono.error(() -> new OAuth2AuthorizationException(
+//                        invalidTokenResponse("Empty OAuth 2.0 Access Token Response"))))
+//                .map(CustomOAuth2AccessTokenResponseBodyExtractor::parse)
+//                .flatMap(CustomOAuth2AccessTokenResponseBodyExtractor::oauth2AccessTokenResponse)
+//                .map(CustomOAuth2AccessTokenResponseBodyExtractor::oauth2AccessTokenResponse);
     }
 
 
