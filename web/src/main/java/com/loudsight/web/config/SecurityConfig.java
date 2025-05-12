@@ -92,11 +92,11 @@ public class SecurityConfig {
 //        return new CustomServerLogoutSuccessHandler(authenticationListener(), clientRegistrationRepository);
 //    }
 
-    Customizer<ServerHttpSecurity.OAuth2LoginSpec> oauth2LoginCustomizer(
-            ServerSecurityContextRepository serverSecurityContextRepository) {
-        return (oauth2Login) -> {
-            oauth2Login.securityContextRepository(serverSecurityContextRepository)
-                    .authenticationSuccessHandler(customAuthenticationSuccessHandler());
-        };
-    }
+//    Customizer<ServerHttpSecurity.OAuth2LoginSpec> oauth2LoginCustomizer(
+//            SecurityContextRepository serverSecurityContextRepository) {
+//        return (oauth2Login) -> {
+//            oauth2Login.securityContextRepository(serverSecurityContextRepository)
+//                    .authenticationSuccessHandler(customAuthenticationSuccessHandler());
+//        };
+//    }
 }
