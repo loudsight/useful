@@ -12,6 +12,8 @@ import java.util.Map;
 
 public class SLF4JLoggerInterceptor {
     
+    private static final LoggingHelper LOG = LoggingHelper.wrap(SLF4JLoggerInterceptor.class);
+    
     private static final Map<String, InterceptingAppender> interceptors = new ConcurrentHashMap<>();
     private static boolean globalInterceptionEnabled = false;
     
@@ -39,7 +41,7 @@ public class SLF4JLoggerInterceptor {
         rootLogger.addAppender(interceptor);
         
         globalInterceptionEnabled = true;
-        System.out.println("Global SLF4J log interception enabled");
+        LOG.logInfo("Global SLF4J log interception enabled");
     }
     
     /**
@@ -65,7 +67,7 @@ public class SLF4JLoggerInterceptor {
         logger.addAppender(interceptor);
         
         interceptors.put(loggerName, interceptor);
-        System.out.println("Interception enabled for logger: " + loggerName);
+        LOG.logInfo("Interception enabled for logger: " + loggerName);
     }
     
     /**
@@ -87,7 +89,7 @@ public class SLF4JLoggerInterceptor {
             
             logger.detachAppender(interceptor);
             interceptor.stop();
-            System.out.println("Interception disabled for logger: " + loggerName);
+            LOG.logInfo("Interception disabled for logger: " + loggerName);
         }
     }
     
@@ -103,7 +105,7 @@ public class SLF4JLoggerInterceptor {
             // Remove the global interceptor
             rootLogger.detachAppender("GLOBAL_INTERCEPTOR");
             globalInterceptionEnabled = false;
-            System.out.println("Global SLF4J log interception disabled");
+            LOG.logInfo("Global SLF4J log interception disabled");
         }
     }
     
@@ -114,9 +116,9 @@ public class SLF4JLoggerInterceptor {
         ILoggerFactory loggerFactory = LoggerFactory.getILoggerFactory();
         LoggerContext context = (LoggerContext) loggerFactory;
         
-        System.out.println("Registered loggers:");
+        LOG.logInfo("Registered loggers:");
         for (Logger logger : context.getLoggerList()) {
-            System.out.println("  - " + logger.getName() + " (Level: " + logger.getLevel() + ")");
+            LOG.logInfo("  - " + logger.getName() + " (Level: " + logger.getLevel() + ")");
         }
     }
     
@@ -134,7 +136,7 @@ public class SLF4JLoggerInterceptor {
             }
         }
         
-        System.out.println("Interception enabled for package: " + packageName);
+        LOG.logInfo("Interception enabled for package: " + packageName);
     }
     
     /**
@@ -164,14 +166,14 @@ public class SLF4JLoggerInterceptor {
             }
             
             // Your custom interception logic here
-            System.out.printf(
+            LOG.logInfo(
                     "[INTERCEPTED] %tF %<tT.%<tL [%s] %-5s %s - %s (Called from: %s)%n",
                 timestamp, threadName, level, loggerName, message, callerInfo
             );
             
             // Handle exceptions
             if (event.getThrowableProxy() != null) {
-                System.out.println("  Exception: " + event.getThrowableProxy().getMessage());
+                LOG.logInfo("  Exception: " + event.getThrowableProxy().getMessage());
             }
             
             // You can add custom logic here:
@@ -188,12 +190,12 @@ public class SLF4JLoggerInterceptor {
             // Example: Count errors per logger
             if ("ERROR".equals(event.getLevel().toString())) {
                 // Increment error counter for this logger
-                System.out.println("  >>> ERROR detected in " + event.getLoggerName());
+                LOG.logInfo("  >>> ERROR detected in " + event.getLoggerName());
             }
             
             // Example: Detect specific patterns
             if (event.getFormattedMessage().contains("SECURITY")) {
-                System.out.println("  >>> SECURITY-related log detected!");
+                LOG.logInfo("  >>> SECURITY-related log detected!");
             }
         }
     }
@@ -204,31 +206,31 @@ public class SLF4JLoggerInterceptor {
         enableGlobalLogInterception();
         
         // Test with different loggers
-        org.slf4j.Logger logger1 = LoggerFactory.getLogger("com.example.TestClass1");
-        org.slf4j.Logger logger2 = LoggerFactory.getLogger("com.example.TestClass2");
-        org.slf4j.Logger logger3 = LoggerFactory.getLogger(SLF4JLoggerInterceptor.class);
+        LoggingHelper logger1 = LoggingHelper.wrap("com.example.TestClass1");
+        LoggingHelper logger2 = LoggingHelper.wrap("com.example.TestClass2");
+        LoggingHelper logger3 = LoggingHelper.wrap(SLF4JLoggerInterceptor.class);
         
         // These will all be intercepted
-        logger1.info("This is an info message from TestClass1");
-        logger2.error("This is an error message from TestClass2");
-        logger3.debug("This is a debug message from SLF4JLoggerInterceptor");
-        logger1.warn("Warning with exception", new RuntimeException("Test exception"));
+        logger1.logInfo("This is an info message from TestClass1");
+        logger2.logError("This is an error message from TestClass2");
+        logger3.logDebug("This is a debug message from SLF4JLoggerInterceptor");
+        logger1.logWarn("Warning with exception", new RuntimeException("Test exception"));
         
         // List all loggers
-        System.out.println("\n" + "=".repeat(50));
+        LOG.logInfo("\n" + "=".repeat(50));
         listAllLoggers();
         
         // Test specific logger interception
-        System.out.println("\n" + "=".repeat(50));
+        LOG.logInfo("\n" + "=".repeat(50));
         disableGlobalLogInterception();
         enableLoggerInterception("com.example.TestClass1");
         
-        logger1.info("This will be intercepted (specific logger)");
-        logger2.info("This will NOT be intercepted");
+        logger1.logInfo("This will be intercepted (specific logger)");
+        logger2.logInfo("This will NOT be intercepted");
         
         // Test package interception
-        System.out.println("\n" + "=".repeat(50));
+        LOG.logInfo("\n" + "=".repeat(50));
         enablePackageInterception("com.example");
-        logger2.info("Now this will also be intercepted (package level)");
+        logger2.logInfo("Now this will also be intercepted (package level)");
     }
 }
