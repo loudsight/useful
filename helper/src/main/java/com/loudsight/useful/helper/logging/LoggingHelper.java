@@ -1,5 +1,7 @@
 package com.loudsight.useful.helper.logging;
 
+import com.loudsight.helper.ClassHelper;
+import com.loudsight.helper.JvmClassHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,6 +11,10 @@ public class LoggingHelper {
 
     private LoggingHelper(Logger logger) {
         this.logger = logger;
+    }
+
+    public static LoggingHelper wrap(String className) {
+        return wrap(JvmClassHelper.classForName(className));
     }
 
     public static LoggingHelper wrap(Class<?> clazz) {
