@@ -22,6 +22,7 @@ public class ExceptionHelper {
 //        }
 //    }
 
+    @FunctionalInterface
     public interface Function0<R, E extends Exception> {
         R apply() throws E;
     }
