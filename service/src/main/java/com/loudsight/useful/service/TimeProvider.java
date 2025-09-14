@@ -3,6 +3,7 @@ package com.loudsight.useful.service;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
+@FunctionalInterface
 public interface TimeProvider {
 
     LocalDateTime now();
