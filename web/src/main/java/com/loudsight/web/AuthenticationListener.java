@@ -2,6 +2,7 @@ package com.loudsight.web;
 
 import java.util.function.Consumer;
 
+@FunctionalInterface
 public interface AuthenticationListener extends Consumer<AuthenticationEvent> {
 
     /**
