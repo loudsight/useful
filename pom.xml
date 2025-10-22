@@ -49,7 +49,6 @@
         <module>helper</module>
         <module>service</module>
         <module>string</module>
-        <module>web</module>
     </modules>
     <build>
         <plugins>
