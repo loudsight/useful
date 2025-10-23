@@ -275,6 +275,7 @@ public abstract class DispatcherTest {
             var address = new Topic<>(DispatcherTest.class, Integer.class, Integer.class, Map.of("service", i, "topic", i));
             dispatcher.publish(address, i);
         }
+
         for (int i = 0; i < 100; i++) {
             assertEquals(i, received.getResult());
         }

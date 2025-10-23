@@ -7,10 +7,6 @@ import org.junit.jupiter.api.Disabled;
 @Disabled
 public class SerialDispatcherTest extends DispatcherTest {
 
-    static {
-        MetaRepository.getInstance().register(EnvelopeMeta.getInstance());
-        MetaRepository.getInstance().register(TopicMeta.getInstance());
-    }
     private final TopicFactory topicFactory = new TopicFactory(MetaRepository.getInstance());
     private final Dispatcher dispatcherValue = new SerialDispatcher(topicFactory);
 
