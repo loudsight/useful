@@ -163,7 +163,7 @@ public class ParallelDispatcher implements Dispatcher, AutoCloseable {
 
         var subscription = this.subscribe(replyTo, (payload1) -> {
             subscriptionHolder.get().unsubscribe();
-            handler.accept(payload1);
+            handler.accept(payload1 == NullValue.INSTANCE? null : payload1);
             return  null;
         });
         subscriptionHolder.set(subscription);
