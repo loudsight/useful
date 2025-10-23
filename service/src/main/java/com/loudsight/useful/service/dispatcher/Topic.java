@@ -6,13 +6,13 @@ import java.util.Collections;
 import java.util.Map;
 
 @Introspect(clazz = Topic.class)
-public record Topic<P, I, O>(
+public record Topic<P, I, O/* extends Response*/>(
         Class<P> publisher,
         Class<I> requestType,
         Class<O> responseType,
         Map<String, Object> properties) {
 
-    public static Topic<?, ?, ?> NO_REPLY = new Topic<>(Object.class, Void.class, Void.class, Collections.emptyMap());
+    public static Topic<?, ?, ?> NO_REPLY = new Topic<>(Object.class, Request.class, Response.class, Collections.emptyMap());
     public static Topic<Object, Object, Object> WILDCARD_ADDRESS =
             new Topic<>(Object.class, Object.class, Object.class);
 
