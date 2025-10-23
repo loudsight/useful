@@ -12,7 +12,7 @@ public record Topic<P, I, O/* extends Response*/>(
         Class<O> responseType,
         Map<String, Object> properties) {
 
-    public static Topic<?, ?, ?> NO_REPLY = new Topic<>(Object.class, Request.class, Response.class, Collections.emptyMap());
+    public static Topic<?, ?, ?> NO_REPLY = new Topic<>(Object.class, Object.class, Object.class, Collections.emptyMap());
     public static Topic<Object, Object, Object> WILDCARD_ADDRESS =
             new Topic<>(Object.class, Object.class, Object.class);
 

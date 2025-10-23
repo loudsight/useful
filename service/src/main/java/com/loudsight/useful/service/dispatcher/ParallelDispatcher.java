@@ -26,10 +26,6 @@ public class ParallelDispatcher implements Dispatcher, AutoCloseable {
     private final List<Long> closedSubscriptions = new ArrayList<>();
     private final AtomicLong idCount = new AtomicLong();
 
-    static {
-        MetaRepository.getInstance().register(AddressMeta.getInstance());
-    }
-
     public ParallelDispatcher(TopicFactory topicFactory, int workerCount) {
         this.topicFactory = topicFactory;
         this.executorService = Executors.newFixedThreadPool(workerCount, new NamedThreadFactory("ParallelDispatcher"));
