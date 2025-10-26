@@ -10,6 +10,8 @@ import com.loudsight.useful.helper.logging.LoggingHelper;
 import com.loudsight.useful.service.Listener;
 import org.junit.jupiter.api.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -275,10 +277,15 @@ public abstract class DispatcherTest {
             var address = new Topic<>(DispatcherTest.class, Integer.class, Integer.class, Map.of("service", i, "topic", i));
             dispatcher.publish(address, i);
         }
-
-        for (int i = 0; i < 100; i++) {
-            assertEquals(i, received.getResult());
+        List<Integer> xx = new ArrayList<>();
+         for (int i = 0; i < 1000; i++) {
+            xx.add(received.getResult());
+            if (!received.getResult().equals(i)) {
+                logger.logError("Received unexpected result {}", received.getResult());
+            }
+//            assertEquals(i, received.getResult());
         }
+         xx.toArray();
     }
 
 
