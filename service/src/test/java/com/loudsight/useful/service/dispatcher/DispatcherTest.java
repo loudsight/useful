@@ -263,11 +263,17 @@ public abstract class DispatcherTest {
     @Test
     public void testWildCardSubscription() {
         Dispatcher dispatcher = getClientDispatcher();
-        var received = new Listener<Integer>();
+        var received = new Listener<List<Integer>>();
+        List<Integer> results = new ArrayList<>();
 
         Function<Object, Object> handler =
                 (payload) -> {
-                    received.accept((Integer)payload);
+                    results.add((Integer) payload);
+
+                    if (results.size() == 100) {
+                        received.accept(results);
+                    }
+
                     return null;
                 };
 
@@ -277,15 +283,10 @@ public abstract class DispatcherTest {
             var address = new Topic<>(DispatcherTest.class, Integer.class, Integer.class, Map.of("service", i, "topic", i));
             dispatcher.publish(address, i);
         }
-        List<Integer> xx = new ArrayList<>();
-         for (int i = 0; i < 1000; i++) {
-            xx.add(received.getResult());
-            if (!received.getResult().equals(i)) {
-                logger.logError("Received unexpected result {}", received.getResult());
-            }
-//            assertEquals(i, received.getResult());
-        }
-         xx.toArray();
+         for (int i = 0; i < 100; i++) {
+            received.getResult(); // blocks untils all results received
+            assertEquals(i, results.get(i));
+         }
     }
 
 
