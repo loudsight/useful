@@ -24,6 +24,8 @@ public record Topic<P, I, O/* extends Response*/>(
                 Collections.emptyMap());
     }
 
+    // TODO - Should equality should be based on assignability???
+
 //    public static Map<Object, Object> zip(Object... elements) {
 //        var map = new HashMap<>();
 //        for (int i = 0; i < elements.length/2; i+=2) {
