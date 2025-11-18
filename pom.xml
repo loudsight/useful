@@ -72,7 +72,10 @@
             <version>0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-
+        <dependency>
+            <groupId>com.loudsight</groupId>
+            <artifactId>basic-helper</artifactId>
+        </dependency>
     </dependencies>
 </project>
 

@@ -1,6 +1,6 @@
 package com.loudsight.useful.service.publisher;
 
-import com.loudsight.useful.helper.logging.LoggingHelper;
+import com.loudsight.helper.logging.LoggingHelper;
 import com.loudsight.useful.service.NamedThreadFactory;
 import com.loudsight.useful.service.TimeProvider;
 import com.loudsight.useful.service.dispatcher.Dispatcher;

@@ -1,12 +1,13 @@
 package com.loudsight.useful.entity.utils;
 
-import com.loudsight.useful.helper.logging.LoggingHelper;
+import com.loudsight.helper.logging.LoggingHelper;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -78,7 +79,7 @@ public class PropertiesToYamlConverter {
         Yaml yaml = new Yaml(options);
 
         // Write the Map as a YAML file
-        try (FileWriter writer = new FileWriter(yamlFilePath)) {
+        try (FileWriter writer = new FileWriter(yamlFilePath, Charset.defaultCharset())) {
             yaml.dump(propertiesMap, writer);
         }
     }
