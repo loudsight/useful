@@ -6,7 +6,7 @@ import com.loudsight.meta.entity.SimpleEntity;
 import com.loudsight.meta.entity.SelfReferencingEntity;
 import com.loudsight.meta.serialization.transform.JvmTransforms;
 import com.loudsight.useful.entity.permission.Subject;
-import com.loudsight.useful.helper.logging.LoggingHelper;
+import com.loudsight.helper.logging.LoggingHelper;
 import com.loudsight.useful.service.Listener;
 import org.junit.jupiter.api.*;
 
