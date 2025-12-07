@@ -12,6 +12,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <enable-meta-entity-generation>true</enable-meta-entity-generation>
     </properties>
 
     <groupId>com.loudsight.useful</groupId>
@@ -45,6 +46,7 @@
         <url>git@github.com:loudsight/utilities.git</url>
     </scm>
     <modules>
+        <module>pattern</module>
         <module>entity</module>
         <module>collection</module>
         <module>helper</module>
@@ -53,38 +55,39 @@
     </modules>
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>com.loudsight.meta</groupId>
-                            <artifactId>entity-meta-processor</artifactId>
-                            <version>0.0.1-SNAPSHOT</version>
-                        </path>
-                    </annotationProcessorPaths>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>enable-meta-entity-generation</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-compiler-plugin</artifactId>
+                            <version>3.14.0</version>
+                            <configuration>
+                                <release>${java.version}</release>
+                                <annotationProcessorPaths>
+                                    <path>
+                                        <groupId>com.loudsight.meta</groupId>
+                                        <artifactId>entity-meta-processor</artifactId>
+                                        <version>0.0.1-SNAPSHOT</version>
+                                    </path>
+                                </annotationProcessorPaths>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+    </profiles>
     <dependencies>
-        <dependency>
-            <groupId>com.loudsight.meta</groupId>
-            <artifactId>entity-meta-processor</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.loudsight.meta</groupId>
-            <artifactId>entity-meta-generator-lib</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.loudsight</groupId>
-            <artifactId>basic-helper</artifactId>
-        </dependency>
     </dependencies>
 </project>
 
