@@ -20,4 +20,12 @@
     <name>Useful collection utilities</name>
     <description>Useful collection utilities</description>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.loudsight.useful</groupId>
+            <artifactId>pattern</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
 </project>
