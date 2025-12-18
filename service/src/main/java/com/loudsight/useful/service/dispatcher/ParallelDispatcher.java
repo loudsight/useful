@@ -1,6 +1,6 @@
 package com.loudsight.useful.service.dispatcher;
 
-import com.loudsight.helper.ClassHelper;
+import com.loudsight.useful.helper.ClassHelper;
 import com.loudsight.meta.MetaRepository;
 import com.loudsight.useful.service.NamedThreadFactory;
 import com.loudsight.useful.service.publisher.TopicFactory;

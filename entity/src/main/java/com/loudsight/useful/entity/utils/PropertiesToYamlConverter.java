@@ -1,6 +1,6 @@
 package com.loudsight.useful.entity.utils;
 
-import com.loudsight.helper.logging.LoggingHelper;
+import com.loudsight.useful.helper.logging.LoggingHelper;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
