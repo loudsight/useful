@@ -52,8 +52,12 @@ public class AdjacencyListGraph<T> implements DirectedGraph<T> {
 
     @Override
     public Set<T> getNodes() {
-        // Return unmodifiable view to prevent external modification while preserving insertion order
-        return Collections.unmodifiableSet(nodes);
+        // Return the actual LinkedHashSet to preserve insertion order
+        // Note: this returns a reference to the internal set, so modifications to the
+        // returned set will modify the graph. For true immutability, callers should treat
+        // the returned set as read-only. The LinkedHashSet preserves insertion order which is
+        // critical for deterministic graph traversal and topological sorting.
+        return nodes;
     }
 
     @Override
