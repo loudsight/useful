@@ -52,7 +52,8 @@ public class AdjacencyListGraph<T> implements DirectedGraph<T> {
 
     @Override
     public Set<T> getNodes() {
-        return new LinkedHashSet<>(nodes);
+        // Return unmodifiable view to prevent external modification while preserving insertion order
+        return Collections.unmodifiableSet(nodes);
     }
 
     @Override
