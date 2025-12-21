@@ -12,8 +12,8 @@ import java.util.*;
  */
 public class AdjacencyListGraph<T> implements DirectedGraph<T> {
 
-    private final Map<T, Set<T>> adjacencyList = new HashMap<>();
-    private final Set<T> nodes = new HashSet<>();
+    private final Map<T, Set<T>> adjacencyList = new LinkedHashMap<>();
+    private final Set<T> nodes = new LinkedHashSet<>();
 
     @Override
     public void addNode(T node) {
@@ -52,7 +52,7 @@ public class AdjacencyListGraph<T> implements DirectedGraph<T> {
 
     @Override
     public Set<T> getNodes() {
-        return new HashSet<>(nodes);
+        return new LinkedHashSet<>(nodes);
     }
 
     @Override
