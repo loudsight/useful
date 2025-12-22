@@ -1,59 +1,54 @@
 package com.loudsight.useful.helper.logging;
 
-import com.loudsight.useful.helper.JvmClassHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-public class LoggingHelper {
-
-    private final Logger logger;
-
-    private LoggingHelper(Logger logger) {
-        this.logger = logger;
+/**
+ * Interface for structured logging with support for multiple implementations.
+ * Defines standard log level methods mirrored across all logging implementations.
+ * 
+ * The default implementation is DefaultLoggingHelper.
+ * Specialized implementations (e.g., CommandLogger) can provide alternative routing.
+ */
+public interface LoggingHelper {
+    
+    void logTrace(String log, Object... params);
+    
+    void logDebug(String log, Object... params);
+    
+    void logInfo(String log, Object... params);
+    
+    void logWarn(String log, Object... params);
+    
+    void logError(String log, Object... params);
+    
+    void logError(String log, Throwable t);
+    
+    /**
+     * Create a LoggingHelper for the given class (uses DefaultLoggingHelper).
+     * @param className the fully qualified class name
+     * @return a new LoggingHelper instance
+     */
+    static LoggingHelper wrap(String className) {
+        return DefaultLoggingHelper.wrap(className);
     }
-
-    public static LoggingHelper wrap(String className) {
-        return wrap(JvmClassHelper.classForName(className));
+    
+    /**
+     * Create a LoggingHelper for the given class (uses DefaultLoggingHelper).
+     * @param clazz the class to log from
+     * @return a new LoggingHelper instance
+     */
+    static LoggingHelper wrap(Class<?> clazz) {
+        return DefaultLoggingHelper.wrap(clazz);
     }
-
-    public static LoggingHelper wrap(Class<?> clazz) {
-        var logger = LoggerFactory.getLogger(clazz);
-        return new LoggingHelper(logger);
-    }
-
-    public void logTrace(String log, Object... params) {
-        if (logger.isTraceEnabled()) {
-            logger.trace(log, params);
-        }
-    }
-
-    public void logDebug(String log, Object... params) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(log, params);
-        }
-    }
-
-    public void logInfo(String log, Object... params) {
-        if (logger.isInfoEnabled()) {
-            logger.info(log, params);
-        }
-    }
-
-    public void logWarn(String log, Object... params) {
-        if (logger.isWarnEnabled()) {
-            logger.warn(log, params);
-        }
-    }
-
-    public void logError(String log, Object... params) {
-        if (logger.isErrorEnabled()) {
-            logger.error(log, params);
-        }
-    }
-
-    public void logError(String log, Throwable t) {
-        if (logger.isErrorEnabled()) {
-            logger.error(log, t);
-        }
+    
+    /**
+     * Create a LoggingHelper with a named logger category (uses DefaultLoggingHelper).
+     * Useful for routing logs to specific appenders (e.g., "commands" for command.log).
+     * 
+     * @param loggerName the SLF4J logger name
+     * @param calledFrom the class context for log message decoration
+     * @return a new LoggingHelper instance
+     */
+    static LoggingHelper wrapByName(String loggerName, Class<?> calledFrom) {
+        return DefaultLoggingHelper.wrapByName(loggerName, calledFrom);
     }
 }
+
