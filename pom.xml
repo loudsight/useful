@@ -52,12 +52,6 @@
         <module>service</module>
         <module>string</module>
     </modules>
-    <build>
-        <plugins>
-        </plugins>
-    </build>
-    <dependencies>
-    </dependencies>
 </project>
 
 

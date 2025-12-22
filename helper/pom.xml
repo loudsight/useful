@@ -10,7 +10,6 @@
     </parent>
 
     <artifactId>helper</artifactId>
-    <packaging>jar</packaging>
     <name>Useful helper utilities</name>
     <description>Useful helper utilities</description>
 
