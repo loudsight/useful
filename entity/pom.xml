@@ -25,10 +25,6 @@
              <version>2.5</version>
          </dependency>
          <dependency>
-             <groupId>com.loudsight</groupId>
-             <artifactId>basic-helper</artifactId>
-         </dependency>
-         <dependency>
              <groupId>com.loudsight.meta</groupId>
              <artifactId>entity-meta-generator-lib</artifactId>
              <version>0.0.1-SNAPSHOT</version>
