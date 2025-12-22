@@ -11,9 +11,12 @@
 
     <artifactId>helper</artifactId>
     <packaging>jar</packaging>
-
     <name>Useful helper utilities</name>
     <description>Useful helper utilities</description>
+
+    <properties>
+        <skip-meta-entity-generation>true</skip-meta-entity-generation>
+    </properties>
 
     <licenses>
         <license>
