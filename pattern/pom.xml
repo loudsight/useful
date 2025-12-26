@@ -13,13 +13,4 @@
     <artifactId>pattern</artifactId>
     <name>Useful Pattern</name>
     <description>Reusable design pattern implementations including visitor pattern abstractions</description>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-
 </project>
