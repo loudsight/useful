@@ -8,7 +8,6 @@ public class Subject {
 
    @Id
    private String id;
-   @Id
    private String name;
 
    private static final Subject anonymous = new Subject();
