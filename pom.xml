@@ -51,6 +51,7 @@
         <module>helper</module>
         <module>service</module>
         <module>string</module>
+        <module>common-util</module>
     </modules>
 </project>
 
