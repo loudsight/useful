@@ -52,6 +52,7 @@
         <module>service</module>
         <module>string</module>
         <module>common-util</module>
+        <module>iso</module>
     </modules>
 </project>
 
