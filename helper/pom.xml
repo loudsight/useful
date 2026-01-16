@@ -3,10 +3,12 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>com.loudsight.useful</groupId>
-        <version>0.0.1-SNAPSHOT</version>
         <artifactId>useful</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath/>
     </parent>
 
     <artifactId>helper</artifactId>
@@ -48,7 +50,7 @@
                     <version>3.14.0</version>
                     <configuration>
                         <release>${java.version}</release>
-                        <annotationProcessorPaths />
+                        <annotationProcessorPaths combine.self="override" />
                     </configuration>
                 </plugin>
             </plugins>
@@ -62,13 +64,13 @@
                     <execution>
                         <id>default-compile</id>
                         <configuration>
-                            <annotationProcessorPaths />
+                            <annotationProcessorPaths combine.self="override" />
                         </configuration>
                     </execution>
                     <execution>
                         <id>default-testCompile</id>
                         <configuration>
-                            <annotationProcessorPaths />
+                            <annotationProcessorPaths combine.self="override" />
                         </configuration>
                     </execution>
                 </executions>
