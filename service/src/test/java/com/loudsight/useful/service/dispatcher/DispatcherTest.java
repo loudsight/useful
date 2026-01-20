@@ -112,13 +112,13 @@ public abstract class DispatcherTest {
         setupAddresses(serverAddress, CLIENT_ADDRESS);
         var subscription = serverDispatcher.subscribe(serverAddress, asyncHandler);
 
-        clientDispatcher.publishAsync(serverAddress, sent, replied::accept);
+        clientDispatcher.publishAsync(serverAddress, sent, replied);
 
-        var result = received.getResult(60, TimeUnit.SECONDS);
+        var result = received.getResult(10, TimeUnit.SECONDS);
         assertEquals(sent.getId(), result.getId());
         assertEquals(sent.getName(), result.getName());
 
-        SimpleEntity reply = replied.getResult(60, TimeUnit.SECONDS);
+        SimpleEntity reply = replied.getResult(10, TimeUnit.SECONDS);
         assertEquals(sent.getId() + 123, reply.getId());
         assertEquals("b", reply.getName());
         subscription.unsubscribe();
@@ -210,7 +210,7 @@ public abstract class DispatcherTest {
 
         dispatcher.publish(new Topic<>(Object.class, SimpleEntity.class, Void.class), sent);
 
-        replyLatch.await(15, TimeUnit.SECONDS);
+        replyLatch.await(10, TimeUnit.SECONDS);
 
         assertEquals(sent.getId(), received.get().getId());
 
@@ -254,7 +254,7 @@ public abstract class DispatcherTest {
         delay(500);
         clientDispatcher.publish(serverAddress, sent);
 
-        var result = received.getResult(60, TimeUnit.SECONDS);
+        var result = received.getResult(10, TimeUnit.SECONDS);
 
         assertEquals(sent.getId(), result.getId());
         subscription.unsubscribe();
@@ -280,7 +280,8 @@ public abstract class DispatcherTest {
         dispatcher.subscribe(WILDCARD_ADDRESS, handler);
 
         for (int i = 0; i < 100; i++) {
-            var address = new Topic<>(DispatcherTest.class, Integer.class, Integer.class, Map.of("service", i, "topic", i));
+            var address = new Topic<>(DispatcherTest.class, Integer.class, Integer.class,
+                    Map.of("id", String.valueOf(i), "id2", String.valueOf(i)));
             dispatcher.publish(address, i);
         }
          for (int i = 0; i < 100; i++) {

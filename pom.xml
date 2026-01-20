@@ -49,6 +49,7 @@
         <module>entity</module>
         <module>collection</module>
         <module>helper</module>
+        <module>io</module>
         <module>service</module>
         <module>string</module>
         <module>common-util</module>

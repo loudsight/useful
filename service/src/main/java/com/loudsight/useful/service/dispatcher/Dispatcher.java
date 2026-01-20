@@ -3,7 +3,7 @@ package com.loudsight.useful.service.dispatcher;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public interface Dispatcher {
+public interface Dispatcher extends AutoCloseable {
 
     <P, Q, A> Subscription<P, Q, A> subscribe(Topic<P, Q, A> requestTopic, Topic<P, A, ?> responseTopic, Function<Q, A> handler);
 
