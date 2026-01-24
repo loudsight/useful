@@ -12,9 +12,8 @@ public record Topic<P, I, O/* extends Response*/>(
         Class<O> responseType,
         Map<String, Object> properties) {
 
-    public static Topic<?, ?, ?> NO_REPLY = new Topic<>(Object.class, Object.class, Object.class, Collections.emptyMap());
-    public static Topic<Object, Object, Object> WILDCARD_ADDRESS =
-            new Topic<>(Object.class, Object.class, Object.class);
+    public static Topic<?, ?, ?> NO_REPLY = new Topic<>(Void.class, Void.class, Void.class, Collections.emptyMap());
+    public static Topic<Object, Object, Object> WILDCARD_ADDRESS = new Topic<>(Object.class, Object.class, Object.class);
 
     public Topic(Class<P> publisherClass, Class<I> requestType, Class<O> responseType) {
         this(
@@ -36,9 +35,5 @@ public record Topic<P, I, O/* extends Response*/>(
 
     public Object getProperty(String key) {
         return properties.get(key);
-    }
-
-    public <T> T getPropertyOrDefault(String key, Object defaultValue) {
-        return (T)properties.getOrDefault(key, defaultValue);
     }
 }

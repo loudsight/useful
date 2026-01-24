@@ -6,6 +6,7 @@ import com.loudsight.useful.service.TimeProvider;
 import com.loudsight.useful.service.dispatcher.Dispatcher;
 import com.loudsight.useful.service.dispatcher.Topic;
 
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -19,7 +20,13 @@ public class TickPublisher implements AutoCloseable {
     public static final Topic<TickPublisher, Long, Object> ONE_SECOND_TICK = new Topic<>(
             TickPublisher.class,
             Long.class,
-            Object.class
+            Object.class,
+            Map.of(
+                    "service", "tick",
+                    "name", "ONE_SECOND_TICK",
+                    "streamId", 400,
+                    "channel", "aeron:ipc"
+            )
     );
 
     private volatile boolean isOpen = true;
