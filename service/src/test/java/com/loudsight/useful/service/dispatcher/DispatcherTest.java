@@ -108,7 +108,8 @@ public abstract class DispatcherTest {
         Dispatcher serverDispatcher = getServerDispatcher();
         var serverAddress = new Topic<>(Object.class,
                 SimpleEntity.class,
-                SimpleEntity.class);
+                SimpleEntity.class,
+                Map.of("service", "persistence", "name", "PING_ADDRESS"));
         setupAddresses(serverAddress, CLIENT_ADDRESS);
         var subscription = serverDispatcher.subscribe(serverAddress, asyncHandler);
 
@@ -208,7 +209,9 @@ public abstract class DispatcherTest {
             replyLatch.countDown();
         });
 
-        dispatcher.publish(new Topic<>(Object.class, SimpleEntity.class, Void.class), sent);
+        dispatcher.publish(new Topic<>(Object.class, SimpleEntity.class, Void.class,
+                        Map.of("service", "persistence", "name", "PING_ADDRESS")),
+                sent);
 
         replyLatch.await(10, TimeUnit.SECONDS);
 
@@ -248,7 +251,10 @@ public abstract class DispatcherTest {
                 Object.class,
                 SimpleEntity.class,
                 SimpleEntity.class,
-                Map.of("scope", id.incrementAndGet()));
+                Map.of(
+                        "service", "persistence",
+                        "name", "PING_ADDRESS",
+                        "scope", id.incrementAndGet()));
         setupAddresses(serverAddress, CLIENT_ADDRESS);
         var subscription = serverDispatcher.subscribe(serverAddress, handler);
         delay(500);
@@ -281,7 +287,11 @@ public abstract class DispatcherTest {
 
         for (int i = 0; i < 100; i++) {
             var address = new Topic<>(DispatcherTest.class, Integer.class, Integer.class,
-                    Map.of("id", String.valueOf(i), "id2", String.valueOf(i)));
+                    Map.of(
+                            "service", "persistence",
+                            "name", "FIND_ADDRESS",
+                            "id", String.valueOf(i),
+                            "id2", String.valueOf(i)));
             dispatcher.publish(address, i);
         }
          for (int i = 0; i < 100; i++) {

@@ -2,7 +2,7 @@ package com.loudsight.useful.service.ping;
 
 import com.loudsight.useful.helper.logging.LoggingHelper;
 import com.loudsight.useful.service.dispatcher.Dispatcher;
-import com.loudsight.useful.service.dispatcher.Subscription;
+import com.loudsight.useful.service.dispatcher.SubscriptionHandle;
 import com.loudsight.useful.service.dispatcher.Topic;
 
 import java.lang.invoke.MethodHandles;
@@ -106,7 +106,7 @@ public final class PingProbeHelper {
 
         CountDownLatch latch = new CountDownLatch(1);
         AtomicReference<PongResponse> responseRef = new AtomicReference<>();
-        AtomicReference<Subscription<?, ?, ?>> subscriptionRef = new AtomicReference<>();
+        AtomicReference<SubscriptionHandle<?, ?, ?>> subscriptionRef = new AtomicReference<>();
 
         try {
             var subscription = dispatcher.subscribe(pingResponseTopic, response -> {

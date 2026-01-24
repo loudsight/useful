@@ -8,7 +8,8 @@ import org.junit.jupiter.api.Disabled;
 public class SerialDispatcherTest extends DispatcherTest {
 
     private final TopicFactory topicFactory = new TopicFactory(MetaRepository.getInstance());
-    private final Dispatcher dispatcherValue = new SerialDispatcher(topicFactory);
+    private final Dispatcher clientDispatcher = new SerialDispatcher(topicFactory);
+    private final Dispatcher serverDispatcher = new SerialDispatcher(topicFactory);
 
     @Override
     protected MetaRepository getMetaRepository() {
@@ -17,7 +18,11 @@ public class SerialDispatcherTest extends DispatcherTest {
 
     @Override
     protected Dispatcher getClientDispatcher() {
-        return dispatcherValue;
+        return clientDispatcher;
     }
 
+    @Override
+    public Dispatcher getServerDispatcher() {
+        return serverDispatcher;
+    }
 }
