@@ -11,6 +11,6 @@
     </parent>
 
     <artifactId>pattern</artifactId>
-    <name>Useful Pattern</name>
-    <description>Reusable design pattern implementations including visitor pattern abstractions</description>
+    <name>Loudsight Useful Pattern</name>
+    <description>Loudsight Reusable design pattern implementations including visitor pattern abstractions</description>
 </project>

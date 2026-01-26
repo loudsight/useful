@@ -17,19 +17,19 @@
     <artifactId>service</artifactId>
     <packaging>jar</packaging>
 
-    <name>Useful service utilities</name>
-    <description>Useful service utilities</description>
+    <name>Loudsight Useful service utilities</name>
+    <description>Loudsight Useful service utilities</description>
 
     <licenses>
         <license>
-            <name>Apache License 2.0 (Apache-2.0)</name>
+            <name>Loudsight Apache License 2.0 (Apache-2.0)</name>
             <url>https://www.apache.org/licenses/LICENSE-2.0.html</url>
         </license>
     </licenses>
 
     <developers>
         <developer>
-            <name>loudsight</name>
+            <name>Loudsight loudsight</name>
             <email>spam@loudsight.com</email>
             <organization>Loudsight</organization>
             <organizationUrl>https://loudsight.com</organizationUrl>

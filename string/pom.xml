@@ -12,6 +12,6 @@
 
     <artifactId>string</artifactId>
     <packaging>jar</packaging>
-    <name>Useful string utilities</name>
-    <description>Useful string utilities</description>
+    <name>Loudsight Useful string utilities</name>
+    <description>Loudsight Useful string utilities</description>
 </project>
