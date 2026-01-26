@@ -12,8 +12,8 @@
 	<artifactId>common-util</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<name>common-util</name>
-	<description>Common utilities and shared configurations</description>
+	<name>Loudsight common-util</name>
+	<description>Loudsight Common utilities and shared configurations</description>
 
 	<dependencies>
 		<dependency>

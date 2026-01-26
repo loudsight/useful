@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>entity</artifactId>
-    <name>Useful entity utilities</name>
+    <name>Loudsight Useful entity utilities</name>
     <description>Loudsight's useful entity utilities</description>
 
     <properties>

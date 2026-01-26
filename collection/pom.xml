@@ -17,8 +17,8 @@
     <artifactId>collection</artifactId>
     <packaging>jar</packaging>
 
-    <name>Useful collection utilities</name>
-    <description>Useful collection utilities</description>
+    <name>Loudsight Useful collection utilities</name>
+    <description>Loudsight Useful collection utilities</description>
 
     <dependencies>
         <dependency>
