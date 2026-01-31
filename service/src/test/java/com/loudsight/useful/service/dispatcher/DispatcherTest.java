@@ -4,7 +4,6 @@ import com.loudsight.useful.helper.ClassHelper;
 import com.loudsight.meta.MetaRepository;
 import com.loudsight.meta.entity.SimpleEntity;
 import com.loudsight.meta.entity.SelfReferencingEntity;
-import com.loudsight.meta.serialization.transform.JvmTransforms;
 import com.loudsight.useful.entity.permission.Subject;
 import com.loudsight.useful.helper.logging.LoggingHelper;
 import com.loudsight.useful.service.Listener;
@@ -31,8 +30,6 @@ public abstract class DispatcherTest {
     private static volatile boolean isRunning = true;
 
     static {
-        JvmTransforms.init(); // FIXME
-
 //        new Thread(() -> {
 //            Thread.currentThread().setDaemon(true);
 //
