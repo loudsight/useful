@@ -54,6 +54,7 @@
         <module>string</module>
         <module>common-util</module>
         <module>iso</module>
+        <module>web</module>
     </modules>
 </project>
 
