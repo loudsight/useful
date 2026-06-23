@@ -10,9 +10,9 @@ public class Subject {
    private String id;
    private String name;
 
-   private static final Subject anonymous = new Subject();
+   private static final Subject anonymous = new Subject("anonymous", "Anonymous");
    
-   private static final Subject admin = new Subject();
+   private static final Subject admin = new Subject("admin", "Admin");
 
    public Subject( String id,  String name) {
       this.id = id;
