@@ -2,6 +2,8 @@ package com.loudsight.useful.entity.permission;
 
 import com.loudsight.meta.annotation.Id;
 import com.loudsight.meta.annotation.Introspect;
+import java.util.ArrayList;
+import java.util.List;
 
 @Introspect(clazz = Subject.class)
 public class Subject {
@@ -9,6 +11,7 @@ public class Subject {
    @Id
    private String id;
    private String name;
+   private List<PermissionGrant> permissionGrants = new ArrayList<>();
 
    private static final Subject anonymous = new Subject("anonymous", "Anonymous");
    
@@ -39,6 +42,14 @@ public class Subject {
 
    public final void setName( String var1) {
       this.name = var1;
+   }
+
+   public List<PermissionGrant> getPermissionGrants() {
+      return permissionGrants;
+   }
+
+   public void setPermissionGrants(List<PermissionGrant> permissionGrants) {
+      this.permissionGrants = permissionGrants;
    }
 
    public final boolean isBuiltinSubject() {
