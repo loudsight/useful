@@ -53,7 +53,7 @@ public class Subject {
    }
 
    public final boolean isBuiltinSubject() {
-      return this == anonymous || this == admin;
+      return id != null && (id.equals(anonymous.id) || id.equals(admin.id));
    }
 
    public final Subject valueOf( String username) {
