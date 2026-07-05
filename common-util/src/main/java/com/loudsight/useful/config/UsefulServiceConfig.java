@@ -2,8 +2,6 @@ package com.loudsight.useful.config;
 
 import com.loudsight.meta.MetaRepository;
 import com.loudsight.useful.helper.logging.LoggingHelper;
-import com.loudsight.useful.service.dispatcher.Dispatcher;
-import com.loudsight.useful.service.dispatcher.SerialDispatcher;
 import com.loudsight.useful.service.publisher.TopicFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,18 +21,6 @@ public class UsefulServiceConfig {
     public TopicFactory topicFactory() {
         logger.logInfo("Creating TopicFactory bean");
         return new TopicFactory(MetaRepository.getInstance());
-    }
-
-    /**
-     * Creates Dispatcher bean for message processing.
-     *
-     * @param topicFactory the TopicFactory bean
-     * @return SerialDispatcher for sequential message processing
-     */
-    @Bean
-    public Dispatcher dispatcher(TopicFactory topicFactory) {
-        logger.logInfo("Creating Dispatcher bean");
-        return new SerialDispatcher(topicFactory);
     }
 
     @Bean
