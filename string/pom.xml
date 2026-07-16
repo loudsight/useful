@@ -11,6 +11,7 @@
     </parent>
 
     <artifactId>string</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Loudsight Useful string utilities</name>
     <description>Loudsight Useful string utilities</description>
