@@ -12,6 +12,7 @@
     </parent>
 
     <artifactId>helper</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
     <name>Loudsight Useful helper utilities</name>
     <description>Loudsight Useful helper utilities</description>
 
