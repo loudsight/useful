@@ -3,6 +3,7 @@ package com.loudsight.useful.entity.permission;
 import com.loudsight.meta.annotation.Id;
 import com.loudsight.meta.annotation.Introspect;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -18,7 +19,8 @@ public class PermissionGrant {
     
     public PermissionGrant() {
         this.id = UUID.randomUUID().toString();
-        this.grantedAt = LocalDateTime.now();
+        // Stored timestamps are UTC instants - see TimeProvider for why the zone is explicit.
+        this.grantedAt = LocalDateTime.now(ZoneOffset.UTC);
     }
     
     public PermissionGrant(Object target, Permission permission, Subject grantedBy) {
