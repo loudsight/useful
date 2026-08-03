@@ -4,6 +4,7 @@ import com.loudsight.meta.annotation.Id;
 import com.loudsight.meta.annotation.Introspect;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.UUID;
 
 /**
@@ -24,7 +25,8 @@ public class TagAssignment {
 
     public TagAssignment() {
         this.id = UUID.randomUUID().toString();
-        this.taggedAt = LocalDateTime.now();
+        // Stored timestamps are UTC instants - see TimeProvider for why the zone is explicit.
+        this.taggedAt = LocalDateTime.now(ZoneOffset.UTC);
     }
 
     public TagAssignment(Object target, Tag tag) {
