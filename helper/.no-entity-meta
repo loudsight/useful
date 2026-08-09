@@ -1,0 +1,5 @@
+Opts this module out of the entity-meta-processing profile in parent/pom.xml.
+
+entity-meta-processor -> entity-meta-generator-lib -> helper, so taking the profile's dependency on
+the processor would be a cycle. This replaces the skip-meta-entity-generation property, which never
+worked (POM properties cannot activate profiles).

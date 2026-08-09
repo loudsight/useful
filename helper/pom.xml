@@ -16,10 +16,6 @@
     <name>Loudsight Useful helper utilities</name>
     <description>Loudsight Useful helper utilities</description>
 
-    <properties>
-        <skip-meta-entity-generation>true</skip-meta-entity-generation>
-    </properties>
-
     <licenses>
         <license>
             <name>Loudsight Apache License 2.0 (Apache-2.0)</name>
