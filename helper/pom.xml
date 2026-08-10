@@ -38,40 +38,15 @@
         <url>git@github.com:loudsight/useful.git</url>
     </scm>
 
-    <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.14.0</version>
-                    <configuration>
-                        <release>${java.version}</release>
-                        <annotationProcessorPaths combine.self="override" />
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
+    <!--
+      This module had a <build> block whose only purpose was emptying annotationProcessorPaths in
+      three places, to escape an entity-meta-processor path the parent once applied unconditionally
+      - helper is a dependency of that processor, so processing it with itself is a cycle.
 
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>default-compile</id>
-                        <configuration>
-                            <annotationProcessorPaths combine.self="override" />
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>default-testCompile</id>
-                        <configuration>
-                            <annotationProcessorPaths combine.self="override" />
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
+      The escape is obsolete: the processor path now lives in the parent's entity-meta-processing
+      profile, which this module already opts out of via .no-entity-meta. help:active-profiles here
+      lists only "cicd", so those overrides suppressed nothing. Keeping them would instead strip
+      error_prone_core from the inherited path while the inherited -Xplugin:ErrorProne argument
+      remained, which fails the compile outright.
+    -->
  </project>
