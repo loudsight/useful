@@ -11,7 +11,7 @@ import java.util.UUID;
  * Links a {@link Tag} to an arbitrary tagged entity, mirroring {@code PermissionGrant}'s shape
  * ({@code target: Object}). Querying by {@code target} or {@code tag} relies on
  * CypherQueryUtils.buildRelationshipPredicates (persistence-lib) deriving the traversed
- * relationship's type from the field name - see docs/wip/cross-cutting-tag-primitive.md for why
+ * relationship's type from the field name - see notebook/decisions/cross-cutting-tag-primitive.md for why
  * this is safe now (it wasn't, for any entity, before that fix).
  */
 @Introspect(clazz = TagAssignment.class)
