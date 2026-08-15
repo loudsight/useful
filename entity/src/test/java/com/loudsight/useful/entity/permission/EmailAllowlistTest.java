@@ -3,6 +3,7 @@ package com.loudsight.useful.entity.permission;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class EmailAllowlistTest {
@@ -78,5 +79,41 @@ public class EmailAllowlistTest {
 
         assertFalse(allowlist.permits("owner@example.com"));
         assertFalse(allowlist.permitsEveryone());
+    }
+
+    /**
+     * The guard the test above refers to, pinned directly - it had no test at all, and three
+     * separate notebook passages consequently described this as "empty means allow all", which is
+     * the exact opposite of what it does. An unset property does not open the deployment; it stops
+     * the container starting.
+     */
+    @Test
+    public void fromConfigurationRefusesToBuildAnythingFromABlankValue() {
+        assertThrows(IllegalStateException.class, () -> EmailAllowlist.fromConfiguration(null));
+        assertThrows(IllegalStateException.class, () -> EmailAllowlist.fromConfiguration(""));
+        // Whitespace matters as its own case: both call sites read the property through
+        // ${application.auth.allowedEmails:}, whose empty default is what actually arrives when
+        // the property is missing, and a stray-space value must not slip past as "configured".
+        assertThrows(IllegalStateException.class, () -> EmailAllowlist.fromConfiguration("   "));
+    }
+
+    @Test
+    public void fromConfigurationMessageNamesThePropertyAndItsRemedy() {
+        // An operator sees this at container-start with no other context, so it has to say which
+        // property is missing and what a valid value looks like.
+        var thrown = assertThrows(IllegalStateException.class,
+                () -> EmailAllowlist.fromConfiguration(""));
+
+        assertTrue(thrown.getMessage().contains("application.auth.allowedEmails"),
+                "the message must name the property: " + thrown.getMessage());
+        assertTrue(thrown.getMessage().contains("*"),
+                "the message must give the allow-anyone value: " + thrown.getMessage());
+    }
+
+    @Test
+    public void fromConfigurationBuildsNormallyWhenAValueIsPresent() {
+        // The control - without it, a factory that threw unconditionally would satisfy the above.
+        assertTrue(EmailAllowlist.fromConfiguration("*").permitsEveryone());
+        assertTrue(EmailAllowlist.fromConfiguration("owner@example.com").permits("owner@example.com"));
     }
 }
