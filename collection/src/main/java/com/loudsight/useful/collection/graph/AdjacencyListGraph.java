@@ -40,7 +40,7 @@ public class AdjacencyListGraph<T> implements DirectedGraph<T> {
         if (!nodes.contains(from) || !nodes.contains(to)) {
             throw new IllegalArgumentException("Both nodes must exist in the graph");
         }
-        adjacencyList.get(from).add(to);
+        adjacencyList.computeIfAbsent(from, key -> new HashSet<>()).add(to);
     }
 
     @Override
@@ -136,8 +136,8 @@ public class AdjacencyListGraph<T> implements DirectedGraph<T> {
         // This ensures consistent ordering when multiple nodes have the same in-degree
         Queue<T> queue = new PriorityQueue<>((a, b) -> {
             // Compare by in-degree first, then by natural ordering if available
-            int inDegreeA = inDegree.get(a);
-            int inDegreeB = inDegree.get(b);
+            int inDegreeA = inDegree.getOrDefault(a, 0);
+            int inDegreeB = inDegree.getOrDefault(b, 0);
             if (inDegreeA != inDegreeB) {
                 return Integer.compare(inDegreeA, inDegreeB);
             }
@@ -146,7 +146,7 @@ public class AdjacencyListGraph<T> implements DirectedGraph<T> {
         });
 
         for (T node : nodes) {
-            if (inDegree.get(node) == 0) {
+            if (inDegree.getOrDefault(node, 0) == 0) {
                 queue.add(node);
             }
         }
@@ -157,8 +157,9 @@ public class AdjacencyListGraph<T> implements DirectedGraph<T> {
             result.add(node);
 
             for (T neighbor : adjacencyList.getOrDefault(node, new HashSet<>())) {
-                inDegree.put(neighbor, inDegree.get(neighbor) - 1);
-                if (inDegree.get(neighbor) == 0) {
+                int remaining = inDegree.getOrDefault(neighbor, 0) - 1;
+                inDegree.put(neighbor, remaining);
+                if (remaining == 0) {
                     queue.add(neighbor);
                 }
             }
