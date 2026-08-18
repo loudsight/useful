@@ -182,7 +182,7 @@ public class UrlProxyRoutes <T, I extends T> {
             }
         }
 
-        public static abstract class Invocation<T, I extends T, K> {
+        public abstract static class Invocation<T, I extends T, K> {
             InterceptedInvocation interceptedInvocation;
 
             Invocation(InterceptedInvocation interceptedInvocation) {
