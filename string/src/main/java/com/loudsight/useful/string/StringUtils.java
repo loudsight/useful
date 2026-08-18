@@ -31,7 +31,7 @@ public class StringUtils {
         int i = 0;
 
         while (i < buf.length) {
-            if ((((int)buf[i]) & 0xff) < 0x10) {
+            if ((buf[i] & 0xff) < 0x10) {
                 strbuf.append("0");
             }
 
@@ -47,7 +47,7 @@ public class StringUtils {
         StringBuilder ss = new StringBuilder();
         int i = 0;
         while (i < s.length) {
-            char c = (char)(((int) s[i + 1] << 8) + s[i]);
+            char c = (char)((s[i + 1] << 8) + s[i]);
             ss.append(c);
             i += 2;
         }
