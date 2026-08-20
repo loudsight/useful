@@ -30,11 +30,11 @@ public class VisitorTest {
 
         // Test single visit
         Integer result = visitor.visit("test");
-        assertEquals(Integer.valueOf(1), result);
+        assertEquals(1, result);
 
         // Test accumulation
         Integer accumulated = visitor.accumulate("another", 5);
-        assertEquals(Integer.valueOf(6), accumulated);
+        assertEquals(6, accumulated);
     }
 
     /**

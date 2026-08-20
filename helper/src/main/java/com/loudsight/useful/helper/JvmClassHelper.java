@@ -1,5 +1,6 @@
 package com.loudsight.useful.helper;
 
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -9,7 +10,11 @@ import java.util.stream.Stream;
  *
  * @author munyengm
  */
-public class JvmClassHelper {
+public final class JvmClassHelper {
+
+    private JvmClassHelper() {
+    }
+
     private static final Map<String, Class<?>> PRIMITIVES = Stream.of(
             Boolean.class,
             boolean.class,
@@ -47,7 +52,7 @@ public class JvmClassHelper {
             className = "java.lang.String";
         } else if (className.startsWith("kotlin.")) {
             className = className.replace("kotlin.", "");
-            className = className.toLowerCase();
+            className = className.toLowerCase(Locale.ROOT);
         }
 
         return className;
@@ -60,10 +65,11 @@ public class JvmClassHelper {
     public static <T> Class<T> classForName(String className, ClassLoader classLoader) {
         if (isPrimitive(className)) {
             return getPrimitiveClass(className);
-        } else try {
+        }
+        try {
             return ClassHelper.uncheckedCast(Class.forName(className, true, classLoader));
         } catch (Exception e) {
-            throw new RuntimeException("Instantiation error", e);
+            throw new IllegalStateException("Instantiation error", e);
         }
     }
 

@@ -26,21 +26,33 @@ public interface CommandLogger {
      */
     CommandLogger NO_OP = new CommandLogger() {
         @Override
-        public void logTrace(String log, Object... params) {}
-        
+        public void logTrace(String log, Object... params) {
+            // No-op.
+        }
+
         @Override
-        public void logDebug(String log, Object... params) {}
-        
+        public void logDebug(String log, Object... params) {
+            // No-op.
+        }
+
         @Override
-        public void logInfo(String log, Object... params) {}
-        
+        public void logInfo(String log, Object... params) {
+            // No-op.
+        }
+
         @Override
-        public void logWarn(String log, Object... params) {}
-        
+        public void logWarn(String log, Object... params) {
+            // No-op.
+        }
+
         @Override
-        public void logError(String log, Object... params) {}
-        
+        public void logError(String log, Object... params) {
+            // No-op.
+        }
+
         @Override
-        public void logError(String log, Throwable t) {}
+        public void logError(String log, Throwable t) {
+            // No-op.
+        }
     };
 }

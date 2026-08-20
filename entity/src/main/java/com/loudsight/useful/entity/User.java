@@ -28,9 +28,6 @@ public class User extends Subject {
     }
 
     public static boolean isAnonymous(User user) {
-        if (user == null) {
-            return true;
-        }
-        return "".equals(user.getId()) && "".equals(user.getName());
+        return user == null || ("".equals(user.getId()) && "".equals(user.getName()));
     }
 }

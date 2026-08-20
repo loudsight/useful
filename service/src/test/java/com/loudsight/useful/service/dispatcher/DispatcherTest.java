@@ -21,64 +21,40 @@ import java.util.function.Function;
 import static com.loudsight.useful.service.dispatcher.Topic.WILDCARD_ADDRESS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+// The client/server Dispatcher instances returned by getClientDispatcher()/getServerDispatcher()
+// are fixtures owned by the concrete subclass (e.g. SerialDispatcherTest's fields) and are reused
+// across every @Test method in this class; closing them here would break subsequent tests.
+@SuppressWarnings("PMD.CloseResource")
 public abstract class DispatcherTest {
     private static final LoggingHelper logger = LoggingHelper.wrap(DispatcherTest.class);
     private static final Address SERVER_ADDRESS = new Address("Test.to", "Q");
     private static final Address CLIENT_ADDRESS = new Address("Test.from", "Q");
     private static final AtomicInteger id = new AtomicInteger();
     public static final Subject ANONYMOUS = Subject.getAnonymous();
-    private static volatile boolean isRunning = true;
-
-    static {
-//        new Thread(() -> {
-//            Thread.currentThread().setDaemon(true);
-//
-//            while (isRunning) {
-//                try {
-//                    ThreadMXBean tmx = ManagementFactory.getThreadMXBean();
-//                    long[] ids = tmx.findDeadlockedThreads();
-//                    if (ids != null) {
-//                        ThreadInfo[] infos = tmx.getThreadInfo(ids, true, true);
-//                        logger.logInfo("The following threads are deadlocked:");
-//                        for (ThreadInfo ti : infos) {
-//                            logger.logInfo(String.valueOf(ti));
-//                        }
-//                    }
-//                    Thread.sleep(100);
-//                } catch (Exception e) {
-//                    logger.logError("Unexpected error", e);
-//                }
-//            }
-//        }).start();
-    }
 
     protected abstract MetaRepository getMetaRepository();
 
     protected abstract Dispatcher getClientDispatcher();
 
-    protected <P, Q, A> void setupAddresses(Topic<P, Q, A> serverAddress, Address clientAddress) {  };
+    protected <P, Q, A> void setupAddresses(Topic<P, Q, A> serverAddress, Address clientAddress) {
+        // Override to register addresses; no-op by default.
+    }
 
     protected Dispatcher getServerDispatcher() {
         return getClientDispatcher();
-}
+    }
 
-    protected void doBeforeEach() { };
+    protected void doBeforeEach() {
+        // Override for subclass-specific setup; no-op by default.
+    }
 
-    protected void doAfterEach() { };
+    protected void doAfterEach() {
+        // Override for subclass-specific teardown; no-op by default.
+    }
 
     @BeforeEach
     public void beforeEach() {
         doBeforeEach();
-    }
-
-    @BeforeAll
-    static void beforeAll() {
-        isRunning = false;
-    }
-
-    @AfterAll
-    static void afterAll() {
-        isRunning = false;
     }
 
     @Test

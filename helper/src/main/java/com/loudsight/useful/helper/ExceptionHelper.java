@@ -1,6 +1,9 @@
 package com.loudsight.useful.helper;
 
-public class ExceptionHelper {
+public final class ExceptionHelper {
+
+    private ExceptionHelper() {
+    }
 
 //    fun <T, R> wrap(checkedFunction: (T) -> R): (T) -> R {
 //        return { t ->
@@ -33,7 +36,7 @@ public class ExceptionHelper {
         } catch (Exception e1) {
             uncheckedThrow(e1);
         }
-        throw new RuntimeException("What!!! This should not be possible");
+        throw new IllegalStateException("What!!! This should not be possible");
     }
 
     public static <T extends Throwable> RuntimeException uncheckedThrow(Throwable e) throws T {

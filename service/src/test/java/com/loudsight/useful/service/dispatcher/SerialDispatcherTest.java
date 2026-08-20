@@ -3,6 +3,9 @@ package com.loudsight.useful.service.dispatcher;
 import com.loudsight.meta.MetaRepository;
 import com.loudsight.useful.service.publisher.TopicFactory;
 
+// All test cases live in the abstract DispatcherTest base class; PMD can't see inherited @Test
+// methods, so it misreads this concrete fixture as a test class with no test cases.
+@SuppressWarnings("PMD.TestClassWithoutTestCases")
 public class SerialDispatcherTest extends DispatcherTest {
 
     private final TopicFactory topicFactory = new TopicFactory(MetaRepository.getInstance());

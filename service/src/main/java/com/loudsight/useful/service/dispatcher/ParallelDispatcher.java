@@ -23,7 +23,7 @@ public class ParallelDispatcher implements Dispatcher, AutoCloseable {
     private final ExecutorService executorService;
 
     TopicFactory topicFactory;
-    private long replyId = 0L;
+    private long replyId;
     private final Map<Topic, List<Subscription<?, ?, ?>>> openSubscriptions = new HashMap<>();
     private final List<Long> closedSubscriptions = new ArrayList<>();
     private final AtomicLong idCount = new AtomicLong();
@@ -168,14 +168,13 @@ public class ParallelDispatcher implements Dispatcher, AutoCloseable {
 //                println("new subscription {id: $id to: $to isBridged: $isBridged} ")
 //            }
 
+            SubscriptionHolder() {
+                subscriptionList.add(this);
+            }
+
             @Override
             public long getId() {
                 return id;
-            }
-
-
-            {
-                subscriptionList.add(this);
             }
 
             @Override
@@ -224,11 +223,9 @@ public class ParallelDispatcher implements Dispatcher, AutoCloseable {
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("[{}] No local subscriptions found, bridging to {} peer dispatchers", debugId, peerDispatchers.size());
 			}
-			// Bridge to peer dispatchers
-			for (Dispatcher peer : peerDispatchers) {
-				peer.publishAsync(to, payload, handler);
-				return; // For now, bridge to first peer only
-			}
+			// Bridge to first peer only to avoid duplicates
+			peerDispatchers.get(0).publishAsync(to, payload, handler);
+			return;
 		}
 		
 		if (subscriptions.isEmpty()) {
@@ -236,16 +233,18 @@ public class ParallelDispatcher implements Dispatcher, AutoCloseable {
 				LOGGER.debug("[{}] No local subscriptions and no peers, invoking handler with null", debugId);
 			}
 			@SuppressWarnings("unchecked")
-			A nullResponse = (A) null;
+			A nullResponse = null;
 			handler.accept(nullResponse);
 			return;
 		}
 		
 		AtomicReference<SubscriptionHandle<?, ?, ?>> subscriptionHolder = new AtomicReference<>();
+		long currentReplyId = replyId;
+		replyId++;
 		var replyTo =
 			new Topic<>(ParallelDispatcher.class,
 				to.responseType(), NullValue.class,
-				Map.of("id", "publishAsync" + replyId++));
+				Map.of("id", "publishAsync" + currentReplyId));
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("[{}] Subscribing to replyTo topic", debugId);
 		}

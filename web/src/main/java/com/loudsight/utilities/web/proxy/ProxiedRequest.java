@@ -1,7 +1,7 @@
 package com.loudsight.utilities.web.proxy;
 
 public class ProxiedRequest {
-    private Headers headers = new Headers();
+    private final Headers headers = new Headers();
 
     public Headers getHeaders() {
         return headers;

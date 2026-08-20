@@ -10,6 +10,7 @@ public class Tag {
     private String name;
 
     public Tag() {
+        // Required for deserialization.
     }
 
     public Tag(String name) {

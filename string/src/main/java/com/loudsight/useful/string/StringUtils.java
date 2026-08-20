@@ -3,16 +3,20 @@ package com.loudsight.useful.string;
 import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Locale;
 import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class StringUtils {
+public final class StringUtils {
     private static final char[] codeChars = new char[] {
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
             'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
     };
     private static final Random random = new SecureRandom();
+
+    private StringUtils() {
+    }
 
 
     public static String capitalize(String str) {
@@ -57,7 +61,7 @@ public class StringUtils {
     public static Collection<String> filterMatching(Collection<String> countries, String query) {
         return countries
                 .stream()
-                .filter(country -> country.toUpperCase().startsWith(query.toUpperCase()))
+                .filter(country -> country.toUpperCase(Locale.ROOT).startsWith(query.toUpperCase(Locale.ROOT)))
                 .collect(Collectors.toList());
     }
 
@@ -114,7 +118,7 @@ public class StringUtils {
         StringBuilder res = new StringBuilder();
         boolean capitalise = false;
 
-        for (char it: str.toLowerCase().toCharArray())  {
+        for (char it: str.toLowerCase(Locale.ROOT).toCharArray())  {
             if (it == '_') {
                 capitalise = true;
             } else {

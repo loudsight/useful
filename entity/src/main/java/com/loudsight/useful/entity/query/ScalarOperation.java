@@ -11,7 +11,7 @@ public interface ScalarOperation<K, T> {
 	boolean apply(K t);
 
 
-    ScalarOperation<K, T> and(final ScalarOperation<K, T> second);
+    ScalarOperation<K, T> and(ScalarOperation<K, T> second);
 
     ScalarOperation<K, T> or(ScalarOperation<K, T> second);
 

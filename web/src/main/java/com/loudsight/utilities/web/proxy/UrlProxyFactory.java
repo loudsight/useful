@@ -54,6 +54,9 @@ public class UrlProxyFactory {
         return kmf;
     }
 
+    // The HttpClient built below is handed to the request factory and lives for as long as the
+    // RestClient (and the proxy returned from this method) does, so it must not be closed here.
+    @SuppressWarnings("PMD.CloseResource")
     public <T> T proxy(URI url, Class<T> klass, ProxiedRequestFilter... filters) {
         RestClient.Builder builder = RestClient.builder();
 
@@ -76,9 +79,9 @@ public class UrlProxyFactory {
     }
 
     public <T> T proxy(RestClient webClient, Class<T> klass, ProxiedRequestFilter... filters) {
-        return (T) Proxy.newProxyInstance(klass.getClassLoader(),
+        return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
                 new Class[]{klass},
-                new UrlProxyHandler(klass, webClient, urlRouteMap, filters)
+                new UrlProxyHandler<>(klass, webClient, urlRouteMap, filters)
         );
     }
 }

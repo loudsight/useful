@@ -4,8 +4,6 @@ import com.loudsight.meta.annotation.Id;
 import com.loudsight.meta.annotation.Introspect;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Introspect(clazz = PermissionGrant.class)

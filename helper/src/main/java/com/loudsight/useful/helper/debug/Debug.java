@@ -9,7 +9,10 @@ import java.util.List;
  * @author munyengm
  * 
  */
-public class Debug {
+public final class Debug {
+
+    private Debug() {
+    }
 
     /**
      * <a href="http://stackoverflow.com/questions/4944606/how-to-find-out-if-a-java-process-was-started-in-debugger?rq=1">...</a>
