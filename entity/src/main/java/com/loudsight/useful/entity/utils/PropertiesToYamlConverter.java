@@ -4,16 +4,20 @@ import com.loudsight.useful.helper.logging.LoggingHelper;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.io.InputStream;
+import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-public class PropertiesToYamlConverter {
+public final class PropertiesToYamlConverter {
     private static final LoggingHelper LOGGER = LoggingHelper.wrap(PropertiesToYamlConverter.class);
+
+    private PropertiesToYamlConverter() {
+    }
 
     public static void main(String[] args) {
         // Specify the input and output file paths
@@ -63,7 +67,7 @@ public class PropertiesToYamlConverter {
         Properties properties = new Properties();
         
         // Load properties file
-        try (FileInputStream inputStream = new FileInputStream(propertiesFilePath)) {
+        try (InputStream inputStream = Files.newInputStream(Path.of(propertiesFilePath))) {
             properties.load(inputStream);
         }
         
@@ -79,7 +83,7 @@ public class PropertiesToYamlConverter {
         Yaml yaml = new Yaml(options);
 
         // Write the Map as a YAML file
-        try (FileWriter writer = new FileWriter(yamlFilePath, Charset.defaultCharset())) {
+        try (Writer writer = Files.newBufferedWriter(Path.of(yamlFilePath))) {
             yaml.dump(propertiesMap, writer);
         }
     }

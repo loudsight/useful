@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
  * Default implementation of LoggingHelper using SLF4J.
  * Provides structured logging with support for calling class context.
  */
-public class DefaultLoggingHelper implements LoggingHelper {
+public final class DefaultLoggingHelper implements LoggingHelper {
 
     private final Logger logger;
     private final Class<?> calledFrom;

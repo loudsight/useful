@@ -6,6 +6,8 @@ package com.loudsight.useful.service.ping;
  */
 public class ClientStartupFailedException extends RuntimeException {
 
+    private static final long serialVersionUID = 1L;
+
     private final String clientName;
     private final String serverName;
     private final long timeoutMs;

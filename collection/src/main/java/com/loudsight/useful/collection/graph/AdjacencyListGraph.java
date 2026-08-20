@@ -88,10 +88,8 @@ public class AdjacencyListGraph<T> implements DirectedGraph<T> {
         Set<T> recursionStack = new HashSet<>();
 
         for (T node : nodes) {
-            if (!visited.contains(node)) {
-                if (hasCycleDFS(node, visited, recursionStack)) {
-                    return true;
-                }
+            if (!visited.contains(node) && hasCycleDFS(node, visited, recursionStack)) {
+                return true;
             }
         }
         return false;

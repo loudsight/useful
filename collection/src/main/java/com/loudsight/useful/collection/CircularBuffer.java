@@ -1,9 +1,9 @@
 package com.loudsight.useful.collection;
 
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.IntStream;
 
 public class CircularBuffer<T> {
 
@@ -33,7 +33,7 @@ public class CircularBuffer<T> {
 
     public CircularBuffer(int length) {
         this.nodes = new Node[length];
-        IntStream.range(0, length).forEach( i -> this.nodes[i] = new Node());
+        Arrays.setAll(this.nodes, i -> new Node());
     }
 
     private int indexOf(int count) {
@@ -43,10 +43,13 @@ public class CircularBuffer<T> {
     public T poll() {
         int currentReadPosition = readPosition.get();
         Node node = nodes[indexOf(currentReadPosition)];
-        Optional<T> value;
 
-        if (writePosition.get() - currentReadPosition == 0 ||
-                (value = node.getValue()).isEmpty()) {
+        if (writePosition.get() - currentReadPosition == 0) {
+            return null;
+        }
+
+        Optional<T> value = node.getValue();
+        if (value.isEmpty()) {
             return null;
         }
 
@@ -58,8 +61,13 @@ public class CircularBuffer<T> {
         Node node = nodes[indexOf(currentReadPosition)];
         Optional<T> value;
 
-        while (writePosition.get() - currentReadPosition == 0 ||
-                (value = node.getValue()).isEmpty()) {
+        while (true) {
+            if (writePosition.get() - currentReadPosition != 0) {
+                value = node.getValue();
+                if (!value.isEmpty()) {
+                    break;
+                }
+            }
             Thread.yield();
         }
 

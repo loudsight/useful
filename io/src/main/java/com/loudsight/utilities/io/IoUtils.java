@@ -3,8 +3,8 @@ package com.loudsight.utilities.io;
 import com.loudsight.useful.helper.logging.LoggingHelper;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.invoke.MethodHandles;
 import java.nio.charset.Charset;
 import java.nio.file.*;
@@ -13,8 +13,11 @@ import java.nio.file.attribute.BasicFileAttributes;
 import static java.nio.file.FileVisitResult.CONTINUE;
 import static java.nio.file.FileVisitResult.TERMINATE;
 
-public class IoUtils {
+public final class IoUtils {
     private static final LoggingHelper logger = LoggingHelper.wrap(MethodHandles.lookup().lookupClass());
+
+    private IoUtils() {
+    }
 
     public static String readFile(File file, String csName) throws IOException {
         final Charset cs = Charset.forName(csName);
@@ -28,7 +31,7 @@ public class IoUtils {
     }
 
     public static String readFile(Path file, Charset cs) throws IOException {
-        try (final FileInputStream stream = new FileInputStream(file.toFile())) {
+        try (InputStream stream = Files.newInputStream(file)) {
             return new String(stream.readAllBytes(), cs);
         }
     }
@@ -43,9 +46,9 @@ public class IoUtils {
      * @throws IOException - thrown by underlying nio calls
      */
     public static void copyFileOrFolder(File source, File dest, CopyOption... options) throws IOException {
-        if (source.isDirectory())
+        if (source.isDirectory()) {
             copyDirectory(source, dest, options);
-        else {
+        } else {
             isParentDirectory(dest);
             copyFile(source, dest, options);
         }
@@ -63,22 +66,24 @@ public class IoUtils {
      * @throws IOException - thrown by underlying nio calls
      */
     private static void copyDirectory(File source, File dest, CopyOption... options) throws IOException {
-        if (!dest.exists())
+        if (!dest.exists()) {
             dest.mkdirs();
+        }
         File[] contents = source.listFiles();
         if (contents != null) {
             for (File f : contents) {
                 File newFile = new File(dest.getAbsolutePath() + File.separator + f.getName());
-                if (f.isDirectory())
+                if (f.isDirectory()) {
                     copyDirectory(f, newFile, options);
-                else
+                } else {
                     copyFile(f, newFile, options);
+                }
             }
         }
     }
 
     public static void deleteFileOrFolder(final Path path) throws IOException {
-        Files.walkFileTree(path, new SimpleFileVisitor<Path>(){
+        Files.walkFileTree(path, new SimpleFileVisitor<>(){
             @Override public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs)
                     throws IOException {
                 Files.delete(file);
@@ -96,7 +101,9 @@ public class IoUtils {
 
             @Override public FileVisitResult postVisitDirectory(final Path dir, final IOException e)
                     throws IOException {
-                if(e!=null)return handleException(e);
+                if (e != null) {
+                    return handleException(e);
+                }
                 Files.delete(dir);
                 return CONTINUE;
             }

@@ -15,10 +15,10 @@ public class GraphVisitorTest {
     /**
      * Simple test graph implementation for testing.
      */
-    static class TestGraph implements Graph<String> {
+    static class StubGraph implements Graph<String> {
         private Set<String> nodes = new HashSet<>();
 
-        public TestGraph(String... nodeNames) {
+        public StubGraph(String... nodeNames) {
             for (String name : nodeNames) {
                 nodes.add(name);
             }
@@ -48,7 +48,7 @@ public class GraphVisitorTest {
 
         @Override
         public Set<String> visitGraph(Graph<String> graph) {
-            TestGraph testGraph = (TestGraph) graph;
+            StubGraph testGraph = (StubGraph) graph;
             return new HashSet<>(testGraph.getNodes());
         }
     }
@@ -71,7 +71,7 @@ public class GraphVisitorTest {
 
     @Test
     public void testGraphVisitorWithGraph() {
-        Graph<String> testGraph = new TestGraph("a", "b", "c");
+        Graph<String> testGraph = new StubGraph("a", "b", "c");
         GraphVisitor<String, Set<String>> visitor = new CollectingGraphVisitor();
 
         Set<String> graphNodes = visitor.visitGraph(testGraph);

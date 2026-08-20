@@ -25,7 +25,7 @@ public class Listener<T> implements Consumer<T> {
         } catch (Exception e) {
             logger.logDebug("[EVIDENCE] results.get() threw exception: " + e.getClass().getSimpleName() + " - " + e.getMessage());
             ExceptionHelper.uncheckedThrow(e);
-            throw new RuntimeException("", e);
+            throw new IllegalStateException("Failed to get result", e);
         }
 
         return res;
@@ -37,7 +37,7 @@ public class Listener<T> implements Consumer<T> {
         try {
             results.complete(result);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new IllegalStateException(e);
         }
     }
 }

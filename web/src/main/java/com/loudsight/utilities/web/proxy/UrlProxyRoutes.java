@@ -67,22 +67,22 @@ public class UrlProxyRoutes <T, I extends T> {
                     var path = pathPattern.pattern();
 
                     if (!path.startsWith("/")) {
-                        throw new RuntimeException("UrlRoute path must start with '/'");
+                        throw new IllegalArgumentException("UrlRoute path must start with '/'");
                     }
 
-                    if (base.endsWith("/")) {
-                        path = base.substring(0, base.length() - 1) + path;
-                    } else {
-                        path = base + path;
-                    }
+                    String fullPath = base.endsWith("/")
+                            ? base.substring(0, base.length() - 1) + path
+                            : base + path;
 
                     var requestPredicate = switch (requestMethod) {
-                        case GET -> GET(path);
-                        case POST -> POST(path);
-                        case PUT -> PUT(path);
+                        case GET -> GET(fullPath);
+                        case POST -> POST(fullPath);
+                        case PUT -> PUT(fullPath);
                         default -> null;
                     };
-                    if (requestPredicate == null) return null;
+                    if (requestPredicate == null) {
+                        return null;
+                    }
 
                     return route(requestPredicate, logAndExecute(request -> {
                         Object result = urlRoute.handle(request, instance);
@@ -118,7 +118,7 @@ public class UrlProxyRoutes <T, I extends T> {
 //                    .map(DataBuffer::asByteBuffer)
 //                    .map(it -> map(request.headers().contentType().orElse(MediaType.APPLICATION_OCTET_STREAM), it.array()))
 //                    .singleOrEmpty();
-////                .map(inflatingMapper);
+//                .map(inflatingMapper);
 
                     return new Object();
                 }).toArray()
@@ -146,7 +146,7 @@ public class UrlProxyRoutes <T, I extends T> {
                 return str.getBytes(StandardCharsets.UTF_8);
             }
         }
-        throw new RuntimeException("fix it");
+        throw new IllegalStateException("fix it");
     }
 
     private <T extends ServerResponse> HandlerFunction<T> logAndExecute(Function<ServerRequest, T> handler) {
@@ -194,6 +194,8 @@ public class UrlProxyRoutes <T, I extends T> {
 
         List<UrlRoute> routes = new ArrayList<>();
         private final Class<T> aClass;
+        // Held for the "Fixme when meta supports methods" work in path(), not yet wired up.
+        @SuppressWarnings("PMD.UnusedPrivateField")
         private final Meta<T> meta;
 //        private final Map<Integer, List<Function<?, ?>>> paramExtractors = new HashMap<>();
 //        private final AtomicInteger routeId = new AtomicInteger();
@@ -206,17 +208,16 @@ public class UrlProxyRoutes <T, I extends T> {
         public String strFromPath() {
 //            var x = paramExtractors.putIfAbsent(routeId.get(), new ArrayList<>());
             // x.add();
-            meta.toString(); // get rid of unused error in PMD
             return "";
         }
 
         public A<T, I, Object> path(HttpMethod httpMethod, String path) {
             final Queue<InterceptedInvocation> interceptedInvocations = new ArrayDeque<>();
             return new A<>() {
-                final Object proxiedInstance = Proxy.newProxyInstance(aClass.getClassLoader(),
+                final Object proxiedInstance = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
                         new Class[]{aClass},
                         (a, method, parameters) -> {
-                    throw new RuntimeException("Fixme when meta supports methods");
+                    throw new UnsupportedOperationException("Fixme when meta supports methods");
                             // var entityMethod = meta.getMethod(method.getName());
                             // interceptedInvocations.add(new InterceptedInvocation(entityMethod, parameters));
 

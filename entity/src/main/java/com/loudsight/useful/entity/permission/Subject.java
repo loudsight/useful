@@ -73,11 +73,11 @@ public class Subject {
 
 
    public static Subject getAnonymous() {
-      return Subject.anonymous;
+      return anonymous;
    }
 
 
    public static Subject getAdmin() {
-      return Subject.admin;
+      return admin;
    }
 }

@@ -181,7 +181,7 @@ public class DirectedGraphTest {
         graph.addNode("B");
         graph.addNode("C");
 
-        GraphVisitor<String, Set<String>> collectingVisitor = new GraphVisitor<String, Set<String>>() {
+        GraphVisitor<String, Set<String>> collectingVisitor = new GraphVisitor<>() {
             @Override
             public Set<String> visit(String element) {
                 Set<String> result = new HashSet<>();

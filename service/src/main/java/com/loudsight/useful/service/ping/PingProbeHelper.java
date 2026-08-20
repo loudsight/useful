@@ -110,7 +110,7 @@ public final class PingProbeHelper {
 
         try {
             var subscription = dispatcher.subscribe(pingResponseTopic, response -> {
-                responseRef.set((PongResponse) response);
+                responseRef.set(response);
                 logger.logDebug("Pong received");
                 latch.countDown();
                 return null;

@@ -1,13 +1,16 @@
 package com.loudsight.useful.helper;
 
+import java.io.IOException;
 import java.net.ServerSocket;
 
-public class WebHelper {
+public final class WebHelper {
 
-    public static int getAvailablePort() throws Exception {
-        ServerSocket serverSocket = new ServerSocket(0);
-        int port = serverSocket.getLocalPort();
-        serverSocket.close();
-        return port;
+    private WebHelper() {
+    }
+
+    public static int getAvailablePort() throws IOException {
+        try (ServerSocket serverSocket = new ServerSocket(0)) {
+            return serverSocket.getLocalPort();
+        }
     }
 }

@@ -4,13 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Headers {
-    private final Map<String, String> headers = new HashMap<>();
+    private final Map<String, String> values = new HashMap<>();
 
     public void add(String name, String value){
-        headers.put(name, value);
+        values.put(name, value);
     }
 
     public Map<String, String> getAll(){
-        return headers;
+        return values;
     }
 }

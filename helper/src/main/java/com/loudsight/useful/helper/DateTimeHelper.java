@@ -4,7 +4,11 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 
-public class DateTimeHelper {
+public final class DateTimeHelper {
+
+    private DateTimeHelper() {
+    }
+
     public static LocalDateTime newDateWithoutMillis(LocalDateTime dateTime) {
         return LocalDateTime.of(dateTime.getYear(),
                 dateTime.getMonth(),

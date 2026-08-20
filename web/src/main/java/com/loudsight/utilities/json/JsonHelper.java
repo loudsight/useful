@@ -12,16 +12,19 @@ import java.util.*;
 import java.util.stream.Collectors;
 import javax.json.*;
 
-public class JsonHelper {
+public final class JsonHelper {
+
+    private JsonHelper() {
+    }
 
     public static class TypeToken<T> {
         public static <T> TypeToken<T> of() {
             return new TypeToken<>();
-        };
+        }
 
         Class<?> getGenericType() {
             return null;
-        };
+        }
     }
     
     private static final MetaRepository metaRepository = MetaRepository.getInstance();
@@ -35,10 +38,8 @@ public class JsonHelper {
         try (var reader = Json.createReader(new ByteArrayInputStream(jsonStr.getBytes(StandardCharsets.UTF_8)))) {
             JsonStructure jsonStructure = reader.read();
 
-            if (String.class == aClazz) {
-                if (jsonStructure.getValueType() == JsonValue.ValueType.OBJECT) {
-                    return (T)jsonStructure.asJsonObject().getString("value");
-                }
+            if (String.class == aClazz && jsonStructure.getValueType() == JsonValue.ValueType.OBJECT) {
+                return (T)jsonStructure.asJsonObject().getString("value");
             }
             var meta = metaRepository.<T>getMeta(aClazz);
             var result = meta.newInstance();
@@ -135,7 +136,8 @@ public class JsonHelper {
             jsonArrayBuilder.add(strValue);
         } else if (Enum.class.isAssignableFrom(value.getClass())) {
             jsonArrayBuilder.add(value.toString());
-        } else if (value instanceof Collection<?> collection) {
+        } else if (value instanceof Collection<?>) {
+            throw new UnsupportedOperationException("Nested collections are not supported in JSON arrays");
         }
     }
 
@@ -186,7 +188,7 @@ public class JsonHelper {
             case STRING -> ((JsonString)value).getString();
             case NUMBER -> getNumber((JsonNumber)value);
             case FALSE, TRUE -> value.getValueType() == JsonValue.ValueType.TRUE;
-            default -> throw new RuntimeException("Unsupported Json Value Type");
+            default -> throw new IllegalArgumentException("Unsupported Json Value Type");
         };
     }
 

@@ -1,8 +1,6 @@
 package com.loudsight.useful.entity.utils;
 
-import com.loudsight.meta.MetaRepository;
 import org.yaml.snakeyaml.LoaderOptions;
-import org.yaml.snakeyaml.constructor.AbstractConstruct;
 import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.nodes.*;
 
@@ -14,18 +12,6 @@ public class CustomObjectConstructor extends Constructor {
 
         public CustomObjectConstructor(LoaderOptions loadingConfig) {
             super(loadingConfig);
-//            this.yamlConstructors.put(new Tag("!" + SimpleFollowerTradeStrategySpecification.class.getName()), new ConstructCustomObject());
-        }
-
-        private static class ConstructCustomObject extends AbstractConstruct {
-
-            @Override
-            public Object construct(Node node) {
-                var mappings = convertNodeToMap(node);
-                var meta = MetaRepository.getInstance().getMeta(mappings.get("__className__").toString());
-
-                return meta.newInstance(mappings);
-            }
         }
 
     public static Map<String, Object> convertNodeToMap(Node node) {
@@ -47,7 +33,7 @@ public class CustomObjectConstructor extends Constructor {
             return map;
         }
 
-        return null; // or throw an exception for unsupported node types
+        return Map.of(); // or throw an exception for unsupported node types
     }
 
     private static Object convertNodeToObject(Node node) {

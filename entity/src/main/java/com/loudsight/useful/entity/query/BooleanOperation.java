@@ -11,7 +11,7 @@ public interface BooleanOperation<K> {
 	boolean apply(K t);
 
 
-    BooleanOperation<K> and(final BooleanOperation<K> second);
+    BooleanOperation<K> and(BooleanOperation<K> second);
 
     BooleanOperation<K> or(BooleanOperation<K> second);
 

@@ -5,12 +5,9 @@ import com.loudsight.meta.serialization.EntityTransform;
 import com.loudsight.useful.helper.JvmClassHelper;
 import com.loudsight.useful.helper.ExceptionHelper;
 import com.loudsight.utilities.json.JsonHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestClient;
-import reactor.core.publisher.Mono;
 
 import java.lang.annotation.Annotation;
 import java.lang.invoke.MethodHandles;
@@ -43,6 +40,13 @@ public class UrlProxyHandler<T> implements InvocationHandler {
     }
 
     @Override
+    // CompareObjectsWithEquals: proxy == args[0] is intentional reference-identity comparison -
+    // this branch IS the implementation of Object.equals() for the proxy, so calling .equals()
+    // here would recurse back into this same invoke() method.
+    // ExceptionAsFlowControl: the catch below is a blanket log-and-rethrow-unchecked wrapper for
+    // the whole method, not flow control targeting the switch's defensive "unsupported HTTP
+    // method" branch specifically.
+    @SuppressWarnings({"PMD.CompareObjectsWithEquals", "PMD.ExceptionAsFlowControl"})
     public Object invoke(Object proxy, Method method, Object[] args) {
         if ("equals".equals(method.getName())) {
             return proxy == args[0];
@@ -60,7 +64,7 @@ public class UrlProxyHandler<T> implements InvocationHandler {
                 case POST -> client.post();
                 case PUT -> client.put();
                 case DELETE -> client.delete();
-                default -> throw new RuntimeException("Unsupported HTTP method");
+                default -> throw new IllegalStateException("Unsupported HTTP method");
             };
 
             var parameterAnnotations = method.getParameterAnnotations();
@@ -90,11 +94,9 @@ public class UrlProxyHandler<T> implements InvocationHandler {
             });
 
             request.getHeaders().getAll().forEach(bodyUriSpec::header);
-            if (bodyUriSpec instanceof RestClient.RequestBodyUriSpec) {
 //                if (requestMapping.consumes().length > 0) {
 //                    ((WebClient.RequestBodyUriSpec)bodyUriSpec).contentType(MediaType.parseMediaType(requestMapping.consumes()[0]));
 //                }
-            }
 
 //            if (requestMapping.produces().length > 0) {
 //                bodyUriSpec.accept(MediaType.parseMediaType(requestMapping.produces()[0]));
@@ -114,11 +116,9 @@ public class UrlProxyHandler<T> implements InvocationHandler {
                 }
             }
 
-            if (!argList.isEmpty()) {
-                if (bodyUriSpec instanceof RestClient.RequestBodyUriSpec) {
-                    byte[] result = EntityTransform.serialize(argList.get(0));
-                    ((RestClient.RequestBodyUriSpec)bodyUriSpec).body(result);
-                }
+            if (!argList.isEmpty() && bodyUriSpec instanceof RestClient.RequestBodyUriSpec) {
+                byte[] result = EntityTransform.serialize(argList.get(0));
+                ((RestClient.RequestBodyUriSpec)bodyUriSpec).body(result);
             }
             var response = bodyUriSpec
                     .retrieve()
@@ -147,11 +147,12 @@ public class UrlProxyHandler<T> implements InvocationHandler {
 
     private Object inflate(byte[] result, Class<?> targetClass) {
         var str = new String(result, Charset.defaultCharset()).trim();
-        if (str.startsWith("["))
+        if (str.startsWith("[")) {
             return JsonHelper.fromJson(str, targetClass, JsonHelper.TypeToken.of());
-        else if (str.startsWith("{"))
+        } else if (str.startsWith("{")) {
             return JsonHelper.fromJson(str, targetClass);
-        else
+        } else {
             return str;
+        }
     }
 }
