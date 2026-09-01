@@ -60,7 +60,6 @@
          <dependency>
             <groupId>com.loudsight.useful</groupId>
             <artifactId>helper</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
          <dependency>
