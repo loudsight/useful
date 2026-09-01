@@ -10,7 +10,7 @@ import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
-import javax.json.*;
+import jakarta.json.*;
 
 public final class JsonHelper {
 
