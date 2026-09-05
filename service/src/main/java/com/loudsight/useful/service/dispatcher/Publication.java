@@ -2,6 +2,7 @@ package com.loudsight.useful.service.dispatcher;
 
 import com.loudsight.meta.annotation.Introspect;
 import com.loudsight.useful.entity.permission.Subject;
+import com.loudsight.useful.helper.ClassHelper;
 import com.loudsight.useful.service.dispatcher.bridge.BridgeMessageType;
 
 @Introspect(clazz = Publication.class)
@@ -62,11 +63,13 @@ public class Publication {
         return publicationType;
     }
 
+    // Caller-driven cast: the payload type is only known at the call site.
+    @SuppressWarnings("TypeParameterUnusedInFormals")
     public  <T> T getData() {
         if (payload instanceof NullValue) {
             return null;
         } else {
-            return (T)payload;
+            return ClassHelper.uncheckedCast(payload);
         }
     }
 }

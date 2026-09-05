@@ -106,16 +106,15 @@ public final class PingProbeHelper {
 
         CountDownLatch latch = new CountDownLatch(1);
         AtomicReference<PongResponse> responseRef = new AtomicReference<>();
-        AtomicReference<SubscriptionHandle<?, ?, ?>> subscriptionRef = new AtomicReference<>();
+        SubscriptionHandle<?, ?, ?> subscription = null;
 
         try {
-            var subscription = dispatcher.subscribe(pingResponseTopic, response -> {
+            subscription = dispatcher.subscribe(pingResponseTopic, response -> {
                 responseRef.set(response);
                 logger.logDebug("Pong received");
                 latch.countDown();
                 return null;
             });
-            subscriptionRef.set(subscription);
 
             dispatcher.publish(pingRequestTopic, pingResponseTopic, request);
 
@@ -124,7 +123,6 @@ public final class PingProbeHelper {
             }
             return responseRef.get();
         } finally {
-            var subscription = subscriptionRef.get();
             if (subscription != null) {
                 subscription.unsubscribe();
             }

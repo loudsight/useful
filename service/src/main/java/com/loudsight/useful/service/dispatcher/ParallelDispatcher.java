@@ -113,7 +113,7 @@ public class ParallelDispatcher implements Dispatcher, AutoCloseable {
 				continue;
 			}
 
-			if (replyTo != Topic.NO_REPLY) {
+			if (!Topic.NO_REPLY.equals(replyTo)) {
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("[{}] Processing with reply: calling it.onEvent()...", debugId);
 				}

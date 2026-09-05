@@ -9,6 +9,7 @@ import com.loudsight.useful.service.dispatcher.Topic;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * This class provides a basic implementation of the a 'Tick Publisher'
@@ -35,13 +36,14 @@ public class TickPublisher implements AutoCloseable {
     private static final LoggingHelper logger = LoggingHelper.wrap(TickPublisher.class);
     private final long startTime;
     ExecutorService executor;
+    private final Future<?> tickTask;
         public TickPublisher(Dispatcher dispatcher,
                              TimeProvider timeProvider) {
             this.dispatcher = dispatcher;
             this.timeProvider = timeProvider;
             this.startTime = timeProvider.millisNow();
             this.executor = Executors.newSingleThreadExecutor(new NamedThreadFactory("TickPublisher"));
-            this.executor.submit(this::execute);
+            this.tickTask = this.executor.submit(this::execute);
         }
 
     public TickPublisher(Dispatcher dispatcher) {
@@ -56,7 +58,7 @@ public class TickPublisher implements AutoCloseable {
             if ((currentTimeMillis - startTime) % 1000 == 0) {
                 dispatcher.publish(ONE_SECOND_TICK, currentTimeMillis);
             } else {
-                Thread.yield();
+                Thread.onSpinWait();
             }
         }
     }
@@ -64,5 +66,7 @@ public class TickPublisher implements AutoCloseable {
     @Override
     public void close() throws Exception {
         isOpen = false;
+        tickTask.cancel(true);
+        executor.shutdownNow();
     }
 }
