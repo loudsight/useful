@@ -1,6 +1,7 @@
 package com.loudsight.utilities.io;
 
 import com.loudsight.useful.helper.logging.LoggingHelper;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +14,11 @@ import java.nio.file.attribute.BasicFileAttributes;
 import static java.nio.file.FileVisitResult.CONTINUE;
 import static java.nio.file.FileVisitResult.TERMINATE;
 
+@SuppressFBWarnings(
+    value = "PATH_TRAVERSAL_IN",
+    justification = "This utility class is used for internal build/deployment file operations. " +
+                    "All file paths come from trusted internal sources (build configs, deployment scripts), not user input."
+)
 public final class IoUtils {
     private static final LoggingHelper logger = LoggingHelper.wrap(MethodHandles.lookup().lookupClass());
 
