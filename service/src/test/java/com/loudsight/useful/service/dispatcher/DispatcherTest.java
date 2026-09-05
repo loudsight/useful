@@ -14,8 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static com.loudsight.useful.service.dispatcher.Topic.WILDCARD_ADDRESS;
@@ -27,7 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SuppressWarnings("PMD.CloseResource")
 public abstract class DispatcherTest {
     private static final LoggingHelper logger = LoggingHelper.wrap(DispatcherTest.class);
-    private static final Address SERVER_ADDRESS = new Address("Test.to", "Q");
     private static final Address CLIENT_ADDRESS = new Address("Test.from", "Q");
     private static final AtomicInteger id = new AtomicInteger();
     public static final Subject ANONYMOUS = Subject.getAnonymous();
@@ -160,39 +157,6 @@ public abstract class DispatcherTest {
 //        subscription.unsubscribe()
 //    }
 
-    interface Function3<A, B, C, D> {
-        D invoke(A a, B b, C c);
-    }
-
-    private void testSubscribe(Function3<Dispatcher, String, Consumer<SimpleEntity>, Void> subscribeStrategy) throws Exception {
-
-        CountDownLatch replyLatch = new CountDownLatch(1);
-        Dispatcher dispatcher = getClientDispatcher();
-
-        var sent = new SimpleEntity();
-        sent.setId(123);
-
-        AtomicReference<SimpleEntity> received = new AtomicReference<>();
-
-        var reply = new SelfReferencingEntity(new SelfReferencingEntity(null));
-        reply.setName("b");
-        reply.setId(sent.getId() + 123);
-        subscribeStrategy.invoke(dispatcher, "Q::class", entity -> {
-            received.set(entity);
-            replyLatch.countDown();
-        });
-
-        dispatcher.publish(new Topic<>(Object.class, SimpleEntity.class, Void.class,
-                        Map.of("service", "persistence", "name", "PING_ADDRESS")),
-                sent);
-
-        replyLatch.await(10, TimeUnit.SECONDS);
-
-        assertEquals(sent.getId(), received.get().getId());
-
-        assertEquals(sent.getName(), received.get().getName());
-    }
-
     @Test
     public void testPublishSubscribe() throws Exception {
         Dispatcher clientDispatcher = getClientDispatcher();
@@ -203,7 +167,8 @@ public abstract class DispatcherTest {
     void testPublishSubscribe(MetaRepository clientMetaRepository,
                               Dispatcher clientDispatcher,
                               Dispatcher serverDispatcher) {
-        var aMeta = clientMetaRepository.getMeta(SelfReferencingEntity.class);
+        // Loads and caches the entity meta as a side effect; the returned value is not needed here.
+        clientMetaRepository.getMeta(SelfReferencingEntity.class);
 
         var sent = new SelfReferencingEntity(new SelfReferencingEntity(null));
         sent.setName("a");

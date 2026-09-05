@@ -1,7 +1,7 @@
 package com.loudsight.useful.util;
 
+import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.LinkedList;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -14,7 +14,7 @@ public class ObjectPool<T> {
         this.reset = reset;
     }
 
-    private final Deque<T> pool = new LinkedList<>();
+    private final Deque<T> pool = new ArrayDeque<>();
 
     public T get() {
         var it = pool.pollFirst();

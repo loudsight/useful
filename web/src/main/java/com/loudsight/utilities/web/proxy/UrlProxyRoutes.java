@@ -126,8 +126,8 @@ public class UrlProxyRoutes <T, I extends T> {
     }
 
     byte[] deflate(List<MediaType> accept, Object payload) {
-        if (payload instanceof byte[]) {
-            return (byte[]) payload;
+        if (payload instanceof byte[] payloadBytes) {
+            return payloadBytes;
         }
         if (payload instanceof Exception e) {
             ExceptionHelper.uncheckedThrow(e);
@@ -149,7 +149,7 @@ public class UrlProxyRoutes <T, I extends T> {
         throw new IllegalStateException("fix it");
     }
 
-    private <T extends ServerResponse> HandlerFunction<T> logAndExecute(Function<ServerRequest, T> handler) {
+    private <R extends ServerResponse> HandlerFunction<R> logAndExecute(Function<ServerRequest, R> handler) {
         return (request) -> {
             logger.logInfo("Request: {} {}", request.method(), request.path());
             request.headers().asHttpHeaders()
@@ -195,7 +195,7 @@ public class UrlProxyRoutes <T, I extends T> {
         List<UrlRoute> routes = new ArrayList<>();
         private final Class<T> aClass;
         // Held for the "Fixme when meta supports methods" work in path(), not yet wired up.
-        @SuppressWarnings("PMD.UnusedPrivateField")
+        @SuppressWarnings({"PMD.UnusedPrivateField", "UnusedVariable"})
         private final Meta<T> meta;
 //        private final Map<Integer, List<Function<?, ?>>> paramExtractors = new HashMap<>();
 //        private final AtomicInteger routeId = new AtomicInteger();
@@ -229,6 +229,9 @@ public class UrlProxyRoutes <T, I extends T> {
                 );
 
                 @Override
+                // ReturnValueIgnored: the call is made purely so the dynamic proxy records the
+                // intercepted invocation; the returned value is never a result we can use here.
+                @SuppressWarnings("ReturnValueIgnored")
                 public Invocation<T, I, Object> consumes(Function<T, Object> methodCaller) {
                     final T invocationInterceptor = ClassHelper.uncheckedCast(proxiedInstance);
                     methodCaller.apply(invocationInterceptor);

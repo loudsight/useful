@@ -68,8 +68,8 @@ public final class StringUtils {
     /**
      * http://stackoverflow.com/a/391978/1249664
      *
-     * @param str
-     * @param n
+     * @param str the string to pad
+     * @param n the minimum width of the result
      *
      * @return the padded string
      */
@@ -80,8 +80,8 @@ public final class StringUtils {
     /**
      * http://stackoverflow.com/a/391978/1249664
      *
-     * @param str
-     * @param n
+     * @param str the string to pad
+     * @param n the minimum width of the result
      *
      * @return the padded string
      */
@@ -104,7 +104,8 @@ public final class StringUtils {
 
     public static String  camelCaseToUnderscores(String str){
         StringBuilder res = new StringBuilder();
-        for (char it: str.toCharArray())  {
+        for (int i = 0; i < str.length(); i++) {
+            char it = str.charAt(i);
             if (Character.isUpperCase(it)) {
                 res.append("_");
             }

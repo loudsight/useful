@@ -1,6 +1,7 @@
 package com.loudsight.useful.service.dispatcher;
 
 import com.loudsight.meta.annotation.Introspect;
+import com.loudsight.useful.helper.ClassHelper;
 
 @Introspect(clazz = Envelope.class)
 public record Envelope(
@@ -31,7 +32,9 @@ public record Envelope(
         this(replyTo, payload, caller, null);
     }
 
+    // Caller-driven cast: the payload type is only known at the call site.
+    @SuppressWarnings("TypeParameterUnusedInFormals")
     public <T> T getCargo() {
-        return (T) payload;
+        return ClassHelper.uncheckedCast(payload);
     }
 }

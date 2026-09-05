@@ -68,7 +68,7 @@ public class CircularBuffer<T> {
                     break;
                 }
             }
-            Thread.yield();
+            Thread.onSpinWait();
         }
 
         node.clearValue();
@@ -82,7 +82,7 @@ public class CircularBuffer<T> {
         Node nextNode = nodes[indexOf(currentWritePosition)];
 
         while (currentWritePosition - readPosition.get() > nodes.length - 1) {
-            Thread.yield();
+            Thread.onSpinWait();
         }
 
         nextNode.setValue(element);

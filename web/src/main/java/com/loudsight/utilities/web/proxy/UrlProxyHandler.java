@@ -46,7 +46,7 @@ public class UrlProxyHandler<T> implements InvocationHandler {
     // ExceptionAsFlowControl: the catch below is a blanket log-and-rethrow-unchecked wrapper for
     // the whole method, not flow control targeting the switch's defensive "unsupported HTTP
     // method" branch specifically.
-    @SuppressWarnings({"PMD.CompareObjectsWithEquals", "PMD.ExceptionAsFlowControl"})
+    @SuppressWarnings({"PMD.CompareObjectsWithEquals", "PMD.ExceptionAsFlowControl", "ReferenceEquality"})
     public Object invoke(Object proxy, Method method, Object[] args) {
         if ("equals".equals(method.getName())) {
             return proxy == args[0];
@@ -116,9 +116,9 @@ public class UrlProxyHandler<T> implements InvocationHandler {
                 }
             }
 
-            if (!argList.isEmpty() && bodyUriSpec instanceof RestClient.RequestBodyUriSpec) {
+            if (!argList.isEmpty() && bodyUriSpec instanceof RestClient.RequestBodyUriSpec bodySpec) {
                 byte[] result = EntityTransform.serialize(argList.get(0));
-                ((RestClient.RequestBodyUriSpec)bodyUriSpec).body(result);
+                bodySpec.body(result);
             }
             var response = bodyUriSpec
                     .retrieve()
