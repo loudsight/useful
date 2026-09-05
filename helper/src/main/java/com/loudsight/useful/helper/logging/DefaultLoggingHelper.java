@@ -3,6 +3,7 @@ package com.loudsight.useful.helper.logging;
 import com.loudsight.useful.helper.JvmClassHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.util.Locale;
 
 /**
  * Default implementation of LoggingHelper using SLF4J.
@@ -95,7 +96,7 @@ public final class DefaultLoggingHelper implements LoggingHelper {
      */
     private String formatMessage(String log) {
         if (calledFrom != null) {
-            return String.format("[%s] %s", calledFrom.getSimpleName(), log);
+            return String.format(Locale.ROOT, "[%s] %s", calledFrom.getSimpleName(), log);
         }
         return log;
     }

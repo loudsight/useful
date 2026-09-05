@@ -30,7 +30,7 @@ public final class ExceptionHelper {
         R apply() throws E;
     }
 
-    public static <T, R, E extends Exception> R wrap(Function0<R, E> checkedFunction) {
+    public static <R, E extends Exception> R wrap(Function0<R, E> checkedFunction) {
         try {
             return checkedFunction.apply();
         } catch (Exception e1) {

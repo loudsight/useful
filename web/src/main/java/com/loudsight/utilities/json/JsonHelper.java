@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 import jakarta.json.*;
+import java.time.ZoneOffset;
 
 public final class JsonHelper {
 
@@ -94,8 +95,7 @@ public final class JsonHelper {
             if (collection.isEmpty()) {
                 return "[]";
             } else {
-                return String.format(
-                        "[%s]",
+                return String.format(Locale.ROOT, "[%s]",
                         collection.stream()
                                 .map(it -> {
                                     var meta = metaRepository.<Object>getMeta((Class)it.getClass());
