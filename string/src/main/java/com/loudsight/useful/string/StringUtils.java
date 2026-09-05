@@ -74,7 +74,7 @@ public final class StringUtils {
      * @return the padded string
      */
     public static String  padRight(String str, int n) {
-        return String.format("%1$-" + n + "s", str);
+        return String.format(Locale.ROOT, "%1$-" + n + "s", str);
     }
 
     /**
@@ -86,7 +86,7 @@ public final class StringUtils {
      * @return the padded string
      */
     public static String padLeft(String str, int n) {
-        return String.format("%1$#" + n + "s", str);
+        return String.format(Locale.ROOT, "%1$#" + n + "s", str);
     }
 
     public static boolean isNullOrEmpty(String str) {

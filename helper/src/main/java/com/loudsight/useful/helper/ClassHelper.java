@@ -7,16 +7,10 @@ public final class ClassHelper {
     }
 
     /**
-     * Method to cast a given type to an arbitrary type. The small size of the method means it will likely be in-lined
-     * by the JVM compiler The method is may be used to deal with situations where a warning is produced by the compiler
-     * stating that a given is an unsafe one i.e. "Type safety: Unchecked cast from O to T" Using this method reduces the
-     * number of places where the @SuppressWarnings annotation is required and restricts the suppression of warning to this
-     * method only - ensuring that real warnings aren't inadvertently hidden. The method infers the target type from the
-     * required return type as illustrated below:
-     * <br />
+     * Unchecked cast of an object to a target type.
+     * Useful for situations where you need to cast an object to a generic type.
+     * Example usage:
      * `
-     * // Ex.
-     * <br />
      * T typedObject = Cast.uncheckedCast(object) // where T is the target type
      * ` *
      *
@@ -24,6 +18,7 @@ public final class ClassHelper {
      * @param entity - Object to cast
      * @return the typed object
      */
+    @SuppressWarnings("TypeParameterUnusedInFormals")
     public static <T> T uncheckedCast(Object entity) {
         return (T)entity;
     }
