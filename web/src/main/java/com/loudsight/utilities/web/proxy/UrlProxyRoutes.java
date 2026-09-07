@@ -215,7 +215,7 @@ public class UrlProxyRoutes <T, I extends T> {
             final Queue<InterceptedInvocation> interceptedInvocations = new ArrayDeque<>();
             return new A<>() {
                 final Object proxiedInstance = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
-                        new Class[]{aClass},
+                    new Class<?>[]{aClass},
                         (a, method, parameters) -> {
                     throw new UnsupportedOperationException("Fixme when meta supports methods");
                             // var entityMethod = meta.getMethod(method.getName());

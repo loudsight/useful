@@ -18,7 +18,7 @@ public final class ClassHelper {
      * @param entity - Object to cast
      * @return the typed object
      */
-    @SuppressWarnings("TypeParameterUnusedInFormals")
+    @SuppressWarnings({"TypeParameterUnusedInFormals", "unchecked"})
     public static <T> T uncheckedCast(Object entity) {
         return (T)entity;
     }

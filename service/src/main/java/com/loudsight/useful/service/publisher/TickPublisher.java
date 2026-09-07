@@ -64,7 +64,7 @@ public class TickPublisher implements AutoCloseable {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         isOpen = false;
         tickTask.cancel(true);
         executor.shutdownNow();

@@ -5,14 +5,14 @@ import com.loudsight.useful.helper.ClassHelper;
 
 @Introspect(clazz = Envelope.class)
 public record Envelope(
-        Topic replyTo,
+    Topic<?, ?, ?> replyTo,
         Object payload,
         String caller,
         String sessionToken
 ) {
 
 
-    public Envelope(Topic replyTo, Object payload) {
+    public Envelope(Topic<?, ?, ?> replyTo, Object payload) {
         this(replyTo, payload, null, null);
     }
 
@@ -28,7 +28,7 @@ public record Envelope(
         this(null, payload, caller, sessionToken);
     }
 
-    public Envelope(Topic replyTo, Object payload, String caller) {
+    public Envelope(Topic<?, ?, ?> replyTo, Object payload, String caller) {
         this(replyTo, payload, caller, null);
     }
 

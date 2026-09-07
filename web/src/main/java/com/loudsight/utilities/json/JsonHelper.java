@@ -39,7 +39,7 @@ public final class JsonHelper {
             JsonStructure jsonStructure = reader.read();
 
             if (String.class == aClazz && jsonStructure.getValueType() == JsonValue.ValueType.OBJECT) {
-                return (T)jsonStructure.asJsonObject().getString("value");
+                return ClassHelper.uncheckedCast(jsonStructure.asJsonObject().getString("value"));
             }
             var meta = metaRepository.<T>getMeta(aClazz);
             var result = meta.newInstance();
@@ -96,18 +96,21 @@ public final class JsonHelper {
             } else {
                 return String.format(Locale.ROOT, "[%s]",
                         collection.stream()
-                                .map(it -> {
-                                    var meta = metaRepository.<Object>getMeta((Class)it.getClass());
-
-                                    return toJson(it, meta);
-                                })
+                                .map(JsonHelper::toJsonWithRuntimeMeta)
                                 .collect(Collectors.joining(","))
                 );
             }
         }
-        var meta = metaRepository.<Object>getMeta((Class)entity.getClass());
+        return toJsonWithRuntimeMeta(entity);
+    }
 
-        return toJson(entity, meta);
+    private static String toJsonWithRuntimeMeta(Object entity) {
+        return toJson(entity, metaFor(entity));
+    }
+
+    private static Meta<Object> metaFor(Object entity) {
+        Class<Object> runtimeClass = ClassHelper.uncheckedCast(entity.getClass());
+        return metaRepository.getMeta(runtimeClass);
     }
     private static <T> String toJson(T entity, Meta<T> meta) {
         var jsonObjectBuilder = Json.createObjectBuilder();
@@ -157,14 +160,14 @@ public final class JsonHelper {
                 var jsonArrayBuilder = Json.createArrayBuilder();
                 collection.forEach(element -> {
                     Object x = element;
-                    if (element instanceof Enum e) {
-                        x = e.name();
+                    if (element instanceof Enum<?> enumValue) {
+                        x = enumValue.name();
                     }
 
                     if (JvmClassHelper.isPrimitive(x.getClass())) {
                         addElement(jsonArrayBuilder, x);
                     } else {
-                        var elementMeta = metaRepository.getMeta(element.getClass());
+                        Meta<Object> elementMeta = metaFor(element);
 //                        var elementMeta = metaRepository.getMeta(element.getClass());
                         var jsonArrayObjectBuilder = Json.createObjectBuilder();
                         Optional.ofNullable(elementMeta).orElseThrow().getFields().forEach(field -> {
@@ -177,7 +180,7 @@ public final class JsonHelper {
             jsonObjectBuilder.add(name, jsonArrayBuilder);
         } else {
             var jsonChildObjectBuilder = Json.createObjectBuilder();
-            var elementMeta = metaRepository.<Object>getMeta((Class)value.getClass());
+            Meta<Object> elementMeta = metaFor(value);
             toJson(jsonChildObjectBuilder, value, elementMeta);
         }
     }

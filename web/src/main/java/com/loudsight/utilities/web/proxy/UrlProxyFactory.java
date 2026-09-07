@@ -79,9 +79,9 @@ public class UrlProxyFactory {
     }
 
     public <T> T proxy(RestClient webClient, Class<T> klass, ProxiedRequestFilter... filters) {
-        return (T) Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
-                new Class[]{klass},
+        return klass.cast(Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(),
+            new Class<?>[]{klass},
                 new UrlProxyHandler<>(klass, webClient, urlRouteMap, filters)
-        );
+        ));
     }
 }
