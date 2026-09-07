@@ -24,7 +24,7 @@ public class ParallelDispatcher implements Dispatcher, AutoCloseable {
 
     TopicFactory topicFactory;
     private long replyId;
-    private final Map<Topic, List<Subscription<?, ?, ?>>> openSubscriptions = new HashMap<>();
+    private final Map<Topic<?, ?, ?>, List<Subscription<?, ?, ?>>> openSubscriptions = new HashMap<>();
     private final List<Long> closedSubscriptions = new ArrayList<>();
     private final AtomicLong idCount = new AtomicLong();
     private final List<Dispatcher> peerDispatchers = new ArrayList<>();
@@ -127,7 +127,7 @@ public class ParallelDispatcher implements Dispatcher, AutoCloseable {
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("[{}] Publishing response to replyTo topic...", debugId);
 				}
-				publish((Topic) replyTo, new Envelope(res));
+                publish(ClassHelper.uncheckedCast(replyTo), new Envelope(res));
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("[{}] Response published", debugId);
 				}

@@ -39,6 +39,7 @@ public final class ExceptionHelper {
         throw new IllegalStateException("What!!! This should not be possible");
     }
 
+    @SuppressWarnings("unchecked")
     public static <T extends Throwable> RuntimeException uncheckedThrow(Throwable e) throws T {
         throw (T) e;
     }

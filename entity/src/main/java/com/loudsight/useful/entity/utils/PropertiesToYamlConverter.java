@@ -47,21 +47,33 @@ public final class PropertiesToYamlConverter {
     }
 
     private static void propertiesToMapOfMaps(String k, Object v, Map<String, Object> to) {
-
-//        BiFunction<Map<String, Object>, Map.Entry<String, Object>, Map<String, Object>> accumulator = (a, b) -> {
             var x = k.split("\\.", 2);
             if (x.length > 1) {
-                to.compute(x[0], (m, n) -> {
-                    if (n == null) {
-                        n = new HashMap<>();
-                    }
-                    propertiesToMapOfMaps(x[1], v, (Map)n);
-                    return n;
-                });
+                var nested = stringObjectMap(to.get(x[0]), x[0]);
+                propertiesToMapOfMaps(x[1], v, nested);
+                to.put(x[0], nested);
             } else {
                 to.put(k, v.toString());
             }
     }
+
+    private static Map<String, Object> stringObjectMap(Object value, String key) {
+        var result = new HashMap<String, Object>();
+        if (value == null) {
+            return result;
+        }
+        if (!(value instanceof Map<?, ?> map)) {
+            throw new IllegalArgumentException("Property key is both a value and a group: " + key);
+        }
+        map.forEach((nestedKey, nestedValue) -> {
+            if (!(nestedKey instanceof String stringKey)) {
+                throw new IllegalArgumentException("Non-string property key under: " + key);
+            }
+            result.put(stringKey, nestedValue);
+        });
+        return result;
+    }
+
     // Convert .properties file to a Map
     private static Map<String, Object> propertiesToMap(String propertiesFilePath) throws IOException {
         Properties properties = new Properties();
@@ -72,7 +84,9 @@ public final class PropertiesToYamlConverter {
         }
         
         // Convert Properties to a Map
-        return (Map) properties;
+        var result = new HashMap<String, Object>();
+        properties.stringPropertyNames().forEach(name -> result.put(name, properties.getProperty(name)));
+        return result;
     }
 
     // Save the Map to a YAML file

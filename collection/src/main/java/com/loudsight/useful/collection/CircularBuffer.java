@@ -1,48 +1,48 @@
 package com.loudsight.useful.collection;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.IntStream;
 
 public class CircularBuffer<T> {
 
-    static class Node {
-       private final AtomicReference<Optional<Object>> value = new AtomicReference<>();
+     static class Node<T> {
+         private final AtomicReference<Optional<T>> value = new AtomicReference<>();
 
         Node() {
             value.set(Optional.empty());
         }
-        <T> Optional<T> getValue() {
-            return (Optional<T>)value.get();
+        Optional<T> getValue() {
+            return value.get();
         }
 
         void clearValue() {
             value.set(Optional.empty());
         }
 
-        void setValue(Object element) {
+        void setValue(T element) {
             value.set(Optional.of(element));
         }
     }
 
 
-    private final Node[] nodes;
+    private final List<Node<T>> nodes;
     private final AtomicInteger readPosition = new AtomicInteger();
     private final AtomicInteger writePosition = new AtomicInteger();
 
     public CircularBuffer(int length) {
-        this.nodes = new Node[length];
-        Arrays.setAll(this.nodes, i -> new Node());
+        this.nodes = IntStream.range(0, length).mapToObj(ignored -> new Node<T>()).toList();
     }
 
     private int indexOf(int count) {
-        return count % nodes.length;
+        return count % nodes.size();
     }
 
     public T poll() {
         int currentReadPosition = readPosition.get();
-        Node node = nodes[indexOf(currentReadPosition)];
+        Node<T> node = nodes.get(indexOf(currentReadPosition));
 
         if (writePosition.get() - currentReadPosition == 0) {
             return null;
@@ -58,7 +58,7 @@ public class CircularBuffer<T> {
 
     public T take() {
         int currentReadPosition = readPosition.get();
-        Node node = nodes[indexOf(currentReadPosition)];
+        Node<T> node = nodes.get(indexOf(currentReadPosition));
         Optional<T> value;
 
         while (true) {
@@ -79,9 +79,9 @@ public class CircularBuffer<T> {
 
     public void add(T element) {
         int currentWritePosition = writePosition.getAndIncrement();
-        Node nextNode = nodes[indexOf(currentWritePosition)];
+        Node<T> nextNode = nodes.get(indexOf(currentWritePosition));
 
-        while (currentWritePosition - readPosition.get() > nodes.length - 1) {
+        while (currentWritePosition - readPosition.get() > nodes.size() - 1) {
             Thread.onSpinWait();
         }
 

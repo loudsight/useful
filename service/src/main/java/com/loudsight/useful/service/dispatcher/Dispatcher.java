@@ -5,6 +5,9 @@ import java.util.function.Function;
 
 public interface Dispatcher extends AutoCloseable {
 
+    @Override
+    void close();
+
     <P, Q, A> SubscriptionHandle<P, Q, A> subscribe(Topic<P, Q, A> requestTopic, Topic<P, A, ?> responseTopic, Function<Q, A> handler);
 
     default <P, Q, A> SubscriptionHandle<P, Q, A> subscribe(Topic<P, Q, A> requestTopic, Function<Q, A> handler) {
