@@ -17,6 +17,11 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+// Debug-level logging of internal dispatch state (topic addresses, thread names, subscription
+// counts); these are application-defined message-bus identifiers, not user-controlled strings,
+// so there is no real log-injection vector here.
+@edu.umd.cs.findbugs.annotations.SuppressFBWarnings(value = "CRLF_INJECTION_LOGS",
+        justification = "logs internal dispatcher state (topics, thread names, counts), not user-controlled strings")
 public class ParallelDispatcher implements Dispatcher, AutoCloseable {
     private static final Logger LOGGER = LoggerFactory.getLogger(ParallelDispatcher.class);
     private static final List<Subscription<?, ?, ?>> EMPTY_LIST = new ArrayList<>();
