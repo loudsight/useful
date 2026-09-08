@@ -59,7 +59,7 @@ public class Subject {
    public final Subject valueOf( String username) {
       Subject subject;
       if ("anonymous".equals(username)) {
-         subject = Subject.getAnonymous();
+         subject = getAnonymous();
       } else {
          if ("admin".equals(username)) {
             throw new IllegalArgumentException("Attempt to create a reserved user");
