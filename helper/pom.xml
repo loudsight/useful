@@ -38,6 +38,14 @@
         <url>git@github.com:loudsight/useful.git</url>
     </scm>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs-annotations</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
     <!--
       This module had a <build> block whose only purpose was emptying annotationProcessorPaths in
       three places, to escape an entity-meta-processor path the parent once applied unconditionally

@@ -9,6 +9,8 @@ import java.util.Locale;
  * Default implementation of LoggingHelper using SLF4J.
  * Provides structured logging with support for calling class context.
  */
+@edu.umd.cs.findbugs.annotations.SuppressFBWarnings(value = "CRLF_INJECTION_LOGS",
+        justification = "generic SLF4J logging wrapper used repo-wide; params are opaque Object varargs from every caller, so trust/untrust triage belongs at each call site, not this shared utility")
 public final class DefaultLoggingHelper implements LoggingHelper {
 
     private final Logger logger;
