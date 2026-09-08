@@ -127,7 +127,7 @@ public class UrlProxyHandler<T> implements InvocationHandler {
 
             var responseContent = response.getBody();
 
-            if (responseContent.length == 1 && responseContent[0] == 0) {
+            if (responseContent == null || (responseContent.length == 1 && responseContent[0] == 0)) {
                 return proxy;
             }
 
