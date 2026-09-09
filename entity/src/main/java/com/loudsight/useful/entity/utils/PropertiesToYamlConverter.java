@@ -20,9 +20,12 @@ public final class PropertiesToYamlConverter {
     }
 
     public static void main(String[] args) {
-        // Specify the input and output file paths
-        String propertiesFilePath = "path/to/config/application.properties";
-        String yamlFilePath = "path/to/config/application.yaml";
+        if (args.length < 2) {
+            LOGGER.logError("Usage: PropertiesToYamlConverter <input.properties> <output.yaml>");
+            return;
+        }
+        String propertiesFilePath = args[0];
+        String yamlFilePath = args[1];
 
         try {
             // Convert properties file to Map
