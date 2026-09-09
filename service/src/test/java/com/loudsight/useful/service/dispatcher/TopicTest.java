@@ -1,7 +1,7 @@
 package com.loudsight.useful.service.dispatcher;
 
 import com.loudsight.meta.MetaRepository;
-import com.loudsight.meta.entity.SimpleEntity;
+import com.loudsight.meta.fixtures.pojo.SimpleEntity;
 import com.loudsight.useful.service.publisher.TopicFactory;
 import org.junit.jupiter.api.Test;
 

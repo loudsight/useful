@@ -2,8 +2,8 @@ package com.loudsight.useful.service.dispatcher;
 
 import com.loudsight.useful.helper.ClassHelper;
 import com.loudsight.meta.MetaRepository;
-import com.loudsight.meta.entity.SimpleEntity;
-import com.loudsight.meta.entity.SelfReferencingEntity;
+import com.loudsight.meta.fixtures.pojo.SimpleEntity;
+import com.loudsight.meta.fixtures.pojo.SelfReferencingEntity;
 import com.loudsight.useful.entity.permission.Subject;
 import com.loudsight.useful.helper.logging.LoggingHelper;
 import com.loudsight.useful.service.Listener;
