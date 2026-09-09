@@ -20,9 +20,12 @@ public final class PropertiesToYamlConverter {
     }
 
     public static void main(String[] args) {
-        // Specify the input and output file paths
-        String propertiesFilePath = "c:/dev/code/victory2025/webapps/backendserver/src/main/config/loudsight.net.properties";
-        String yamlFilePath = "c:/dev/code/victory2025/webapps/backendserver/src/main/config/loudsight.net.yaml";
+        if (args.length < 2) {
+            LOGGER.logError("Usage: PropertiesToYamlConverter <input.properties> <output.yaml>");
+            return;
+        }
+        String propertiesFilePath = args[0];
+        String yamlFilePath = args[1];
 
         try {
             // Convert properties file to Map
