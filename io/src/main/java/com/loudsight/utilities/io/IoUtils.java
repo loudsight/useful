@@ -55,7 +55,7 @@ public final class IoUtils {
         if (source.isDirectory()) {
             copyDirectory(source, dest, options);
         } else {
-            isParentDirectory(dest);
+            ensureParentDirectory(dest);
             copyFile(source, dest, options);
         }
     }
@@ -72,8 +72,8 @@ public final class IoUtils {
      * @throws IOException - thrown by underlying nio calls
      */
     private static void copyDirectory(File source, File dest, CopyOption... options) throws IOException {
-        if (!dest.exists()) {
-            dest.mkdirs();
+        if (!dest.exists() && !dest.mkdirs() && !dest.isDirectory()) {
+            throw new IOException("Could not create destination directory: " + dest);
         }
         File[] contents = source.listFiles();
         if (contents != null) {
@@ -121,10 +121,10 @@ public final class IoUtils {
         Files.copy(source.toPath(), dest.toPath(), options);
     }
 
-    private static void isParentDirectory(File file) {
+    private static void ensureParentDirectory(File file) throws IOException {
         File parent = file.getParentFile();
-        if (parent != null && !parent.exists()) {
-            parent.mkdirs();
+        if (parent != null && !parent.exists() && !parent.mkdirs() && !parent.isDirectory()) {
+            throw new IOException("Could not create parent directory: " + parent);
         }
     }
 }

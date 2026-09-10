@@ -1,5 +1,6 @@
 package com.loudsight.utilities.web.proxy;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,6 +12,6 @@ public class Headers {
     }
 
     public Map<String, String> getAll(){
-        return values;
+        return Collections.unmodifiableMap(values);
     }
 }

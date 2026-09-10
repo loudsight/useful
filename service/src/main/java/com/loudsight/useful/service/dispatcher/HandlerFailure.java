@@ -18,6 +18,11 @@ import java.io.StringWriter;
 @Introspect(clazz = HandlerFailure.class)
 public record HandlerFailure(String message, String exceptionType, String stackTrace) {
 
+    @edu.umd.cs.findbugs.annotations.SuppressFBWarnings(value = "INFORMATION_EXPOSURE_THROUGH_AN_ERROR_MESSAGE",
+            justification = "Capturing the server-side stack trace into the reply is the documented "
+                    + "purpose of this type (see class Javadoc): the failure is delivered over the "
+                    + "internal message bus to the originating caller so it is actionable without "
+                    + "cross-referencing server logs. It is not rendered to an untrusted HTTP client.")
     public static HandlerFailure of(Throwable t) {
         StringWriter sw = new StringWriter();
         t.printStackTrace(new PrintWriter(sw));

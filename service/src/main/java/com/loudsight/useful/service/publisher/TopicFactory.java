@@ -9,15 +9,16 @@ import java.util.Map;
 
 public class TopicFactory {
 
-    /*private final */MetaRepository metaRepository;
-
+    // The MetaRepository parameter is currently unused: it is kept on the constructor because
+    // every caller and the AeronTopicFactory subclass already pass it, and method-level topic
+    // resolution (not yet wired) is expected to consult it. Nothing is stored, so there is no
+    // dead field to keep in sync.
+    @SuppressWarnings("UnusedVariable")
     public TopicFactory(MetaRepository metaRepository) {
-        this.metaRepository = metaRepository;
+        // no state retained yet - see comment above
     }
 
     public <P, I, O> Topic<P, I, O> create(Class<P> publisherClass, Class<I> requestType, Class<O> responseType) {
-//        var meta = metaRepository.getMeta(responseType);
-
         return new Topic<>(publisherClass, requestType, responseType);
     }
 
