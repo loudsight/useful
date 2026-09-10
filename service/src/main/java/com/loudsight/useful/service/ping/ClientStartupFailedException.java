@@ -1,5 +1,7 @@
 package com.loudsight.useful.service.ping;
 
+import java.util.Locale;
+
 /**
  * Generic runtime exception thrown when a dependent service fails to acknowledge
  * the startup ping within the configured timeout budget.
@@ -34,8 +36,9 @@ public class ClientStartupFailedException extends RuntimeException {
                                        long elapsedNanos,
                                        int attempts) {
         long elapsedMs = Math.max(0, elapsedNanos / 1_000_000);
-        return "Client startup failed for %s (server=%s) after %dms timeout=%dms attempts=%d"
-                .formatted(clientName, serverName, elapsedMs, timeoutMs, attempts);
+        return String.format(Locale.ROOT,
+                "Client startup failed for %s (server=%s) after %dms timeout=%dms attempts=%d",
+                clientName, serverName, elapsedMs, timeoutMs, attempts);
     }
 
     public String getClientName() {
