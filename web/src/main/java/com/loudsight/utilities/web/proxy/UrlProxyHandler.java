@@ -21,19 +21,16 @@ import java.util.Map;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class UrlProxyHandler<T> implements InvocationHandler {
+public class UrlProxyHandler implements InvocationHandler {
     private static final LoggingHelper logger = LoggingHelper.wrap(MethodHandles.lookup().lookupClass());
 
     private final RestClient client;
     private final ProxiedRequestFilter[] filters;
-    Class<T> klass;
     private final Map<String, UrlProxyRoutes.UrlRoute> urlRouteMap;
 
-    public UrlProxyHandler(Class<T> klass,
-                           RestClient client,
+    public UrlProxyHandler(RestClient client,
                            Map<String, UrlProxyRoutes.UrlRoute> urlRouteMap,
                            ProxiedRequestFilter... filters) {
-        this.klass = klass;
         this.client = client;
         this.filters = Stream.of(filters).toList().toArray(new ProxiedRequestFilter[0]);
         this.urlRouteMap = urlRouteMap;
@@ -47,6 +44,11 @@ public class UrlProxyHandler<T> implements InvocationHandler {
     // the whole method, not flow control targeting the switch's defensive "unsupported HTTP
     // method" branch specifically.
     @SuppressWarnings({"PMD.CompareObjectsWithEquals", "PMD.ExceptionAsFlowControl", "ReferenceEquality"})
+    @edu.umd.cs.findbugs.annotations.SuppressFBWarnings(value = "REC_CATCH_EXCEPTION",
+            justification = "Deliberate blanket log-and-rethrow-unchecked boundary for the whole "
+                    + "reflective dispatch: RestClient, EntityTransform and JvmClassHelper all "
+                    + "surface failures as unchecked exceptions, and catch (Exception) is the "
+                    + "single place they are logged before being re-thrown via uncheckedThrow.")
     public Object invoke(Object proxy, Method method, Object[] args) {
         if ("equals".equals(method.getName())) {
             return proxy == args[0];

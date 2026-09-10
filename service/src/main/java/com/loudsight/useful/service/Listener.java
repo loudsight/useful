@@ -4,7 +4,9 @@ import com.loudsight.useful.helper.ExceptionHelper;
 import com.loudsight.useful.helper.logging.LoggingHelper;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 
 public class Listener<T> implements Consumer<T> {
@@ -22,7 +24,7 @@ public class Listener<T> implements Consumer<T> {
             logger.logDebug("[EVIDENCE] About to call results.get(" + timeout + ", " + unit + ")...");
             res = results.get(timeout, unit);
             logger.logDebug("[EVIDENCE] results.get() returned successfully: " + res);
-        } catch (Exception e) {
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
             logger.logDebug("[EVIDENCE] results.get() threw exception: " + e.getClass().getSimpleName() + " - " + e.getMessage());
             ExceptionHelper.uncheckedThrow(e);
             throw new IllegalStateException("Failed to get result", e);

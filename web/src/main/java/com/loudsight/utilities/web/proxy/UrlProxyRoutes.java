@@ -1,7 +1,6 @@
 package com.loudsight.utilities.web.proxy;
 
 import com.loudsight.useful.helper.logging.LoggingHelper;
-import com.loudsight.meta.Meta;
 import com.loudsight.meta.EntityHelper;
 import com.loudsight.meta.entity.EntityMethod;
 import com.loudsight.meta.MetaRepository;
@@ -27,7 +26,6 @@ import java.util.Objects;
 import java.util.Queue;
 import java.util.function.Function;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 import static org.springframework.http.MediaType.ALL;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -163,7 +161,7 @@ public class UrlProxyRoutes <T, I extends T> {
 
     public static class Builder<T, I extends T> {
         public List<UrlRoute> build() {
-            return routes;
+            return List.copyOf(routes);
         }
 
         @FunctionalInterface
@@ -173,12 +171,9 @@ public class UrlProxyRoutes <T, I extends T> {
 
         static class InterceptedInvocation {
             EntityMethod<?, ?> method;
-            Object[] parameters;
 
-            InterceptedInvocation(EntityMethod<?, ?> method, Object... parameters) {
+            InterceptedInvocation(EntityMethod<?, ?> method) {
                 this.method = method;
-                this.parameters = (parameters == null || parameters.length == 0)?
-                        new Object[0] : Stream.of(parameters).toList().toArray();
             }
         }
 
@@ -194,15 +189,14 @@ public class UrlProxyRoutes <T, I extends T> {
 
         List<UrlRoute> routes = new ArrayList<>();
         private final Class<T> aClass;
-        // Held for the "Fixme when meta supports methods" work in path(), not yet wired up.
-        @SuppressWarnings({"PMD.UnusedPrivateField", "UnusedVariable"})
-        private final Meta<T> meta;
 //        private final Map<Integer, List<Function<?, ?>>> paramExtractors = new HashMap<>();
 //        private final AtomicInteger routeId = new AtomicInteger();
 
+        // metaRepository is currently unused: kept on the constructor for the not-yet-wired
+        // method-level topic resolution in path() (see the commented meta.getMethod call there).
+        @SuppressWarnings("UnusedVariable")
         public Builder(Class<T> aClass, MetaRepository metaRepository) {
             this.aClass = aClass;
-            this.meta = metaRepository.getMeta(aClass);
         }
 
         public String strFromPath() {

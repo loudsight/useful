@@ -27,15 +27,17 @@ public class ParallelDispatcher implements Dispatcher, AutoCloseable {
     private static final List<Subscription<?, ?, ?>> EMPTY_LIST = new ArrayList<>();
     private final ExecutorService executorService;
 
-    TopicFactory topicFactory;
     private long replyId;
     private final Map<Topic<?, ?, ?>, List<Subscription<?, ?, ?>>> openSubscriptions = new HashMap<>();
     private final List<Long> closedSubscriptions = new ArrayList<>();
     private final AtomicLong idCount = new AtomicLong();
     private final List<Dispatcher> peerDispatchers = new ArrayList<>();
 
+    // topicFactory is currently unused: kept on the constructor because SerialDispatcher and the
+    // Spring configs already supply it, and meta-driven reply-topic construction (not yet wired,
+    // see the direct `new Topic<>(...)` in publishAsync) is expected to consult it.
+    @SuppressWarnings("UnusedVariable")
     public ParallelDispatcher(TopicFactory topicFactory, int workerCount) {
-        this.topicFactory = topicFactory;
         this.executorService = Executors.newFixedThreadPool(workerCount, new NamedThreadFactory("ParallelDispatcher"));
     }
 
@@ -237,9 +239,7 @@ public class ParallelDispatcher implements Dispatcher, AutoCloseable {
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("[{}] No local subscriptions and no peers, invoking handler with null", debugId);
 			}
-			@SuppressWarnings("unchecked")
-			A nullResponse = null;
-			handler.accept(nullResponse);
+			handler.accept(null);
 			return;
 		}
 		

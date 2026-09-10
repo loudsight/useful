@@ -46,6 +46,11 @@ public final class JvmClassHelper {
         return ClassHelper.uncheckedCast(PRIMITIVES.get(className));
     }
 
+    @edu.umd.cs.findbugs.annotations.SuppressFBWarnings(value = "IMPROPER_UNICODE",
+            justification = "primitiveName is a JVM/Kotlin type identifier (e.g. \"kotlin.Int\"), "
+                    + "not user text; the toLowerCase is a fixed ASCII mapping of the eight Kotlin "
+                    + "builtin names onto Java primitive names and is used only as a Map key lookup, "
+                    + "never in a security decision.")
     private static String getClassName(String primitiveName) {
         var className = primitiveName;
         if ("kotlin.String".equals(className)) {

@@ -12,6 +12,12 @@ public record Topic<P, I, O/* extends Response*/>(
         Class<O> responseType,
         Map<String, Object> properties) {
 
+    public Topic {
+        // Defensive immutable copy: properties() is otherwise a live view of caller-supplied
+        // state, and Topic instances are used as map keys / wire messages that must not change.
+        properties = properties == null ? Map.of() : Map.copyOf(properties);
+    }
+
     public static final Topic<?, ?, ?> NO_REPLY = new Topic<>(Void.class, Void.class, Void.class, Collections.emptyMap());
     public static final Topic<Object, Object, Object> WILDCARD_ADDRESS = new Topic<>(Object.class, Object.class, Object.class);
 
