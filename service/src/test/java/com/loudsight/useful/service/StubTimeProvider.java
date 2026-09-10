@@ -2,7 +2,7 @@ package com.loudsight.useful.service;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class StubTimeProvider implements  TimeProvider {
@@ -18,7 +18,7 @@ public class StubTimeProvider implements  TimeProvider {
     public LocalDateTime now() {
         Instant instant = Instant.ofEpochMilli(millis(startTime) + time.get());
 
-        return instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
+        return LocalDateTime.ofInstant(instant, ZoneOffset.UTC);
     }
 
     public void increment(long millis) {
