@@ -1,6 +1,7 @@
 package com.loudsight.useful.entity.permission;
 
 import com.loudsight.meta.annotation.Id;
+import org.jspecify.annotations.Nullable;
 import com.loudsight.meta.annotation.Introspect;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,14 +11,14 @@ public class Subject {
 
    @Id
    private String id;
-   private String name;
+   private @Nullable String name;
    private List<PermissionGrant> permissionGrants = new ArrayList<>();
 
    private static final Subject anonymous = new Subject("anonymous", "Anonymous");
    
    private static final Subject admin = new Subject("admin", "Admin");
 
-   public Subject( String id,  String name) {
+   public Subject( String id,  @Nullable String name) {
       this.id = id;
       this.name = name;
    }
@@ -36,11 +37,11 @@ public class Subject {
    }
 
    
-   public final String getName() {
+   public final @Nullable String getName() {
       return this.name;
    }
 
-   public final void setName( String var1) {
+   public final void setName(@Nullable String var1) {
       this.name = var1;
    }
 

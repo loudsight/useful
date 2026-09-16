@@ -1,9 +1,11 @@
 package com.loudsight.useful.service.dispatcher;
 
+import org.jspecify.annotations.Nullable;
+
 public interface Subscription<P, Q, A> {
         long getId();
 
-        A onEvent(Envelope envelope);
+        @Nullable A onEvent(Envelope envelope);
 
         void unsubscribe();
 
