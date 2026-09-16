@@ -1,6 +1,7 @@
 package com.loudsight.useful.entity;
 
 import com.loudsight.meta.annotation.Introspect;
+import org.jspecify.annotations.Nullable;
 import com.loudsight.useful.entity.permission.Role;
 import com.loudsight.useful.entity.permission.Subject;
 
@@ -15,7 +16,7 @@ public class User extends Subject {
         super();
     }
 
-    public User(String name, String id) {
+    public User(@Nullable String name, String id) {
         super(id, name);
     }
 

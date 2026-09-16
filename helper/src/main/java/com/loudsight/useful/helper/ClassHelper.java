@@ -1,5 +1,7 @@
 package com.loudsight.useful.helper;
 
+import org.jspecify.annotations.Nullable;
+
 
 public final class ClassHelper {
 
@@ -19,7 +21,7 @@ public final class ClassHelper {
      * @return the typed object
      */
     @SuppressWarnings({"TypeParameterUnusedInFormals", "unchecked"})
-    public static <T> T uncheckedCast(Object entity) {
+    public static <T> T uncheckedCast(@Nullable Object entity) {
         return (T)entity;
     }
 
