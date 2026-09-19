@@ -42,6 +42,15 @@
         <dependency>
             <groupId>com.github.spotbugs</groupId>
             <artifactId>spotbugs-annotations</artifactId>
+            <!--
+              Literal, not ${spotbugs.version}: flatten-maven-plugin's own effective-model builder
+              (used by flattenMode "ossrh" to resolve inherited dependencyManagement into literal
+              per-dependency versions) runs a stricter model-build pass that rejects an
+              unresolved property here ("must be a valid version but is '${spotbugs.version}'"),
+              even though it interpolates properties fine everywhere else. Keep in sync with
+              com.loudsight:parent's spotbugs.version property.
+            -->
+            <version>4.10.3</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
