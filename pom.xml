@@ -40,9 +40,9 @@
     </developers>
 
     <scm>
-        <connection>scm:git@github.com:loudsight/utilities.git</connection>
-        <developerConnection>scm:git@github.com:loudsight/utilities.git</developerConnection>
-        <url>git@github.com:loudsight/utilities.git</url>
+        <connection>scm:git:https://github.com/loudsight/useful.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/loudsight/useful.git</developerConnection>
+        <url>https://github.com/loudsight/useful</url>
     </scm>
     <modules>
         <module>pattern</module>
