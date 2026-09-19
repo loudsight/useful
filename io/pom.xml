@@ -24,11 +24,13 @@
         <dependency>
             <groupId>com.loudsight.useful</groupId>
             <artifactId>helper</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <!-- SpotBugs Annotations (for @SuppressFBWarnings) -->
         <dependency>
             <groupId>com.github.spotbugs</groupId>
             <artifactId>spotbugs-annotations</artifactId>
+            <version>4.10.3</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
