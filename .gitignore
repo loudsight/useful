@@ -26,3 +26,6 @@ hs_err_pid*
 /**/build
 /**/target
 /pom.xml.versionsBackup
+
+# flatten-maven-plugin output (the central-release profile writes one per module)
+.flattened-pom.xml

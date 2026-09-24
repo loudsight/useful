@@ -6,12 +6,12 @@
 
     <parent>
         <groupId>com.loudsight.useful</groupId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.1.0-SNAPSHOT</version>
         <artifactId>useful</artifactId>
     </parent>
 
     <artifactId>string</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Loudsight Useful string utilities</name>
     <description>Loudsight Useful string utilities</description>
