@@ -10,6 +10,8 @@
     </parent>
 
     <artifactId>iso</artifactId>
+    <name>Loudsight Useful ISO codes</name>
+    <description>ISO 4217 currency and ISO 3166 country code enumerations</description>
 
     <build>
         <plugins>
