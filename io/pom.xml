@@ -11,6 +11,8 @@
     </parent>
 
     <artifactId>io</artifactId>
+    <name>Loudsight Useful I/O utilities</name>
+    <description>Small I/O helpers (IoUtils) shared across Loudsight modules</description>
 
     <build>
         <plugins>
