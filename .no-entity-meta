@@ -1,0 +1,6 @@
+Opts this module out of the entity-meta-processing profile in parent/pom.xml.
+
+pom packaging - nothing to compile - so the profile's provided-scope dependency on
+entity-meta-processor would be inert here, yet it still has to resolve: a fresh local repo cannot
+install this aggregator until entity-meta-generator's processors are built, which inverts the
+cross-repo release order. Activation does not inherit, so each child carries its own marker if needed.
