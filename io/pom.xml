@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.loudsight.useful</groupId>
         <artifactId>useful</artifactId>
-        <version>0.1.0-SNAPSHOT</version>
+        <version>0.1.0</version>
     </parent>
 
     <artifactId>io</artifactId>
@@ -26,7 +26,7 @@
         <dependency>
             <groupId>com.loudsight.useful</groupId>
             <artifactId>helper</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
+            <version>0.1.0</version>
         </dependency>
         <!-- SpotBugs Annotations (for @SuppressFBWarnings) -->
         <dependency>
