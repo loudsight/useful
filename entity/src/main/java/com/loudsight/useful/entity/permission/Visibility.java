@@ -29,7 +29,7 @@ import com.loudsight.meta.annotation.Introspect;
  * consult it at all. A public entity is world-readable and still owner-writable.
  *
  * Sharing with SPECIFIC users is a different mechanism (PermissionGrant) and is not expressible
- * here - see notebook/plans/claude/permission-aware-ui-visibility.md.
+ * here - see kb/plans/claude/permission-aware-ui-visibility.md.
  */
 @Introspect(clazz = Visibility.class)
 public enum Visibility {
