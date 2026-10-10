@@ -59,7 +59,15 @@ jobs:
           elif [ -n "${BEFORE:-}" ] && [ "$BEFORE" != "$zeros" ] && git cat-file -e "$BEFORE^{commit}" 2>/dev/null; then
             range="$BEFORE..$head"
           else
-            range="$head"
+            # A new ref (before is all zeros): a tag on a commit a branch already has, or a branch cut from one, adds nothing to scan.
+            # Only what no OTHER ref reaches is new, as in the pre-push hook (<sha> --not --remotes); the pushed ref itself is left out of
+            # "the others" (its own remote ref exists by now), so the first push of a branch or of a whole repo still scans everything.
+            case "${GITHUB_REF_TYPE:-}" in
+              tag) others="--exclude=${GITHUB_REF_NAME:?} --tags --remotes" ;;
+              branch) others="--exclude=origin/${GITHUB_REF_NAME:?} --remotes --tags" ;;
+              *) others="" ;;
+            esac
+            range="$head${others:+ --not $others}"
           fi
           work=$(mktemp -d)
           trap 'rm -rf "$work"' EXIT
