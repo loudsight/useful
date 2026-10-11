@@ -14,8 +14,6 @@ import java.util.concurrent.Future;
 /**
  * This class provides a basic implementation of the a 'Tick Publisher'
  * The publisher produces ticks on fixed addresses
- *
- * @author  Munya M.
  */
 public class TickPublisher implements AutoCloseable {
     public static final Topic<TickPublisher, Long, Object> ONE_SECOND_TICK = new Topic<>(
