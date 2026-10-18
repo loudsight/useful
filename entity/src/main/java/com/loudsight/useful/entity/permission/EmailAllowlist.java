@@ -18,8 +18,9 @@ import java.util.stream.Collectors;
  * <h2>Two call sites, and both are required</h2>
  *
  * Social sign-in auto-provisions an account for whatever address the provider returns, and
- * {@code POST /api/auth/register} self-confirms ({@code ConfirmMethod.NONE} is read as
- * {@code confirmed = true}), so it also yields a usable account with no verification step. Gating
+ * {@code POST /api/auth/register} creates an account for whatever address the caller submits; the
+ * account signs in once its emailed confirmation link is opened ({@code ConfirmMethod.EMAIL}), but
+ * that proves only that the caller controls the address, not that the address is permitted. Gating
  * only one of them leaves the other as a way in. The sign-in gate must also reject DURING
  * authentication rather than after it: the session repository is HttpSessionSecurityContextRepository,
  * so a rejection raised once authentication has succeeded would leave the caller authenticated in
