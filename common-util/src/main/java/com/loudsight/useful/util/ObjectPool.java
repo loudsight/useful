@@ -1,5 +1,7 @@
 package com.loudsight.useful.util;
 
+import org.jspecify.annotations.Nullable;
+
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.function.Consumer;
@@ -16,21 +18,17 @@ public class ObjectPool<T> {
 
     private final Deque<T> pool = new ArrayDeque<>();
 
-    public T get() {
+    public @Nullable T get() {
         var it = pool.pollFirst();
+        if (it != null) {
+            return it;
+        }
 
         try {
-            if (it == null) {
-                it = newPoolEntry.get();
-            } else {
-                return pool.removeFirst();
-            }
+            return newPoolEntry.get();
         } catch (Exception e) {
-            if (it != null) {
-                put(it);
-            }
+            return null;
         }
-        return it;
     }
 
     public void put(T it) {

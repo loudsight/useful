@@ -28,6 +28,9 @@ public class TickPublisher implements AutoCloseable {
             )
     );
 
+    private static final long TICK_INTERVAL_MILLIS = 1000;
+    private static final long MAX_POLL_MILLIS = 20;
+
     private volatile boolean isOpen = true;
     Dispatcher dispatcher;
     TimeProvider timeProvider;
@@ -49,14 +52,23 @@ public class TickPublisher implements AutoCloseable {
     }
 
     private void execute() {
-        var currentTimeMillis = timeProvider.millisNow();
-        logger.logDebug("-Tick produced at " + currentTimeMillis);
+        var nextTick = startTime + TICK_INTERVAL_MILLIS;
 
         while (isOpen) {
-            if ((currentTimeMillis - startTime) % 1000 == 0) {
+            var currentTimeMillis = timeProvider.millisNow();
+            if (currentTimeMillis >= nextTick) {
+                logger.logDebug("-Tick produced at " + currentTimeMillis);
                 dispatcher.publish(ONE_SECOND_TICK, currentTimeMillis);
+                // one tick per elapsed interval; skip any intervals missed while stalled
+                nextTick = startTime
+                        + ((currentTimeMillis - startTime) / TICK_INTERVAL_MILLIS + 1) * TICK_INTERVAL_MILLIS;
             } else {
-                Thread.onSpinWait();
+                try {
+                    Thread.sleep(Math.min(nextTick - currentTimeMillis, MAX_POLL_MILLIS));
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    return;
+                }
             }
         }
     }
