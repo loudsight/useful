@@ -68,7 +68,6 @@ public class ParallelDispatcher implements Dispatcher, AutoCloseable {
         // Check if there are any local subscriptions for this topic
         // Use defensive copy to avoid mutating the stored subscription list
         List<Subscription<?, ?, ?>> subscriptions = new ArrayList<>(openSubscriptions.getOrDefault(requestTopic, EMPTY_LIST));
-        subscriptions.addAll(openSubscriptions.getOrDefault(Topic.WILDCARD_ADDRESS, EMPTY_LIST));
         
         // Only bridge to peers if:
         // 1. No local subscriptions found
@@ -102,7 +101,6 @@ public class ParallelDispatcher implements Dispatcher, AutoCloseable {
 
 		// Use defensive copy to avoid mutating the stored subscription list
 		List<Subscription<?, ?, ?>> subscriptions = new ArrayList<>(openSubscriptions.getOrDefault(topic, EMPTY_LIST));
-		subscriptions.addAll(openSubscriptions.getOrDefault(Topic.WILDCARD_ADDRESS, EMPTY_LIST));
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("[{}] Found {} subscriptions", debugId, subscriptions.size());
 		}
@@ -224,7 +222,6 @@ public class ParallelDispatcher implements Dispatcher, AutoCloseable {
 		// Check if there are any local subscriptions for this topic
 		// Use defensive copy to avoid mutating the stored subscription list
 		List<Subscription<?, ?, ?>> subscriptions = new ArrayList<>(openSubscriptions.getOrDefault(to, EMPTY_LIST));
-		subscriptions.addAll(openSubscriptions.getOrDefault(Topic.WILDCARD_ADDRESS, EMPTY_LIST));
 		
 		if (subscriptions.isEmpty() && !peerDispatchers.isEmpty()) {
 			if (LOGGER.isDebugEnabled()) {
