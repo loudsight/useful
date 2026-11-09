@@ -9,14 +9,11 @@ import com.loudsight.useful.helper.logging.LoggingHelper;
 import com.loudsight.useful.service.Listener;
 import org.junit.jupiter.api.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
-import static com.loudsight.useful.service.dispatcher.Topic.WILDCARD_ADDRESS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 // The client/server Dispatcher instances returned by getClientDispatcher()/getServerDispatcher()
@@ -204,41 +201,8 @@ public abstract class DispatcherTest {
         subscription.unsubscribe();
     }
 
-    @Test
-    public void testWildCardSubscription() {
-        Dispatcher dispatcher = getClientDispatcher();
-        var received = new Listener<List<Integer>>();
-        List<Integer> results = new ArrayList<>();
-
-        Function<Object, Object> handler =
-                (payload) -> {
-                    results.add((Integer) payload);
-
-                    if (results.size() == 100) {
-                        received.accept(results);
-                    }
-
-                    return null;
-                };
-
-        dispatcher.subscribe(WILDCARD_ADDRESS, handler);
-
-        for (int i = 0; i < 100; i++) {
-            var address = new Topic<>(DispatcherTest.class, Integer.class, Integer.class,
-                    Map.of(
-                            "service", "persistence",
-                            "name", "FIND_ADDRESS",
-                            "id", String.valueOf(i),
-                            "id2", String.valueOf(i)));
-            dispatcher.publish(address, i);
-        }
-         for (int i = 0; i < 100; i++) {
-            received.getResult(); // blocks untils all results received
-            assertEquals(i, results.get(i));
-         }
-    }
-
-
+    // Wildcard delivery (Topic.WILDCARD_ADDRESS) is implementation-specific, not part of the shared
+    // Dispatcher contract; implementations that support it test it themselves (see SerialDispatcherTest).
 
     @Test
     public void eventBusConcurrentRequests() {
