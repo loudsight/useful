@@ -201,9 +201,6 @@ public abstract class DispatcherTest {
         subscription.unsubscribe();
     }
 
-    // Wildcard delivery (Topic.WILDCARD_ADDRESS) is implementation-specific, not part of the shared
-    // Dispatcher contract; implementations that support it test it themselves (see SerialDispatcherTest).
-
     @Test
     public void eventBusConcurrentRequests() {
 //        EventBus eventBus = Vertx.vertx().eventBus();
