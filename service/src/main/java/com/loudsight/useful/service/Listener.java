@@ -19,15 +19,16 @@ public class Listener<T> implements Consumer<@Nullable T> {
     }
 
     public @Nullable T getResult(long timeout, TimeUnit unit) {
-        logger.logDebug("[EVIDENCE] Listener.getResult(" + timeout + " " + unit + ") called, results.isDone=" + results.isDone());
+        logger.logDebug("[EVIDENCE] Listener.getResult({} {}) called, results.isDone={}", timeout, unit, results.isDone());
         @Nullable T res;
 
         try {
-            logger.logDebug("[EVIDENCE] About to call results.get(" + timeout + ", " + unit + ")...");
+            logger.logDebug("[EVIDENCE] About to call results.get({}, {})...", timeout, unit);
             res = results.get(timeout, unit);
-            logger.logDebug("[EVIDENCE] results.get() returned successfully: " + res);
+            logger.logDebug("[EVIDENCE] results.get() returned successfully, result type: {}", typeName(res));
         } catch (InterruptedException | ExecutionException | TimeoutException e) {
-            logger.logDebug("[EVIDENCE] results.get() threw exception: " + e.getClass().getSimpleName() + " - " + e.getMessage());
+            // The type only: an exception message can quote the values being processed.
+            logger.logDebug("[EVIDENCE] results.get() threw exception: {}", e.getClass().getSimpleName());
             ExceptionHelper.uncheckedThrow(e);
             throw new IllegalStateException("Failed to get result", e);
         }
@@ -37,11 +38,19 @@ public class Listener<T> implements Consumer<@Nullable T> {
 
     @Override
     public void accept(@Nullable T result) {
-        logger.logDebug("[EVIDENCE] Listener.accept() called with result: " + result);
+        logger.logDebug("[EVIDENCE] Listener.accept() called with result type: {}", typeName(result));
         try {
             results.complete(result);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    /**
+     * Describes a value for logging without revealing its contents. Results are arbitrary
+     * caller data that may carry credentials, so their {@code toString()} is never logged.
+     */
+    private static String typeName(@Nullable Object value) {
+        return value == null ? "null" : value.getClass().getName();
     }
 }
