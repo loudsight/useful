@@ -22,8 +22,10 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Queue;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
@@ -37,6 +39,12 @@ import static org.springframework.web.servlet.function.RouterFunctions.route;
 public class UrlProxyRoutes <T, I extends T> {
 
     private static final LoggingHelper logger = LoggingHelper.wrap(MethodHandles.lookup().lookupClass());
+
+    // Lower-case names of the only headers whose values are logged. Any other header may carry a
+    // credential, including application-specific ones, so its value is redacted.
+    private static final Set<String> LOGGABLE_HEADERS = Set.of(
+            "accept", "accept-encoding", "accept-language", "cache-control", "connection",
+            "content-length", "content-type", "host", "user-agent");
 
     public record UrlRoute(HttpMethod httpMethod, Pattern pathPattern, EntityMethod<?,?> entityMethod, String mediaType) {
 
@@ -147,16 +155,21 @@ public class UrlProxyRoutes <T, I extends T> {
         throw new IllegalStateException("fix it");
     }
 
-    private <R extends ServerResponse> HandlerFunction<R> logAndExecute(Function<ServerRequest, R> handler) {
+    <R extends ServerResponse> HandlerFunction<R> logAndExecute(Function<ServerRequest, R> handler) {
         return (request) -> {
             logger.logInfo("Request: {} {}", request.method(), request.path());
             request.headers().asHttpHeaders()
                     .forEach(
-                            (name, values) -> values.forEach(value -> logger.logInfo("{}={}", name, value))
+                            (name, values) -> values.forEach(
+                                    value -> logger.logInfo("{}={}", name, loggableValue(name, value)))
                     );
 
             return handler.apply(request);
         };
+    }
+
+    private static String loggableValue(String name, String value) {
+        return LOGGABLE_HEADERS.contains(name.toLowerCase(Locale.ROOT)) ? value : "<redacted>";
     }
 
     public static class Builder<T, I extends T> {
