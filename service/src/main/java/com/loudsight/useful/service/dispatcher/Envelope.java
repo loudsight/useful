@@ -33,6 +33,17 @@ public record Envelope(
         this(replyTo, payload, caller, null);
     }
 
+    // The generated record form would print the session token and the payload into any log line
+    // that includes an envelope.
+    @Override
+    public String toString() {
+        return "Envelope[replyTo=" + replyTo
+                + ", payloadType=" + (payload == null ? null : payload.getClass().getName())
+                + ", caller=" + caller
+                + ", sessionToken=" + (sessionToken == null ? null : "<redacted>")
+                + "]";
+    }
+
     // Caller-driven cast: the payload type is only known at the call site.
     @SuppressWarnings("TypeParameterUnusedInFormals")
     public <T> T getCargo() {
